@@ -1,0 +1,266 @@
+\documentclass[a4paper,11pt, oneside]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage[italian]{babel}
+\usepackage[hidelinks]{hyperref}
+\usepackage{listings}
+\usepackage{dirtree}
+\usepackage{float}
+\usepackage{listings}
+\usepackage{graphicx}
+\usepackage{titling}
+\usepackage[font=small,labelfont=bf]{caption}
+\usepackage{verbatim}
+
+\lstset{
+            basicstyle=\ttfamily
+        }
+
+\pretitle{%
+  \begin{center}
+  \LARGE
+  \includegraphics[]{logo_unife}\\[\bigskipamount]
+}
+\posttitle{\end{center}}
+
+\title{\textbf{UNIVERSITÀ DEGLI STUDI DI FERRARA\\}
+\bigskip
+Corso di Laurea in Informatica\\
+\bigskip
+\bigskip
+\bigskip
+\textit{Ricostruzione tomografica mediante libreria OpenRTK e creazione di un package Python per semplificarne l'utilizzo.\\}
+\bigskip
+\bigskip
+\bigskip
+\bigskip
+\bigskip
+\bigskip
+\bigskip
+\bigskip
+\bigskip
+\bigskip
+\bigskip
+\bigskip
+\bigskip
+\bigskip
+\bigskip
+\bigskip
+\bigskip
+\bigskip
+\bigskip
+\bigskip
+}
+\author{Relatore: Giovanni Di Domenico\and
+Candidato: Danny Lessio}
+
+
+\date{Anno Accademico 2015 - 2016}
+\begin{document}
+
+    \maketitle
+    \newpage
+    
+    \tableofcontents
+
+    \part{Presentazione}
+        \par
+            Questa tesi tratta lo studio e l'utilizzo della libreria OpenRTK \cite{openrtk-website} basata su Insight Toolkit (ITK).\cite{itk-website}, la quale fornisce sia un insieme di tools basilari per poter eseguire efficientemente ricostruzioni tomografiche ( filtering, forward projection, backprojection ), sia un set di strumenti per poter eseguire il calcolo a livello multithreaded, sia su CPU che su GPU. Presenta inoltre delle interfacce I/O calibrate per un insieme limitato di CAT scanner attualmente in commercio.
+    
+        \par
+            Per semplificarne l'utilizzo viene realizzato un package Python che si appoggia sia sulla libreria OpenRTK per eseguire le retroproiezioni sia su tools esterni come SimpleITK, una libreria più leggera rispetto ad Insight ToolKit per aiutare nella normalizzazione e conversione delle proiezioni in formato .MHA / .MHD.
+            Il package è eseguibile a linea di comando, ed è facilmente estendibile per coprire anche eventuali evoluzioni della libreria OpenRTK.
+    
+        \par
+            [TODO nella sezione X si fa Y etc bla di blabla, il secondo di blabla]
+          
+        \newpage
+        \section{Tomografia Assiale Computerizzata}
+            Per tomografia (dal greco \textit{témnó}, tagliare, o \textit{tómos}, nel senso di "strato", e \textit{gráphó}, scrivere) si intende la tecnica spettroscopica mirata alla rappresentazione a strati di un oggetto, in contrapposizione alla radiografia convenzionale la quale dispone sulla superficie bidimensionale della lastra tutto lo spessore del corpo o oggetto.\\
+            La tomografia trova impiego soprattutto in medicina, ma anche in archeologia, geofisica, chimica e scienze dei materiali.
+            
+            \begin{comment}
+            <TODO questa parte iniziale non mi piace affattooolooolo>
+            infatti puoi inserire una descrizione più dettagliata prelevando la roba da questo libro:
+            https://books.google.it/books?id=ba9yAgAAQBAJ&pg=PA202&lpg=PA202&dq=hounsfield+radon&source=bl&ots=rx7UNFYyba&sig=cs2Q6B3sy-LOMMffco3cttyVhxM&hl=it&sa=X&ved=0ahUKEwirqqOKhIrQAhULtBQKHVKsCTAQ6AEIMDAD#v=onepage&q&f=false
+            \end{comment}
+            
+            \subsection{Breve storia}
+                \subsubsection{I limiti della radiografia convenzionale}
+                    \par
+                        Al fine di comprendere l'importanza della Tomografia Computerizzata, è importante comprendere le limitazioni imposte dalla radiografia convenzionale. Questa metodologia è sostanzialmente composta da una sorgente a raggi X, i quali vengono proiettati attraverso il corpo ed impressi su lastra radiografica bidimensionale. E’ essenzialmente il risultato dell’attenuazione media\cite{hounsfield-nobel-lecture} dei raggi dovuta alla composizione del materiale incontrato dalla sorgente alla pellicola. Nel caso in cui l’oggetto in esame sia il corpo umano, la quantità di attenuazione è direttamente proporzionale alla densità dei vari tessuti incontrati: i polmoni, contenendo aria, assorbono poca radiazione; le ossa, essendo molto dense, ne assorbono maggiormente.
+                        
+                        \begin{figure}[h]
+                            \centering
+                            \includegraphics[width=0.4\textwidth]{radiografia}
+                            \caption{Una radiografia al cranio - vista laterale.}
+                            \label{fig:skull}
+                        \end{figure}
+                    
+                        Dalla radiografia in \texttt{Figura \ref{fig:skull}}, è possibile distinguere solamente cinque vari livelli di densità. Partendo dal meno denso, possiamo visualizzare \textit{l'aria}, di colore nero; \textit{l'acqua o i tessuti molli}, che si visualizzano con un grigio chiaro; \textit{le ossa}, che presentano una colorazione tendente al bianco; \textit{il campione metallico} (L), di colore bianco.
+                        \begin{comment}
+                            <TODO accertati che sia un campione metallico>
+                        \end{comment}
+                        L’acqua ed i tessuti molli hanno circa lo stesso livello di attenuazione. Come si sarà notato dalla figura, sarebbe impossibile analizzare il cervello ed evidenziarne una eventuale patologia, poiché esso è rappresentato come una zona omogeneamente grigia. Ottenere un immagine del cervello mediante radiografia classica rimase una sfida sin dal periodo immediatamente successivo al 1985, anno in cui vennero scoperti i raggi X. Anche il grande scienziato ed inventore Thomas Edison agli inizi del '900 si cimentò senza successo nell'impresa, a causa delle grosse limitazioni che l'analisi imponeva.\cite{thomas-edison-brain} Il cervello è infatti composto da tessuti molli, racchiusi all’interno di uno scheletro denso che impedisce alla maggior parte della radiazione di penetrarli, inoltre fluttua a bagno in un liquido chiamato \textit{fluido celebro spinale} il quale fornisce nutrienti ed agisce come cuscino al fine di proteggere la materia grigia stessa. Questo tipo di analisi, si scoprì, essere totalmente inaccessibile alla radiografia convenzionale.
+                        
+                    \par
+                        Un radiogramma impone diversi limiti diagnostici. Il \textit{problema delle ombre} è una diretta conseguenza del fatto che le complesse strutture tridimensionali del corpo umano, nella radiografia, vengono impresse su lastra bidimensionale. Un tumore, ad esempio, se fosse celato da una struttura ad alta densità come le costole, potrebbe passare completamente inosservato alla diagnosi. Questo fu il problema che tormentò i radiologi sin dagli inizi del XX secolo e, come si vedrà nella sezione 1.1.2, fu la ragione che portò allo sviluppo delle prime forme di tomografia classica (non computerizzata).
+                        Un altro problema, come accennato precedentemente, deriva dal fatto che la radiografia convenzionale non consente la distinzione tra tessuti molli. Infine, la lastra radiografica risulta un mezzo intrinsecamente inadeguato al fine di registrare le differenze di intensità dovute all'attenuazione dei raggi X durante il passaggio attraverso il corpo.
+                    \par
+                        Il vero problema della radiografia convenzionale è dunque l'immensa perdita di informazione riscontrata in fase di acquisizione. Il \textit{problema delle ombre} verrà parzialmente risolto con lo sviluppo della tomografia convenzionale, l'analisi dei tessuti molli sarà invece possibile solamente con l'avvento della Tomografia Computerizzata (TC), che consentirà inoltre l'accurata misurazione dei valori d'assorbimento, riuscendo a differenziare la natura del materiale o del tessuto.
+                        
+                \subsubsection{La tomografia convenzionale}
+                    \par
+                        Per \textit{tomografia convenzionale} si intende l'ottenimento di un tomogramma senza l'ausilio di computazione. Questa tecnica venne completamente rimpiazzata con la Tomografia Computerizzata intorno al 1980.
+                        
+                    \par
+                        I primi studi risalgono al primo ventennio del 1900 e la tomografia convenzionale, curiosamente, venne indipendentemente scoperta più volte da diversi ricercatori sia Europei che Americani senza che questi condividessero materiale: all'epoca, i livelli di comunicazione non erano affatto sviluppati. Un pensiero espresso da Alessandro Vallebona, uno dei cinque grandi pionieri di questa metodologia, era il seguente: \textit{“quando un settore della scienza e della tecnica è maturo per progredire, per fare un passo avanti, il progresso avviene, a volte contemporaneamente oppure a breve distanza di tempo, promosso da persone diverse, anche in Paesi diversi”}\cite{vallebona-pensiero}.
+                        Non è infatti difficile recuperare manoscritti nei quali si rivendicano la paternità dell'opera e violazioni d'utilizzo dei brevetti\cite{vallebona-difesa}. Queste ricerche indipendenti, produssero differenti nomenclature generando molta confusione riguardo l'oggetto di studio. Solamente nel 1962, durante la \textit{International Commission of Radiologic Units and Measurements} (ICRU\footnote{\url{http://www.icru.org/}}), venne selezionata la nomenclatura “tomografia”, che venne presto adottata ovunque nel Mondo.
+                        
+                    \par
+                        Come accennato in sezione 1.1.1, i ricercatori del primo ventennio del ‘900 condivisero uno scopo comune: escogitare un sistema che permettesse la separazione delle ombre registrate quando complesse strutture come il corpo umano venivano impressionate su lastra radiografica. Furono offerte numerose soluzioni ed il metodo più convincente risultò la stratificazione dei tessuti del corpo. In questo modo, utilizzando la geometria proiettiva, il problema delle ombre poteva essere superato, nonostante gli ancora elevati livelli di radiazione richiesti dalla procedura.
+                        
+                        \begin{figure}[h]
+                            \centering
+                            \includegraphics[width=0.8\textwidth]{conventional}
+                            \caption{Principio di funzionamento della tomografia convenzionale.}
+                            \label{fig:conventional}
+                        \end{figure}
+                        
+                        Per poter eseguire la tomografia convenzionale senza computazione, in un puro sistema meccanico, due dei tre elementi (tubo, paziente e lastra) dovevano necessariamente muoversi in modo sincrono durante l’esposizione alla radiazione.
+                        Per poter meglio comprendere il principio di funzionamento, si osservi la \texttt{Figura \ref{fig:conventional}} nella quale si mostra come fosse possibile ottenere una singola slice del corpo basandosi esclusivamente sui principi della geometria proiettiva. In questo caso il corpo (al centro) viene mantenuto fermo, mentre tubo e lastra si muovono in modo sincrono ed opposto. Si può notare che solamente circa 1/10 della lunghezza del fascio AB attraversa effettivamente il piano di interesse; i restanti 9/10 attraversano il corpo collezionando informazione inutile, non voluta. Questa è la motivazione per cui, in questi tomogrammi, era facile riscontrare artefatti\cite{hounsfield-nobel-lecture}.
+
+                    \par
+                        André Edmund Marie Bocage, Alessandro Vallebona, Ziedses des Plantes, Gustav Grossmann e Jean Kieffer furono tra i primi ricercatori che contribuirono considerevolmente allo sviluppo di questa nuova metodologia. Bocage nel 1922 ottenne il primo brevetto; Vallebona realizzò diversi prototipi e contribuì alla letteratura con ben 370 pubblicazioni nelle scienze radiologiche\cite{vallebona-ricordo}; des Plantes è ritenuto il pioniere della sperimentazione; Grossmann contribuì all’analisi matematica del metodo e rese più snelli i progetti preesistenti; Kieffer fu il primo pioniere Americano, diede una descrizione esaustiva del suo dispositivo e alla matematica del sistema. I prototipi creati da questi pionieri vennero per lo più utilizzati a scopi di ricerca, l'utilizzo, se a fine clinico, non era affatto confortevole.
+
+                    \par
+                        Lo sviluppo del primo dispositivo clinico per la tomografia convenzionale, il Polytome, venne sviluppato a Parigi nel 1950. Le immagini ricavate da questo dispositivo stimolarono le ricerche in ambito clinico, inizialmente dagli Europei e successivamente dagli Americani (anni ‘60).
+                        
+                        \begin{figure}[h]
+                            \centering
+                            \includegraphics[width=0.5\textwidth]{polytome}
+                            \caption{L'Universal Polytome, sviluppato a Parigi dalla Massiot-Philips.}
+                            \label{fig:polytome}
+                        \end{figure}
+                    
+                        
+                        Le applicazioni più frequenti, riguardavano quelle parti del corpo in cui poteva essere presente un alto livello di contrasto, come il cranio. Queste immagini sezionali permettevano l’esplorazione dell’intricata rete ossea, tra cui i seni paranasali, la sella turcica\footnote{La sella turcica o sella turca costituisce la faccia superiore del corpo dell'osso sfenoide, un osso impari e mediano del neurocranio.} ed altre aree completamente inaccessibili alla radiografia convenzionale. Comparirono successivamente al Polytome diversi nuovi dispositivi che evidenziarono la necessità di ottenere un efficace imaging sezionale.
+                    \par
+                        E’ importante notare che la tomografia convenzionale non permise l’accesso all’imaging dei tessuti molli, un’immagine sezionale del cervello risulterà quindi possibile solo con l’avvento della Tomografia Computerizzata. Si può storicamente affermare che la tomografia convenzionale ha gettato le basi al di sopra delle quali si sono evolute le avanzate tecnologie di imaging sezionale computerizzato che oggi apprezziamo.
+                    
+                \subsubsection{Nascita della Tomografia Computerizzata}
+                    \par
+                        
+                        La nascita della Tomografia Computerizzata riflette l'evoluzione della tomografia classica. Il pensiero di Vallebona, citato nella sezione 1.1.2, ha validità anche in questo caso: tre ricercatori, Allan McLeod Cormack, William H. Oldendorf e Godfrey N. Hounsfield, indipendentemente, svilupparono i principi base della TC intorno al 1960. Cormack ed Hounsfield ricevettero il Premio Nobel nel 1979, Oldendorf fu invece vittima di una controversia\cite{nobel-debate} e non venne premiato. 
+                        Sia Cormack che Oldendorf ottennero prototipi funzionanti, ma l'ingegnere britannico Godfrey N. Hounsfield fu l'unico in grado di ottenere diverse realizzazioni commerciali di successo.
+                    \par
+                        Hounsfield lavorò dal 1951 per la EMI Ltd di Londra, periodo nel quale si interessò particolarmente ai computer e contribuì alla costruzione del primo computer a transistor in assoluto assemblato in Gran Bretagna\cite{housfield-autobiografia}. Successivamente, negli anni '60, egli concepì l’idea della Tomografia Computerizzata ed iniziò le prime sperimentazioni.
+                        Il primo prototipo era composto da un piatto (\texttt{Figura \ref{fig:prototype}}) al di sopra del quale erano posti degli oggetti test. Il piatto, durante la scansione, veniva traslato orizzontalmente per permettere al singolo fascio di poter raggiungere tutti gli oggetti. Al termine del procedimento, il piatto veniva fatto roteare di un grado, ed il procedimento veniva ripetuto.
+                        Il primo prototipo era composto da una scatola di piombo con un piccolo foro posto nella parte anteriore, all’interno della quale era presente un materiale radioattivo, l’Americium, capace di fornire una fonte costante, non particolarmente intensa, di raggi gamma. La radiazione fuoriusciva dal foro in singolo fascio collimato a configurazione pencil-beam. Il fascio collimato passava poi attraverso tutti gli oggetti mediante un movimento traslazionale, e l’informazione ricavata, l’attenuazione, veniva rilevata dai detectors posti nel lato opposto. Il processo di scansione durò ben nove giorni, la ricostruzione computerizzata degli oggetti richiese più di due ore di processamento. Questo fu un risultato molto importante, poiché dimostrò che la Tomografia Computerizzata era tecnologicamente e fisicamente possibile.
+                        
+                         \begin{figure}[h]
+                            \centering
+                            \includegraphics[width=0.5\textwidth]{first-prototype}
+                            \caption{Il primo prototipo realizzato da Hounsfield}
+                            \label{fig:prototype}
+                        \end{figure}
+                        
+                        Circa nello stesso periodo l'Ingegnere costruì il secondo prototipo, cambiò la sorgente di radiazione con un generatore di raggi X, che permise l'intensificazione del fascio.
+                        
+                        
+                        
+                        
+                \subsubsection{Evoluzione generazionale TC}
+            
+            \subsection{Architetture}
+                \subsubsection{Cone Beam}
+                \subsubsection{A Spirale}
+                \subsubsection{Ad Emissione}
+            
+            \subsection{Principi di funzionamento}
+                \subsubsection{Qualche semplice esempio}
+                \begin{comment}
+                    potresti parlare della macchina da corsa, vista frontale, laterale, posteriore etc.
+                \end{comment}
+                \subsubsection{Proiezione - Trasformata di Radon}
+                \subsubsection{Filtering}
+                \subsubsection{Ricostruzione - Antitrasformata di Radon}
+                    In questa sezione puoi pigliare l'introduzione di questo libro:
+                    \url{https://books.google.it/books?id=pqSNAgAAQBAJ&pg=PA35&lpg=PA35&dq=%22radiant+energy+apparatus+for+investigating+selected+areas+of+interior+objects+obscured+by+dense+material&source=bl&ots=tvcx6PeTbo&sig=IjYEBPukA9hr7Wrt9RTAekVzbjU&hl=it&sa=X&ved=0ahUKEwiS3JuF4Y7QAhUKbhQKHSMKCUoQ6AEIKjAD#v=onepage&q=%22radiant%20energy%20apparatus%20for%20investigating%20selected%20areas%20of%20interior%20objects%20obscured%20by%20dense%20material&f=false}
+                \subsubsection{Retroproiezione}
+            
+               
+                        
+    \part{Librerie Utilizzate}
+        \section{OpenRTK}
+            \subsection{Storia del progetto}
+                \par 
+                    Il progetto nacque nel Giugno 2010 quando i founder Simon Rit e Gregory Sharp discussero riguardo la scarsità di soluzioni open-source nell'ambito della Cone-Beam CT. Infatti, l'unica alternativa presente era una libreria chiamata Plastimatch, la quale poteva già effettuare retroproiezioni filtrate sia su CPU che su GPU, ma l'architettura del software non teneva conto dell'evoluzione verso nuove tipologie di algoritmi iterativi. Decidettero quindi di dar vita ad una nuova piattaforma basata su Insight ToolKit (ITK), una libreria di elaborazione delle immagini già famosa all'epoca.
+                \par
+                    Attualmente ( Agosto 2016 ) il Progetto viene mantenuto e sviluppato sulla piattaforma GitHub, ha circa 4000 commit e 20 sviluppatori attivi.
+            \subsection{Geometria}
+            \subsection{Formato Immagini}
+                \subsubsection{.mha}
+                \subsubsection{.mhd}
+            
+            
+        \section{SimpleITK}
+            \subsection{Storia del progetto}
+        
+    \part{Lavoro Svolto}
+        \section{Compilazione OpenRTK}
+            \subsection{Abilitazione Wrapping}
+        \section{Compilazione SimpleITK}
+            \subsection{Abilitazione Wrapping}
+        \section{RTK-Handler}
+            \subsection{Scopo}
+            \subsection{Architettura}
+            \subsection{Utilizzo}
+            \subsection{Estensione}
+            \subsection{Utilizzi futuri}
+            
+    \part{Risultati e Conclusioni}
+        \subsection{Risultati}
+        \subsection{Conclusioni}
+
+
+
+\newpage
+\begin{thebibliography}{1}
+    \bibitem{zeng-tomos}
+        Gengsheng, Z. L. (2010). Basic Principles of Tomography. In Springer (Ed.), \textit{Medical Image Reconstruction: A Conceptual Tutorial}.
+        
+    \bibitem{openrtk-website}
+        \url{http://www.openrtk.org/}
+    
+    \bibitem{itk-website}
+        \url{https://itk.org/}
+    
+    \bibitem{conventional-tomography}
+        Littleton, J.T. "Conventional Tomography". A History of the Radiological Sciences (PDF). American Roentgen Ray Society. Retrieved 11 January 2014.
+    
+    \bibitem{vallebona-ricordo}
+        Franco Bistolfi, Alessandro Vallebona 1899-1987. Ricordo di un grande radiologo e del suo contributo allo sviluppo delle scienze radiologiche (PDF), in Fisica in Medicina, nº 2, 2005, pp. 115-123.
+        
+    \bibitem{vallebona-pensiero}
+        Vallebona A. - Gli ottanta anni della radiologia medica in Liguria. Atti dell’Accademia Ligure di Scienze e Lettere, XXXI: 18-46,1974
+        
+    \bibitem{thomas-edison-brain}
+        \url{https://www.researchgate.net/publication/18576763_Thomas_Edison's_attempts_at_radiography_of_the_brain_1896}
+        
+    \bibitem{hounsfield-nobel-lecture}
+        Godfrey N. Hounsfield - Nobel Lecture, 8 December 1979
+        
+    \bibitem{vallebona-difesa}
+        \url{http://www.fisicamedica.it/museo_virtuale/02_sezioni/articoli/data/Vallebona%20difesa.pdf}
+        
+    \bibitem{nobel-debate}
+        Riddle of the Nobel debate - Science 04 Jan 1980: Vol. 207, Issue 4426, pp. 37-38
+        
+    \bibitem{hounsfield-autobiografia}
+        \url{https://www.nobelprize.org/nobel_prizes/medicine/laureates/1979/hounsfield-bio.html}
+        
+        
+    \end{thebibliography}
+\end{document}
