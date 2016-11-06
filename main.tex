@@ -12,6 +12,7 @@
 \usepackage{titling}
 \usepackage[font=small,labelfont=bf]{caption}
 \usepackage{verbatim}
+\usepackage{gensymb}
 
 \lstset{
             basicstyle=\ttfamily
@@ -156,22 +157,73 @@ Candidato: Danny Lessio}
                         Sia Cormack che Oldendorf ottennero prototipi funzionanti, ma l'ingegnere britannico Godfrey N. Hounsfield fu l'unico in grado di ottenere diverse realizzazioni commerciali di successo.
                     \par
                         Hounsfield lavorò dal 1951 per la EMI Ltd di Londra, periodo nel quale si interessò particolarmente ai computer e contribuì alla costruzione del primo computer a transistor in assoluto assemblato in Gran Bretagna\cite{housfield-autobiografia}. Successivamente, negli anni '60, egli concepì l’idea della Tomografia Computerizzata ed iniziò le prime sperimentazioni.
-                        Il primo prototipo era composto da un piatto (\texttt{Figura \ref{fig:prototype}}) al di sopra del quale erano posti degli oggetti test. Il piatto, durante la scansione, veniva traslato orizzontalmente per permettere al singolo fascio di poter raggiungere tutti gli oggetti. Al termine del procedimento, il piatto veniva fatto roteare di un grado, ed il procedimento veniva ripetuto.
-                        Il primo prototipo era composto da una scatola di piombo con un piccolo foro posto nella parte anteriore, all’interno della quale era presente un materiale radioattivo, l’Americium, capace di fornire una fonte costante, non particolarmente intensa, di raggi gamma. La radiazione fuoriusciva dal foro in singolo fascio collimato a configurazione pencil-beam. Il fascio collimato passava poi attraverso tutti gli oggetti mediante un movimento traslazionale, e l’informazione ricavata, l’attenuazione, veniva rilevata dai detectors posti nel lato opposto. Il processo di scansione durò ben nove giorni, la ricostruzione computerizzata degli oggetti richiese più di due ore di processamento. Questo fu un risultato molto importante, poiché dimostrò che la Tomografia Computerizzata era tecnologicamente e fisicamente possibile.
                         
-                         \begin{figure}[h]
+                        \begin{figure}[h]
                             \centering
                             \includegraphics[width=0.5\textwidth]{first-prototype}
                             \caption{Il primo prototipo realizzato da Hounsfield}
                             \label{fig:prototype}
                         \end{figure}
                         
-                        Circa nello stesso periodo l'Ingegnere costruì il secondo prototipo, cambiò la sorgente di radiazione con un generatore di raggi X, che permise l'intensificazione del fascio.
+                        Il primo prototipo era composto da una scatola di piombo con un piccolo foro posto nella parte anteriore, all’interno della quale era presente un materiale radioattivo, l’Americium, capace di fornire una fonte costante, non particolarmente intensa, di raggi gamma. La radiazione fuoriusciva dal foro in singolo fascio collimato a configurazione pencil-beam. Il piatto visibile in \texttt{Figura \ref{fig:prototype}} veniva traslato orizzontalmente per permettere al singolo fascio di poter raggiungere tutti gli oggetti. Al termine della traslazione, il piatto veniva fatto roteare di un grado, ed il procedimento veniva ripetuto. I livelli d'attenuazione erano letti dai detector opposti alla sorgente. Il processo di scansione durò ben nove giorni, la ricostruzione\footnote{<TODO verrà trattata laggiu>} computerizzata degli oggetti richiese più di due ore di processamento. Questo fu un risultato molto importante, poiché dimostrò che la Tomografia Computerizzata era tecnologicamente e fisicamente possibile.
+                       
+                        Hounsfield ed i suoi collaboratori, mantenendo la stessa geometria a rotazione-traslazione, continuarono lo sviluppo dei prototipi diminuendo sempre più il tempo di acquisizione. Si resero presto conto che l'avanzamento tecnologico avrebbe permesso l'analisi dei tessuti molli, ma non furono ancora certi che questo avrebbe permesso la localizzazione spaziale dei tumori. A verifica di ciò venne creato il primo dispositivo ad utilizzo clinico, molto più veloce e sofisticato rispetto ai prototipi precedenti, dedicato alla sola analisi del cranio, che doveva rimanere estremamente fermo durante la scansione.
                         
+                        \begin{figure}[h]
+                            \centering
+                            \includegraphics[width=0.5\textwidth]{clinical}
+                            \caption{Il primo dispositivo ad utilizzo clinico installato all'Atkinson Morley’s Hospital di Londra.}
+                            \label{fig:clinical}
+                        \end{figure}
                         
+                        Nel 1972 la prima paziente in assoluto fu una donna, il cui cervello si pensava presentasse anomalie. La prima immagine clinica ottenuta con il dispositivo in \texttt{Figura \ref{fig:clinical}} rivelò in chiaro ed inconfondibile dettaglio una cisti circolare nera situata nel lobo frontale della paziente, che fu successivamente operata con successo. Furono analizzati molti altri pazienti, e diventò palese che la macchina risultava perfettamente in grado di effettuare con accuratezza sia l'analisi dei tessuti molli sia la distinzione tra tessuti sani e malati\cite{hounsfield-nobel-lecture}.
+                        Per la prima volta nella storia, i limiti imposti dalla radiografia convenzionale visti in sezione 1.1.1 risultarono completamente superati e si aprì la strada ad una rapida innovazione che coinvolse la riduzione dei tempi di esposizione e l'analisi di tutte le parti del corpo. Il team coordinato da Hounsfield già qualche anno dopo, riuscì a costruire macchinari sempre più complessi, con un tempo di acquisizione prossimo ai tre secondi.
                         
+                \subsubsection{Evoluzione generazionale CT}
+                    \par
+                        Per evoluzione generazionale si intende la sequenza temporale nel quale un particolare tipo di CT scanner, avente una ben precisa disposizione dei componenti e specifiche caratteristiche nei movimenti meccanici di base, è stato introdotto nel mercato. E’ importante notare, che al crescere del numero di generazione non crescono necessariamente le performance del sistema.
+                    
+                    \bigskip
+                    \par
+                        \textbf{Scanner di prima generazione.} Lo scanner riportato in figura XXX appartiene alla prima generazione. La sorgente veniva collimata in un raggio pencil-beam direzionato ad un singolo detector allineato alla sorgente era posizionato all’altro lato del paziente. Una singola proiezione veniva ottenuta muovendo il tubo sorgente ed il detector in una traslazione. Per poter ottenere la successiva proiezione, l’intera struttura ruotava di 1\degree e veniva traslata nella direzione opposta. Questo processo, di rotazione e traslazione, doveva essere ripetuto fino all’ottenimento di 180 proiezioni. Le prime versioni richiedevano circa 4.5 minuti per poter portare a termine la scansione, ed erano limitate a quelle parti del corpo dove il movimento del paziente poteva essere controllato (testa). Le immagini presentavano una risoluzione bassa.
                         
-                \subsubsection{Evoluzione generazionale TC}
+                        \begin{figure}[h]
+                            \centering
+                            \includegraphics[width=0.4\textwidth]{first-generation}
+                            \caption{Rappresentazione schematica di uno scanner di prima generazione.}
+                            \label{fig:third-generation}
+                        \end{figure}
+                        
+                    \bigskip
+                    \par
+                        \textbf{Scanner di seconda generazione.} Il maggiore sforzo per il miglioramento fu concentrato nella riduzione dei tempi di acquisizione, fino al punto di poter ottenere l’imaging di sezioni come il tronco. Aggiungendo detectors disposti angolarmente, diverse proiezioni potevano essere ottenute in una singola traslazione. Una delle prime applicazioni, ad esempo, che presentava 3 detectors con displacement di 1\degree, poteva effettuare 60 traslazioni anzichè 180. Questo era dovuto al fatto che ciascun detector vedeva la sorgente ad un angolo differente, ottenendo in una singola traslazione ben 3 proiezioni. Il sistema, una volta terminata la traslazione, poteva roteare di 3° ed ottenere la nuova proiezione. I tempi di scansione erano quindi ridotti di un terzo. 
+                    
+                    \bigskip
+                    \par
+                        \textbf{Scanner di terza generazione.} In questi scanner, la sorgente è collimata in una struttura a ventaglio (fan-beam) diretta verso i detector disposti ad arco. Durante la scansione, il tubo e l’array di detector ruotano lungo il paziente e differenti proiezioni sono attenute durante la rotazione facendo pulsare la sorgente a raggi X o campionando i detector ad un elevato rate. Il sistema puramente rotazionale ha permesso l’accesso a sorgenti a più elevata potenza, permettendo una notevole riduzione dei tempi d’acquisizione. Un aspetto di questa geometria è che i raggi in una singola proiezione sono divergenti anziché paralleli. La divergenza dei raggi richiede qualche modifica all’interno degli algoritmi di ricostruzione. Tutti gli scanner CT odierni sono basati su modifiche di questo design. I tempi di acquisizione sono dell’ordine di pochi secondi e le recenti versioni riescono a scendere sotto al secondo.
+                        
+                        \begin{figure}[h]
+                            \centering
+                            \includegraphics[width=0.5\textwidth]{third-generation}
+                            \caption{Rappresentazione schematica di uno scanner di terza generazione.}
+                            \label{fig:third-generation}
+                        \end{figure}
+
+                    \bigskip
+                    \par
+                        \textbf{Scanner di quarta generazione.} Questo particolare design si evolse simultaneamente alla terza generazione. In questo particolare caso, viene fatta roteare solo la sorgente e si ha un intero anello composto da detector. Inizialmente questi dispositivi avevano 600 detector, successivamente arrivarono fino a 4800, con tempi di acquisizione comparabili agli scanner di terza generazione. Questo design ha presentato diverse limitazioni, una è dovuta all’ inefficiente utilizzo dei detector (meno di ¼ è effettivamente utilizzato ad ogni istante della scansione) e l’altra è dovuta ad una maggior suscettibilità alla presenza di artefatti (dovuti allo scattering). Per queste ragioni questi scanner non sono più commercialmente disponibili. Una limitazione di questa tipologia di design è la minor efficienza nell’utilizzo dei detector solo meno di ¼ è effettivamente utilizzato ad ogni punto durante la scansione. 
+                        
+                    \bigskip
+                    \par
+                        \textbf{Scanner ad elica.} La tecnica coinvolge la continua acquisizione di proiezioni attraverso l’intero volume del paziente. La procedura viene eseguita roteando continuamente la sorgente ed i detector accompagnando il movimento del paziente in una traslazione all’interno del gantry\footnote{TODO footnote gantry}. Per poter ottenere un applicazione funzionante di questo tipo sono necessarie tre tecnologie: la \textit{Slip-Ring Technology}\footnote{Architettura composta da anelli conduttivi elettromeccanici che permettono al frame di scansione di poter roteare continuamente, senza doversi preoccupare dei cavi.}, tubi a raggi X ad elevata energia ed algoritmi di interpolazione che gestiscano le proiezioni non complanari. E’ una tecnologia molto importante perchè per la prima volta nella storia permette la scansione dell’intero corpo del paziente in tempi brevissimi.
+
+                        \begin{figure}[h]
+                            \centering
+                            \includegraphics[width=0.5\textwidth]{helix}
+                            \caption{Rappresentazione schematica di uno scanner ad elica.}
+                            \label{fig:helix}
+                        \end{figure}
+
             
             \subsection{Architetture}
                 \subsubsection{Cone Beam}
