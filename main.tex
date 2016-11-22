@@ -1,4 +1,5 @@
-\documentclass[a4paper,11pt, oneside]{article}
+\documentclass[a4paper,12pt, doubleside]{report}
+\usepackage[top=1in, bottom=1in, left=1.30in, right=1.30in]{geometry}
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
 \usepackage{lmodern}
@@ -20,18 +21,15 @@
 
 \pretitle{%
   \begin{center}
-  \LARGE
+  \Large
+  \vspace*{-1.5in}
   \includegraphics[]{logo_unife}\\[\bigskipamount]
 }
 \posttitle{\end{center}}
 
 \title{\textbf{UNIVERSITÀ DEGLI STUDI DI FERRARA\\}
 \bigskip
-Corso di Laurea in Informatica\\
-\bigskip
-\bigskip
-\bigskip
-\textit{Ricostruzione tomografica mediante libreria OpenRTK e creazione di un package Python per semplificarne l'utilizzo.\\}
+\textit{Corso di Laurea in Informatica}\\
 \bigskip
 \bigskip
 \bigskip
@@ -39,10 +37,23 @@ Corso di Laurea in Informatica\\
 \bigskip
 \bigskip
 \bigskip
+\textit{\textbf{Impiego di Python e OpenRTK nella ricostruzione tomografica Cone-Beam CT.\\}}
 \bigskip
 \bigskip
 \bigskip
 \bigskip
+\bigskip
+\bigskip
+\bigskip
+\bigskip
+\bigskip
+\bigskip
+\textbf{\underline{Relatore:}}
+\hfill
+\textbf{\underline{Laureando:}\thinspace\thinspace\thinspace} \\
+\textit{Prof. Giovanni Di Domenico}
+\hfill
+\textit{Danny Lessio}
 \bigskip
 \bigskip
 \bigskip
@@ -53,8 +64,6 @@ Corso di Laurea in Informatica\\
 \bigskip
 \bigskip
 }
-\author{Relatore: Giovanni Di Domenico\and
-Candidato: Danny Lessio}
 
 
 \date{Anno Accademico 2015 - 2016}
@@ -62,21 +71,8 @@ Candidato: Danny Lessio}
 
     \maketitle
     \newpage
-    
-    \part*{Sommario}
-        \par
-        	< 	
-        	    <TODO>
-        		Equivale all'abstract presente negli articoli scientifici.
-        		In pochi paragrafi deve esplicitare i contenuti della tesi, facendo riferimento alle parole chiave inserite nel titolo.
-        
-        		Il lettore deve capire dal sommario l'ambito di applicazione del progetto svolto, la problematica esaminata, i metodi e gli algoritmi utilizzati per realizzare il progetto e risolvere gli eventuali problemi incontrati, i risultati ottenuti.
-        
-        		Dalla lettura del sommario il lettore deve comprendere se, per i suoi scopi, può essere utile proseguire o meno la lettura, ovvero se gli argomenti descritti rispondono alle sue necessità. Pensiamo, ad esempio, si pensi a un lettore che sia un tesista che si trova ad affrontare un progetto su temi o ambiti di applicazione collegati: vale la pena leggere questa tesi? 
-        	>
-    
-    \newpage
-    \part*{Introduzione}
+
+    \chapter*{Introduzione}
         \par
             <TODO>
             <
@@ -92,11 +88,6 @@ Candidato: Danny Lessio}
         
         		Spesso l'introduzione è l'ultimo capitolo che viene scritto, sebbene sia il rpimo che si incontra nella lettura della tesi.
         	>
-    
-    \newpage
-    \tableofcontents
-    
-    \part{Presentazione}
         \par
             Questa tesi tratta lo studio e l'utilizzo della libreria OpenRTK \cite{openrtk-website} basata su Insight Toolkit (ITK).\cite{itk-website}, la quale fornisce sia un insieme di tools basilari per poter eseguire efficientemente ricostruzioni tomografiche ( filtering, forward projection, backprojection ), sia un set di strumenti per poter eseguire il calcolo a livello multithreaded, sia su CPU che su GPU. Presenta inoltre delle interfacce I/O calibrate per un insieme limitato di CAT scanner attualmente in commercio.
     
@@ -106,18 +97,19 @@ Candidato: Danny Lessio}
     
         \par
             [TODO nella sezione X si fa Y etc bla di blabla, il secondo di blabla]
-          
-        \newpage
+    
+    \newpage
+    \tableofcontents
+    \newpage
+    \chapter{Presentazione}
         \section{Breve Storia TAC}
             \par
                 Per tomografia (dal greco \textit{témnó}, tagliare, o \textit{tómos}, nel senso di "strato", e \textit{gráphó}, scrivere) si intende la tecnica spettroscopica mirata alla rappresentazione a strati di un oggetto, in contrapposizione alla radiografia convenzionale la quale dispone sulla superficie bidimensionale della lastra tutto lo spessore del corpo o oggetto.\\
                 La tomografia trova impiego soprattutto in medicina, ma anche in archeologia, geofisica, chimica e scienze dei materiali.
                 
-                \begin{comment}
-                <TODO questa parte iniziale non mi piace affattooolooolo>
+                <TODO questa parte iniziale non mi piace affatto>
                 infatti puoi inserire una descrizione più dettagliata prelevando la roba da questo libro:
-                https://books.google.it/books?id=ba9yAgAAQBAJ&pg=PA202&lpg=PA202&dq=hounsfield+radon&source=bl&ots=rx7UNFYyba&sig=cs2Q6B3sy-LOMMffco3cttyVhxM&hl=it&sa=X&ved=0ahUKEwirqqOKhIrQAhULtBQKHVKsCTAQ6AEIMDAD#v=onepage&q&f=false
-                \end{comment}
+                \url{https://books.google.it/books?id=ba9yAgAAQBAJ&pg=PA202&lpg=PA202&dq=hounsfield+radon&source=bl&ots=rx7UNFYyba&sig=cs2Q6B3sy-LOMMffco3cttyVhxM&hl=it&sa=X&ved=0ahUKEwirqqOKhIrQAhULtBQKHVKsCTAQ6AEIMDAD#v=onepage&q&f=false}
                 
                
             \subsection{Limiti della Radiografia Convenzionale}
@@ -133,10 +125,10 @@ Candidato: Danny Lessio}
                         
                     Dalla radiografia in \texttt{Figura \ref{fig:skull}}, è possibile distinguere solamente cinque vari livelli di densità. Partendo dal meno denso, si visualizza \textit{l'aria}, di colore nero; \textit{l'acqua o i tessuti molli}, che si visualizzano con un grigio chiaro; \textit{il grasso}, evidenziato con un colore grigio scuro; \textit{le ossa}, che presentano una colorazione tendente al bianco; \textit{il campione metallico} (L), di colore bianco.
                             
-                    \begin{comment}
-                        <TODO accertati che sia un campione metallico>
+                    
+                        <ASK> <TODO accertati che sia un campione metallico>
                         <TODO spiega cosa sono i tessuti molli>
-                    \end{comment}
+                   
                             
                 \par 
                     L’acqua ed i tessuti molli possiedono circa la medesima densità. Come si sarà notato in figura, è impossibile analizzare il cervello ed evidenziarne un'eventuale patologia, poiché esso è rappresentato come una zona omogeneamente grigia. L'ottenimento di un'immagine del cervello mediante radiografia classica rimase una sfida sin dal periodo immediatamente successivo al 1985, anno in cui vennero scoperti i raggi X. Anche il grande scienziato ed inventore Thomas Edison agli inizi del '900 si cimentò senza successo nell'impresa, a causa delle grosse limitazioni che l'analisi imponeva.\cite{thomas-edison-brain} Il cervello è infatti composto da tessuti molli, racchiusi all’interno di uno scheletro denso che impedisce alla maggior parte della radiazione di penetrarli, inoltre fluttua a bagno in un liquido chiamato \textit{fluido celebro spinale\footnote{Liquido che fornisce nutrienti ed agisce come cuscino al fine di proteggere la materia grigia stessa}} il che rende ancor più ardua l'impresa. Questo tipo di analisi, si scoprì, essere totalmente inaccessibile alla radiografia convenzionale.
@@ -201,7 +193,7 @@ Candidato: Danny Lessio}
                         \label{fig:prototype}
                     \end{figure}
                             
-                    Il primo prototipo era composto da una scatola di piombo con un piccolo foro posto nella parte anteriore, all’interno della quale era presente un materiale radioattivo, l’Americium, capace di fornire una fonte costante, non particolarmente intensa, di raggi gamma. La radiazione fuoriusciva dal foro in singolo fascio collimato a configurazione pencil-beam. Il piatto visibile in \texttt{Figura \ref{fig:prototype}} veniva traslato orizzontalmente per permettere al singolo fascio di poter raggiungere tutti gli oggetti. Al termine della traslazione, il piatto veniva fatto roteare di 1\degree, ed il procedimento veniva ripetuto fino all'ottenimento di 180 <TODO spiega perchè 180> proiezioni. I livelli d'attenuazione erano letti dal signolo detector opposto alla sorgente. Il processo di scansione durò ben nove giorni, la ricostruzione\footnote{<TODO verrà trattata laggiu>} computerizzata degli oggetti richiese più di due ore di processamento. Questo fu un risultato molto importante, poiché dimostrò che la Tomografia Computerizzata era tecnologicamente e fisicamente possibile.
+                    Il primo prototipo era composto da una scatola di piombo con un piccolo foro posto nella parte anteriore, all’interno della quale era presente un materiale radioattivo, l’Americium, capace di fornire una fonte costante, non particolarmente intensa, di raggi gamma. La radiazione fuoriusciva dal foro in singolo fascio collimato a configurazione pencil-beam. Il piatto visibile in \texttt{Figura \ref{fig:prototype}} veniva traslato orizzontalmente per permettere al singolo fascio di poter raggiungere tutti gli oggetti. Al termine della traslazione, il piatto veniva fatto roteare di 1\degree, ed il procedimento veniva ripetuto fino all'ottenimento di 180 <ASK accertati d'aver capito bene, cone beam? perchè 360?> <TODO spiega perchè 180> proiezioni. I livelli d'attenuazione erano letti dal signolo detector opposto alla sorgente. Il processo di scansione durò ben nove giorni, la ricostruzione\footnote{<TODO verrà trattata laggiu>} computerizzata degli oggetti richiese più di due ore di processamento. Questo fu un risultato molto importante, poiché dimostrò che la Tomografia Computerizzata era tecnologicamente e fisicamente possibile.
                     Hounsfield ed i suoi collaboratori, mantenendo la stessa geometria a rotazione-traslazione, continuarono lo sviluppo dei prototipi diminuendo sempre più il tempo di acquisizione. Si resero presto conto che l'avanzamento tecnologico avrebbe permesso l'analisi dei tessuti molli, ma non furono ancora certi che questo avrebbe permesso la localizzazione spaziale dei tumori. A verifica di ciò venne creato il primo dispositivo ad utilizzo clinico, molto più veloce e sofisticato rispetto ai prototipi precedenti, dedicato alla sola analisi del cranio, che doveva rimanere estremamente fermo durante la scansione.
                             
                     \begin{figure}[h]
@@ -285,7 +277,7 @@ Candidato: Danny Lessio}
                 
             \subsection{Geometria}
                 \par
-                    <DIDO> <TODO>
+                    <ASK come è composta veramente? necessito dello standard IEC? devo creare delle immagini che illustrino la configurazione geometrica?> <TODO>
                     RTK necessita di informazioni relative alla geometria di acquisizione per poter correttamente ricostruire un set di proiezioni. L'unica geometria configurabile è \texttt{ ThreeDCircularProjectionGeometry}, implementato come classe in RTK.
                     Lo scopo di questa classe è quella di definire un set di proiezioni 2D, acquisite mediante un detector bidimensionale lungo una traiettoria circolare. La descizione della geometria è basata nello standard internazionale IEC 61217 che è stato progettato per dispositivi cone-beam su sistemi isocentrici. Il sistema a coordinate fisse di RTK ed il sistema di coordinate fisse dell'IEC 61217 sono esattamente eguali. 
                     
@@ -315,8 +307,9 @@ Candidato: Danny Lessio}
         \section{Linguaggio Python}
             
         \section{Normalizzazione delle Proiezioni}
+            \label{sec:normalizzation}
             \par
-                L'intensità dei pixel componenti una proiezione, diretto risultato d'acquisizione da parte del detecor, è direttamente proporzionale all'intensità della sorgente. Gli algoritmi di ricostruzione richiedono, per ogni proiezione, l'informazione relativa alla somma dei coefficienti di attenuazione lineare degli n voxel dell'oggetto attraversati durante l'acquisizione, informazione indipendente dall'intensità del fascio sorgente. La \textit{Normalizzazione dello Stack} non è altro che il processo di ottenimento della somma dei coefficienti di attenuazione a partire dalla rilevazione del detector.
+                L'intensità dei pixel componenti una proiezione, diretto risultato d'acquisizione da parte del detector, è direttamente proporzionale all'intensità della sorgente. Gli algoritmi di ricostruzione richiedono, per ogni proiezione, l'informazione relativa alla somma dei coefficienti di attenuazione lineare degli n voxel dell'oggetto attraversati durante l'acquisizione, informazione indipendente dall'intensità del fascio sorgente. La \textit{Normalizzazione dello Stack} non è altro che il processo di ottenimento della somma dei coefficienti di attenuazione a partire dalla rilevazione del detector.
             \par
                 Per poter meglio comprendere gli effetti di questo procedimento, si osservi il seguente esempio:
                 
@@ -324,14 +317,15 @@ Candidato: Danny Lessio}
                     \centering
                     \includegraphics[width=0.7\textwidth]{normalization}
                     \caption{Effetti della procedura di normalizzazione. Immagine a sinistra: non normalizzata. Immagine a destra: normalizzata.}
-                    \label{fig:skull}
+                    \label{fig:skull-phantom}
                 \end{figure}
                 
                 L'immagine a sinistra è la proiezione numero 333 su 641 acquisita dal detector. Come si può notare, l'oggetto presenta una colorazione molto scura
-                <DIDO> <TODO>
+                <ASK perchè l'oggetto presenta una colorazione scura?> <TODO>
                 
             
             \subsection{Aspetto Matematico}
+                \label{sub:norm-math}
                 \par
                     Le proiezioni appartenenti ad uno Stack, essendo il diretto risultato rilevato dal detector in fase di acquisizione, contengono l'informazione relativa all'attenuazione del fascio dovuta al passaggio attraverso il corpo. Ogni pixel di ciascuna proiezione (ottenuta ad un preciso angolo di acquisizione) registra l'intensità attenuata I, la quale è governata dalla legge di Lambert-Beer\cite{lambert-beer}:
 
@@ -342,7 +336,6 @@ Candidato: Danny Lessio}
                     Dove:
                     \begin{itemize}
                       \item \texttt{I} = Intensità rilevata (attenuata).
-                      \item \texttt{Io} = Intensità della sorgente (non attenuata).
                       \item \texttt{$ (\mu1 + \mu2 + ... + \mu n) $} = Somma dei coefficienti di attenuazione lineare appartenenti ad n voxel incontrati.
                     \end{itemize}
                     
@@ -352,8 +345,6 @@ Candidato: Danny Lessio}
                     \begin{equation} \label{eq:normalization}
                         (\mu1 + \mu2 + ... + \mu n) = - \log_e{(I/Io)}
                     \end{equation}
-                    
-                    <DIDO essere sicuri che il "-" appartenga alla legge di beer> <TODO>
                     
                     Questo processo viene definito Normalizzazione delle proiezioni.
                 
@@ -380,7 +371,7 @@ Candidato: Danny Lessio}
                     
                     
                                   
-    \part{Sviluppo del Progetto}
+    \chapter{Sviluppo del Progetto}
         \section{Obiettivo}
             <TODO>
             Lo scopo principale del progetto riguarda la comprensione di OpenRTK come poter ottenere da questo una ricostruzione delle proiezioni a disposizione.
@@ -388,10 +379,12 @@ Candidato: Danny Lessio}
          
         \section{Gli Stack di Proiezione a disposizione}
             <TODO>
+            <ASK descrivo anche la conversione da .RAW ad .MHA? questo implica una descrizione approfondita di imagej?>
             La Facoltà ha messo a disposizione una decina di stack di proiezione, i quali presentavano le medesime caratteristiche. Originariamente composte in formato .RAW, sono stati convertiti mediante un estensione di ImageJ in immagini .MHA, per poterne favorire la lettura da parte di RTK. Uno stack era inoltre accompagnato da informazioni aggiuntive sull'apparato di acquisizione (SID, SDD, etc) inserite in un semplice file di testo. Per ogni proiezione appartenente ad un particolare stack era inoltre presente un file in formato .csv contenente informazioni riguardanti il preciso angolo di acquisizione, eventuali offset e l'intensità della sorgente non attenuata.
             Tutte le distanze erano espresse in millimetri.
             
             \subsection{Informazioni sull'acquisizione}
+                \label{sub:acq_file}
                 \par
                     Queste informazioni erano presenti su un file di testo esterno, in quanto riguardano esclusivamente l'apparato di acquisizione. 
                     
@@ -405,7 +398,7 @@ Candidato: Danny Lessio}
             
             \subsection{Composizione File .csv}
                 \label{sub:csv}
-                <DIDO> <TODO>
+                <ASK accertati iso u iso v> <TODO>
                 \par
                     Le proiezioni a nostra disposizione erano affiancate ad un file .csv il quale, per ogni riga, conteneva le seguenti informazioni:
                     \begin{lstlisting}[language=bash, frame=bt]
@@ -439,8 +432,9 @@ Candidato: Danny Lessio}
                     
                     Le prime 4 informazioni verranno utilizzate al fine di generare il file di geometria per RTK. L'ultima informazione (Io) verrà utilizzata per effettuare la normalizzazione delle proiezioni. Il numero di righe del file .csv è pari al numero di proiezioni esistenti nello Stack.
                     
-                    
-                
+            \subsection{Composizione Stack .mha} 
+                <TODO>
+                <ASK sono necessari tutti i token?>
           
             
         \section{Configurazione OpenRTK e SimpleRTK}
@@ -584,6 +578,7 @@ $ [sudo] pip install SimpleITK
             
         
         \section{Lettura informazioni da file .csv}
+            \label{sec:lettura-csv}
             Al fine di poter leggere le informazioni relative ad uno Stack di proiezione inserite nel file .csv descritto nella sottosezione \ref{sub:csv} si è inizialmente creata una classe Python che potesse ospitare i file estratti:
             
             \begin{lstlisting}[language=python, frame=bt]
@@ -640,32 +635,214 @@ for row in csv:
             E' opportuno ricordare che in Python l'indicizzazione delle liste comincia dal numero 0, dunque la 1\degree proiezione è identificata dall'indice 0 e così via.
             
         \section{Generazione Geometria .xml di RTK}
-            Come specificato in sezione XXXX <TODO> RTK necessita di una descrizione geometrica relativa all'apparato di acquisizione. Questa configurazione è generabile mendiante il wrapper SimpleRTK e salvabile in un file .xml, che verrà successivamente letto dagli eseguibili di ricostruzione forniti da RTK.
-            
-            <TODO descrivi il solo procedimento di RTK-handler>
+            \par
+                Come specificato in sezione XXXX <TODO> RTK necessita di una descrizione geometrica relativa all'apparato di acquisizione. Questa configurazione è generabile mendiante il wrapper SimpleRTK ed è esportabile in un file .xml, che verrà successivamente letto dagli eseguibili di ricostruzione forniti da RTK.
+                
+            \subsection{ThreeDCircularProjectionGeometry()}
+                \par
+                    SimpleRTK fornisce una classe chiamata \texttt{ThreeDCircularProjectionGeometry()} la quale permette la descrizione della geometria. SimpleRTK inoltre fornisce un'altra classe chiamata \texttt{hreeDCircularProjectionGeometryXMLFileWriter()} che fornisce un'interfaccia per la scrittura di un'istanza di della prima classe su file .xml.
+                
+                    La classe \texttt{ThreeDCircularProjectionGeometry()} è fornita di un metodo chiamato \texttt{AddProjection()} il quale organizza le informazioni relative ad una singola proiezione.
+                    Questi parametri sono richiesti e fondamentali:
+                    
+                    \begin{itemize}
+                        \item SID
+                        \item SDD
+                        \item angle
+                        \item proj\textunderscore offset\textunderscore x
+                        \item proj\textunderscore offset\textunderscore y
+                    \end{itemize}
+                \par
+                    SID ed SDD sono forniti all'interno del file di descrizione associato ad ogni Stack di proiezione a disposizione. \texttt{angle} viene fornito all'interno del file .csv per ogni proiezione. 
+                    proj\textunderscore offset\textunderscore x e proj\textunderscore offset\textunderscore y sono stati precedentemente descritti in sezione <TODO> ed il loro calcolo necessita delle informazioni Pixel Detector Size in entrambe le direzioni (reperibili all'interno del file di descrizione esterno) e delle informazioni iso\textunderscore u ed iso\textunderscore v all'interno del file csv.
+                    
+                    La prima operazione consiste nel popolare una lista \texttt{proj\textunderscore obj\textunderscore list} di oggetti Projection mediante la procedura indicata in sezione \ref{sec:lettura-csv}.
+                    Iterando su questa lista si procede, mediante un ciclo for, al calcolo dei valori proj\textunderscore offset\textunderscore x, proj\textunderscore offset\textunderscore y e si popola l'istanza della classe ThreeDCircularProjectionGeometry() mediante il metodo \texttt{AddProjection()}:
+                
+                    \begin{lstlisting}[language=python, frame=bt]
+geometry = sirtk.ThreeDCircularProjectionGeometry()
+
+for p in proj_obj_list:
+    proj_offset_x = - p.iso_u * pix_size_u
+    proj_offset_y = - p.iso_v * pix_size_v
+
+    geometry.AddProjection(
+        source_to_isocenter_distance,
+        source_to_detector_distance,
+        p.angle,
+        proj_offset_x,
+        proj_offset_y,
+    )
+                    \end{lstlisting}
+                sirtk è un'alias per SimpleRTK, in fase di import è stato eseguito:
+                \begin{lstlisting}[language=python, frame=bt]
+import SimpleRTK as sirtk
+                \end{lstlisting}
+                
         
+            \subsection{Calcolo proj\textunderscore offset \textunderscore x/y}
+                <ASK accertati proj offset x y>
+                <TODO descrivi qui il calcolo proj offset x y? magari nella Presentazione puoi solo spiegare a cosa si riferiscono, mentre questo calcolo riguarda il fatto che stiamo trattando con immagini .mha aventi origine in basso a sinistra>
+                
+            \subsection{Scrittura su file .xml}
+                \par 
+                    Una volta terminata la popolazione dell'istanza ThreeDCircularProjectionGeometry() è possibile generare il file .xml grazie alla classe ThreeDCircularProjectionGeometryXMLFileWriter() come segue:
+                    \begin{lstlisting}[language=python, frame=bt]
+gw = sirtk.ThreeDCircularProjectionGeometryXMLFileWriter()
+gw.SetFileName( geometry.xml )
+gw.Execute( geometry )
+                    \end{lstlisting}
+                    Il metodo Execute() si occupa interamente della generazione. Il file generato, geometry.xml, verrà successivamente utilizzato nei file binari di ricostruzione forniti da RTK.
         
         \section{Normalizzazione degli Stack a disposizione}
-            
+            \label{sec:norm-disp}
             \par
-                Gli Stack di proiezione a disposizione sono affiancati ad un file .csv il quale contiene l'informazione \texttt{Io} per ogni proiezione componente lo Stack. che è stata fisicamente registrata durante la fase di acquisizione. Il processo di approssimazione non è quindi necessario.
+                RTK legge lo stack di proiezione meniante una classe chiamata ProjectionsReader() \cite{projections-reader}. Esso fornisce supporto di approssimazione \texttt{Io} (si veda Sottosezione \ref{sub:io}) solo per alcuni formati: .his (Elekta Synergy), .hnd (Varian OBI), .edf (ESRF), .XRad\footnote{Tra parentesi sono indicati gli scanner commerciali che producono Stack di proiezione aventi il formato indicato.}. Per tutti gli altri formati supportati da ITK, l'approssimazione \texttt{Io} non è supportata.
+            \par    
+                Gli Stack di proiezione a disposizione, essendo in formato .mha, devono necessariamente essere normalizzati manualmente (ottenendo l'informazione \texttt{Io} da file .csv) prima di poter essere letti da un qualunque applicativo di ricostruzione fornito da RTK.
+                La procedura richiesta è la medesima descritta in Sezione \ref{sec:normalizzation} e si compone in queste fasi:
+                \begin{enumerate}
+                    \item Lettura \texttt{Io} da file .csv
+                    \item Lettura Stack di proiezione
+                    \item Estrazione di una proiezione dallo Stack
+                    \item Normalizzazione della singola proiezione
+                    \item Composizione di uno Stack .mha normalizzato, mantenendo l'ordine dello Stack iniziale.
+                \end{enumerate}
                 
-                <TODO>
+                I punti 2-3-4-5 sfruttano il package SimpleITK, i punti 3-4-5 possono essere eseguiti all'interno di un unico cliclo, iterante sulla dimensione z dello Stack (depth).
                 
-                The RTK library reads the stack of projections with a class called ProjectionsReader and from its documentation:
-                  \par \textit{"The universal projections reader of RTK (raw data converted to attenuation). Currently handles .his (Elekta Synergy), .hnd (Varian OBI), .tiff (Digisens), .edf (ESRF), .XRad. For all other ITK file formats, it is assumed that the attenuation is directly passed and there is no processing."\newline}
-                  \par So, RTK makes an automatic Normalization only for a specific set of projections types. Before reading the .mha stack with the ProjectionsReader class it must be normalized manually obtaining the \texttt{Io} intensity directly from a .csv file.\newline
-                   
- 
-  
-  
-  
+            \subsection{Lettura \texttt{Io} da file .csv}
+                \par
+                    Mediante la medesima procedura descritta in Sezione \ref{sec:lettura-csv}, si compone una lista di oggetti Projection, i quali contengono l'informazione \texttt{Io} letta all'interno del file csv: \texttt{proj\textunderscore obj\textunderscore list}.
+                
+            \subsection{Lettura Stack di proiezione}
+                \par
+                    La lettura è affidata al metodo ReadImage\cite{sitk-readimage} di SimpleITK:
+                    
+                    \begin{lstlisting}[language=python, frame=bt]
+stack = sitk.ReadImage(proj_stack.mha)
+                    \end{lstlisting}
+                    
+                    Si noti che \texttt{sitk} è un alias. In fase di import è stato scritto:
+                    \begin{lstlisting}[language=python, frame=bt]
+import SimpleITK as sitk
+                    \end{lstlisting}
+                    
+                    L'oggetto \texttt{stack} possiede ora i metodi GetWidth(), GetHeight(), GetDepth(). Utili al fine di reperire le informazioni dimensionali dello Stack. La profondità, depth, sta ad indicare il numero di singole proiezioni componenti lo Stack.
+                    
+                    \begin{lstlisting}[language=python, frame=bt]
+width = stack.GetWidth()
+height = stack.GetHeight()
+depth = stack.GetDepth()
+                    \end{lstlisting} 
+             
+                    Queste informazioni saranno utili in seguito. L'informazione sulla profondità permetterà l'iterazione all'interno dello Stack. Larghezza ed altezza saranno forniti all'estrattore di SimpleITK.
+                    
+            \subsection{Estrazione di una proiezione dallo Stack}
+                    L'estrazione delle singole proiezioni è affidata alla classe ExtractImageFilter() \cite{sitk-estractor}. Questa classe permette il collasso delle dimensioni di uno Stack .mha. Per poter specificare quale dimensione collassare, l'istanza di ExtractImageFilter, chiamata \texttt{extractor} (estrattore), dev'essere configurata mediante i metodi SetSize() e 
+                    SetIndex(). Il metodo SetSize() specifica la dimensione dell'immagine da ottenere: questa conterrà uno zero nella coordinata dimensionale da collassare. Il metodo SetIndex() identifica la proiezione interna allo Stack da estrarre, impostando a zero le coordinate non-zero indicate da SetSize() ed impostando l'indice di estrazione nella coordinata rimanente. Per poter applicare le operazioni, si ricorre al metodo Execute(stack).
+                    Per poter meglio comprendere quanto descritto, si consideri il seguente esempio:
+                    Dato un ipotetico Stack 3D avente dimensione 4x4x4 dal quale si voglia ottenere un'immagine 2D di dimensione 4x4 individuata all'interno dello Stack mediante le coordinate [x,y,2] (la 3\degree proiezione interna allo Stack 3D): extractor.SetSize(4,4,0) ed extractor.SetIndex(0,0,4). Si procederà poi all'esecuzione di extractor.Execute(stack\textunderscore 3D).
+                    
+                \par
+                    Per poter applicare quanto appena descritto ad uno Stack di proiezione a disposizione, si è iterato lungo la dimensione di profondità depth mediante un ciclo for, ottenendo in questo modo l'indice utilizzato da SetIndex():
+                    
+                    \begin{lstlisting}[language=python, frame=bt]
+for zslice in range(0, depth):
+    extractor = sitk.ExtractImageFilter()
+    extractor.SetSize([width, height, 0])
+    extractor.SetIndex([0, 0, zslice])
 
+    proj = extractor.Execute(stack)
+                    \end{lstlisting} 
+                    
+                    La dimensione della proiezione è stata specificata utilizzando le dimensioni width ed height ottenute in fase di lettura.
+                    zslice assume i valori interi 0 <= zslice < depth in quanto la funzione built-in range()\cite{python-range} fornita da Python genera una sequenza di interi iterabili appartenenti al dominio appena indicato.
+                    In questo modo, una proiezione alla volta viene estratta e sarà oggetto di normalizzazione.
+                
+                
+            \subsection{Normalizzazione della singola proiezione}
+                \par
+                    In questo procedimento viene applicata la computazione relativa alla normalizzazione di una singola proiezione, descritta in equazione (\ref{eq:normalization}), Sottosezione \ref{sub:norm-math}.
+                    L'intensità \texttt{I} è rappresentata da tutti i pixel componenti la proiezione appena estratta. L'intensità \texttt{Io} è disponibile all'interno della lista di oggetti Projection \texttt{proj\textunderscore obj\textunderscore list}. SimpleITK fornisce il metodo Log()\cite{sitk-log}, il quale permette il calcolo del Logaritmo in base $e$ per ciascun pixel componente l'immagine. Inoltre possono essere applicate moltiplicazioni per numeri floating point, applicate ad ogni pixel mediante l'operatore *:
+                    \begin{lstlisting}[language=python, frame=bt]
+proj = proj * float(1 / proj_obj_list[zslice].io)
+proj = sitk.Log(proj)
+proj = proj * float(-1)
+                    \end{lstlisting} 
+                    
+                    Come si può notare, viene applicata esattamente l'equazione (\ref{eq:normalization}) in 3 passaggi. L'informazione \texttt{Io} viene prelevata dalla lista sfruttando l'indice zslice, il quale identifica, in ordine, l'esatta attenuazione della proiezione indicata dall'indice. Questo codice è inserito all'interno del ciclo, quindi la normalizzazione avviene per ogni proiezione inserita nello Stack.
+                             
+            \subsection{Composizione di uno Stack .mha normalizzato}
+                \par
+                    Come primo passaggio si è deciso (esternamente al ciclo), al fine di conservare le metainformazioni componenti l'immagine iniziale, di creare una copia leggendo nuovamente lo Stack non normalizzato mediante il metodo ReadImage() di SimpleITK:
+                   
+                    \begin{lstlisting}[language=python, frame=bt]
+copy = sitk.ReadImage(stack)
+                    \end{lstlisting} 
+                    
+                    All'interno del ciclo, si sono eseguite le seguenti operazioni:
+                    \begin{lstlisting}[language=python, frame=bt]
+norm_vol = sitk.JoinSeries(stack)
+normalized_mha = sitk.Paste(copy, norm_vol, 
+    norm_vol.GetSize(), destinationIndex=[0,0,zslice])
+                    \end{lstlisting}
+                    
+                    Il metodo JoinSeries() \cite{sitk-joinseries} trasforma la proiezione da 2D a 3D. Il metodo Paste() \cite{sitk-paste} permette di rimpiazzare una slice all'interno di copy con la proiezione normalizzata. <TODO finisci e revisiona!>
+                    
+                    
+                    
+        \section{Ricostruzione mediante eseguibili RTK}
+            \subsection{rtkfdk}
+                \par
+                    Il comando viene composto come segue:
+                    \begin{lstlisting}[language=bash, frame=bt]
+./rtkfdk 
+-p stack_name.mha 
+-r reconstruction.mha
+-o output_path 
+-g geometry_name.xml 
+--spacing sp_x sp_y sp_z 
+--dimension dim_x dim_y dim_z 
+-v
+                    \end{lstlisting}
             
-    \part{Creazione Package Python}
+                    Lo stack \texttt{stack\textunderscore name.mha} si riferisce allo Stack di proiezione normalizzato secondo la procedura descritta in sezione \ref{sec:norm-disp}. Il file reconstruction.mha è il file che conterrà la ricostruzione. L'opzione -v sta per "verbose", produce una stampa a video delle informazioni relative alla ricostruzione.
+                    Ecco un'esempio di output su stdout (opzione -v):
+                    \begin{lstlisting}[language=bash, frame=bt]
+Regular expression matches 1 file(s)...
+Reading... It took 0.385705 s
+Reading geometry information from geometry.xml...
+Reconstructing and writing... It took 205.684 s
+FDKConeBeamReconstructionFilter timing:
+Prefilter operations: 4.62599 s
+Ramp filter: 18.2638 s
+Backprojection: 180.379 s
+                    \end{lstlisting}
+            \subsection{Lettura ricostruzione mediante Imagej}
+                \par
+                    Imagej può effettuare la lettura di immagini .mha grazie all'installazione di una estensione chiamata 3DIO\cite{imagej-3dio-plugin} il quale permette la lettura dei formati derivati da ITK mediante una semplice interfaccia.
+                    Selezionando dal menu Plugins, il plugin 3DIO si accede all'elemento del sottomenù chiamato Metaimage Reader. Si apre ora una finestra di navigazione, nel quale viene chiesto di selezionare l'immagine desiderata.
+                    
+                    Una ricostruzione si visualizza come segue:
+                    
+                    \begin{figure}[h]
+                        
+                        \centering
+                        \includegraphics[width=0.8\textwidth]{reconstruction}
+                        \caption{Ricostruzione del fantoccio presentato in \texttt{Figura \ref{fig:skull-phantom}}
+                        utilizzando la procedura rtkfdk. Immagine a sinistra, una sezione del piano sagittale; immagine centrale, una sezione del piano coronale; immagine destra, una sezione del piano trasverso. }
+                        \label{fig:reconstruction}
+                        
+                    \end{figure}
+            
+            
+            
+    \chapter{Creazione Package Python}
         \section{RTK-Handler}
             \subsection{Scopo}
                 \par 
+                    Inizialmente tutte le procedure di generazione geometria e di normalizzazione descritte nelle sezioni 12,13 <TODO!! unmagnet links> si sono implementate all'interno di moduli Python completamente separati tra loro....
                     <TODO>
                     RTK-handler automates the Normalization process according to (2) and creates the .xml geometry according to this:\newline
                     \url{http://www.openrtk.org/Doxygen/geometry.pdf}\newline\newline
@@ -685,7 +862,7 @@ for row in csv:
             \subsection{Estensione}
             \subsection{Utilizzi futuri}
             
-    \part{Risultati e Conclusioni}
+    \chapter{Risultati e Conclusioni}
         \subsection{Risultati}
         \subsection{Conclusioni}
 
@@ -749,5 +926,33 @@ for row in csv:
         
     \bibitem{python-list}
         \url{https://docs.python.org/3/library/stdtypes.html#lists}
+        
+    \bibitem{float-python}
+        \url{https://docs.python.org/3/library/functions.html#float}
+        
+    \bibitem{input-python}
+        \url{https://docs.python.org/3/library/functions.html#input}
+        
+    \bibitem{projections-reader}
+        \url{http://www.openrtk.org/Doxygen/classrtk_1_1ProjectionsReader.html}
+    
+    \bibitem{sitk-readimage}
+        \url{https://itk.org/SimpleITKDoxygen/html/classitk_1_1simple_1_1ImageFileReader.html}
+    
+    \bibitem{sitk-estractor}
+        \url{https://itk.org/SimpleITKDoxygen/html/classitk_1_1simple_1_1ExtractImageFilter.html#details}
+    
+    \bibitem{python-range}
+        \url{https://docs.python.org/3/library/stdtypes.html#range}
+        
+    \bibitem{sitk-log}
+        \url{https://itk.org/SimpleITKDoxygen/html/classitk_1_1simple_1_1LogImageFilter.html#details}
+        
+    \bibitem{sitk-joinseries}
+        \url{https://itk.org/SimpleITKDoxygen/html/classitk_1_1simple_1_1JoinSeriesImageFilter.html#details}
+        
+    \bibitem{sitk-paste}
+        \url{https://itk.org/SimpleITKDoxygen/html/classitk_1_1simple_1_1PasteImageFilter.html#details}
+        
     \end{thebibliography}
 \end{document}
