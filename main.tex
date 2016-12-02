@@ -163,16 +163,7 @@
                             
                 \bigskip
                 \par
-                    I ricercatori condivisero uno scopo comune: superare il problema delle ombre. Furono offerte numerose soluzioni, ma il metodo più convincente risultò la stratificazione dei tessuti del corpo. In questo modo, utilizzando la geometria proiettiva, il problema delle ombre poteva essere parzialmente superato, nonostante gli elevati livelli di radiazione richiesti dalla procedura.
-                            
-                    \begin{figure}[h]
-                        \centering
-                        \includegraphics[width=0.8\textwidth]{conventional}
-                        \caption{Principio di funzionamento della tomografia convenzionale. <TODO dovrei rifare questa immagine, non ha licenza CC>}
-                        \label{fig:conventional}
-                    \end{figure}
-                            
-                    Per poter eseguire la Tomografia Convenzionale senza computazione, in un puro sistema meccanico, due dei tre elementi (tubo, paziente e lastra) dovevano necessariamente muoversi in modo sincrono durante l’esposizione alla radiazione. Per poter meglio comprendere il principio di funzionamento, si osservi la \texttt{Figura \ref{fig:conventional}}. In questo caso il corpo (al centro) viene mantenuto fermo, mentre tubo e lastra si muovono in modo sincrono ed opposto. Si può notare che solamente circa 1/10 della lunghezza del fascio AB attraversa effettivamente il piano di interesse; i restanti 9/10 attraversano il corpo collezionando informazione inutile, non voluta. Questa è la motivazione per cui, in questi tomogrammi, era facile riscontrare artefatti.\cite{hounsfield-nobel-lecture}.
+                    I ricercatori condivisero uno scopo comune: superare il problema delle ombre. Furono offerte numerose soluzioni, ma il metodo più convincente risultò la stratificazione dei tessuti del corpo. In questo modo, utilizzando la geometria proiettiva, il problema delle ombre poteva essere parzialmente superato, nonostante gli elevati livelli di radiazione richiesti dalla procedura. Per poter eseguire la Tomografia Convenzionale senza computazione, in un puro sistema meccanico, due dei tre elementi (tubo, paziente e lastra) dovevano necessariamente muoversi in modo sincrono durante l’esposizione alla radiazione.  In questo caso il corpo veniva mantenuto fermo, mentre tubo e lastra si muovevano in modo sincrono ed opposto. Solamente circa 1/10 della lunghezza del fascio che attraversava il corpo intersecava effettivamente il piano di interesse, i restanti 9/10 attraversavano il corpo collezionando informazione inutile, non voluta. Questa è la motivazione per cui, in questi tomogrammi, era facile riscontrare artefatti.\cite{hounsfield-nobel-lecture}.
                 
                 \bigskip
                 \par
@@ -311,7 +302,10 @@
                     \begin{equation}
                         \int_{-\infty}^\infty \delta(x) \, dx = 1.
                     \end{equation}
-                                
+            
+            \subsection{Normalizzazione delle Proiezioni}
+                
+            
             \subsection{Retroproiezione}
                 \par
                     Nel caso discreto la retroproiezione può essere espressa in forma matriciale:
@@ -357,61 +351,82 @@
             
             \subsection{Ricostruzione}
                 \par
-                    In molti algoritmi di ricostruzione si sfrutta la Trasformata di Fourier per poter applicare dei filtri in grado di rendere minimo il rumore che differenzia le due immagini $x$ e $\bar{x}$. Ad esempio, L'algoritmo FBP - Filtered Back Projection, uno tra i più conosciuti ed utilizzati, prevede come filtro la moltiplicazione della Trasformata di Fourier monodimensionale $P(w,\theta)$ per un filtro detto "a rampa" $|w|$. Successivamente, applica l'Antitrasformata di Fourier al prodotto $|w|P(w, \theta)$ e procede alla retroproiezione. In questo caso, avendo applicato il filtro, l'immagine $\bar{x}$ contiene meno rumore ed è comparabile all'originale $x$.
-                
-                \bigskip        
+                    In molti algoritmi di ricostruzione si sfrutta la Trasformata di Fourier per poter applicare dei filtri in grado di rendere minimo il rumore che differenzia le due immagini $x$ e $\bar{x}$. Ad esempio, L'algoritmo FBP - Filtered Back Projection, uno tra i più conosciuti ed utilizzati, prevede come filtro la moltiplicazione della Trasformata di Fourier monodimensionale $P(w,\theta)$ per un filtro detto "a rampa" $|w|$. Successivamente, applica l'Antitrasformata di Fourier al prodotto $|w|P(w, \theta)$ e procede alla retroproiezione. In questo caso, avendo applicato il filtro, l'immagine $\bar{x}$ contiene meno rumore ed è comparabile all'originale $x$. Esistono molti algoritmi di ricostruzione e diverse soluzioni riguardo l'applicazione dei filtri. Alcuni algoritmi applicano i filtri senza calcolare la trasformata di Fourier, altri utilizzano altri tipi di trasformazione come quella di Hilbert. 
+                \bigskip
                 \par
-                   Esistono molti algoritmi di ricostruzione e diverse soluzioni riguardo l'applicazione dei filtri. Alcuni algoritmi applicano i filtri senza calcolare la trasformata di Fourier, altri utilizzano altri tipi di trasformazione come quella di Hilbert. Esistono poi algoritmi di ricostruzione che effettuano procedimenti iterativi e statistici, combinando procedure di Simulated Forward Projection e Back Projection fornendo dettagli maggiori ($\bar{x}$ molto vicina ad $x$) ad un costo computazionale molto maggiore.
+                    Esistono algoritmi di ricostruzione che effettuano procedimenti iterativi, combinando procedure di Simulated Forward e Back Projection. Un algoritmo iterativo FBP, può essere matematicamente espresso come segue:
+                   
+                   \begin{equation}
+                        x_{n+1} = x_n + \alpha FBP( y - Ax_n)
+                    \end{equation}
+                    
+                    Le proiezioni iniziali sono date da $y$, $Ax$ è una fase di Proiezione simulata (non si effettua un'acquisizione reale) sfruttando i dati dell'iterazione precedente ed $\alpha$ è una variabile peso. Questi algoritmi richiedono un costo computazionale proporzionale al numero di iterazioni effettuate. Nel caso di una singola iterazione, la complessità è paragonabile a quella dell'algoritmo originale.
                     
         \section{OpenRTK}
-            \subsection{Storia del progetto}
-                \par 
-                    Il progetto nacque nel Giugno 2010 quando i founder Simon Rit e Gregory Sharp discussero riguardo la scarsità di soluzioni open-source nell'ambito della Cone-Beam CT. Infatti, l'unica alternativa presente era una libreria chiamata Plastimatch, la quale poteva già effettuare retroproiezioni filtrate sia su CPU che su GPU, ma l'architettura del software non teneva conto dell'evoluzione verso nuove tipologie di algoritmi iterativi. Decidettero quindi di dar vita ad una nuova piattaforma basata su Insight ToolKit (ITK), una libreria di elaborazione delle immagini già famosa all'epoca.
-                \par
-                    Gli sviluppi iniziali furono basati su codici preesistenti, la piattaforma permise in breve tempo l'ottenimento di ricostruzioni FBP utilizzando dati provenienti da diversi scanner commerciali CBCT. Questi sviluppi attirarono l'interesse dell' Université Catholique di Louvain, Francia e dell'azienda Beam Application (IBA) che stava sviluppando il primo scanner CBCT a protoni. RTK è ora utilizzato negli scanner IBA. Al giorno d'oggi questi partners sono riuniti sotto l'RTK Consortium. La piattaforma RTK fornisce una piattaforma efficiente per sviluppi continuativi, beneficiando costantemente delle nuove features di ITK.
-                \par
-                
-                    Attualmente ( Novembre 2016 ) il Progetto viene mantenuto e sviluppato sulla piattaforma GitHub con circa 20 sviluppatori attivi.
-                
-                
+            \par
+                Il progetto, rilasciato sotto licenza Apache 2.0, nacque nel Giugno 2010 quando i founder Simon Rit e Gregory Sharp discussero riguardo la scarsità di soluzioni open-source nell'ambito della Cone Beam CT. Infatti, l'unica alternativa presente era una libreria chiamata Plastimatch, la quale poteva già effettuare retroproiezioni filtrate sia su CPU che su GPU, ma l'architettura del software non teneva conto dell'evoluzione verso nuove tipologie di algoritmi iterativi. Decidettero quindi di dar vita ad una nuova piattaforma basata su Insight ToolKit (ITK), una libreria di elaborazione delle immagini già famosa in quegli anni. Gli sviluppi iniziali furono basati su codici preesistenti, la piattaforma permise in breve tempo l'ottenimento di ricostruzioni FBP utilizzando dati provenienti da diversi scanner commerciali CBCT. Questi sviluppi attirarono l'interesse dell'Università Cattolica di Lovanio e dell'azienda Beam Application (IBA). RTK è ora utilizzato negli scanner commerciali CBCT di IBA. Al giorno d'oggi questi partner sono riuniti presso l'RTK Consortium.
+            
+            \bigskip
+            \par
+                RTK è una libreria scritta in linguaggio C++ ma presenta un interfaccia di utilizzo per altri linguaggi. SimpleRTK\cite{simplertk-wiki} permette l'utilizzo RTK per i linguaggi C\# e Python, ma sono possibili estensioni anche ad altri linguaggi quali Lua e Java, sfruttando SWIG\cite{swig-website}.  RTK fornisce algoritmi di ricostruzione sia sequenziali (FDK) che iterativi (ADMM, SART, Conjugate Gradient, ...), presentando delle varianti degli stessi a seconda delle tipologie di filtering applicate. Sono inoltre presenti delle classi ottimizzate per il calcolo parallelo su architetture CUDA \cite{cuda}. E' possibile consultare l'intera lista delle classi che implementano documentazione ufficiale \cite{rtk-classi}. 
+                Questa descrizione è relativa alla versione di RTK numero 1.3.0, rilasciata il 22/09/2016.
+                    
             \subsection{Geometria}
                 \par
-                    <ASK come è composta veramente? necessito dello standard IEC? devo creare delle immagini che illustrino la configurazione geometrica?> <TODO>
-                    RTK necessita di informazioni relative alla geometria di acquisizione per poter correttamente ricostruire un set di proiezioni. L'unica geometria configurabile è \texttt{ ThreeDCircularProjectionGeometry}, implementato come classe in RTK.
-                    Lo scopo di questa classe è quella di definire un set di proiezioni 2D, acquisite mediante un detector bidimensionale lungo una traiettoria circolare. La descizione della geometria è basata nello standard internazionale IEC 61217 che è stato progettato per dispositivi cone-beam su sistemi isocentrici. Il sistema a coordinate fisse di RTK ed il sistema di coordinate fisse dell'IEC 61217 sono esattamente eguali. 
+                    RTK necessita di informazioni relative alla geometria di acquisizione per poter correttamente ricostruire un set di proiezioni. La classe che gestisce queste informazioni è\texttt{ ThreeDCircularProjectionGeometry}, il cui scopo è quello di definire un set di proiezioni 2D, acquisite mediante un detector bidimensionale lungo una traiettoria circolare. La descrizione della geometria è basata nello standard internazionale IEC 61217 che è stato progettato per dispositivi cone-beam su sistemi isocentrici. Il sistema a coordinate fisse di RTK ed il sistema di coordinate fisse dell'IEC 61217 sono esattamente uguali. La geometria può anche essere letta e salvata mediante l'esportazione in file XML.
+                
+                \bigskip
+                \par
+                    E' possibile impostare fino a 9 parametri in doppia precisione per ciascuna proiezione, sfruttando il metodo \texttt{AddProjection}. Viene impostato il valore di default $0$ per tutti quei parametri non esplicitamente espressi. Di seguito vengono analizzati i 5 parametri fondamentali:
+                        
+                    \begin{itemize}
+                        \item \textbf{SID} - Source to Isocenter\footnote{L’asse centrale del fascio interseca l’asse di rotazione dell'apparato di acquisizione in un punto dello spazio chiamato Isocentro} Distance, espressa in millimetri.
+                        \item \textbf{SDD} - Source to Detector Distance, espressa in millimetri.
+                        \item \textbf{gantryAngle} - E' l'angolo di rotazione del Gantry\footnote{Apparato di acquisizione, composto da sorgente e detector allineati.}. Un incremento di questo parametro corrisponde ad una rotazione oraria del Gantry visto dall'Isocentro.
+                        \item \textbf{projOffsetX} - Offset nella direzione $x$ dall'origine del detector (proiezione ortogonale dell'isocentro sul detector) all'origine dell'immagine di proiezione \cite{rtk-users-proj-offset}. Espresso in millimetri. 
+                        \item \textbf{projOffsetY} - Offset nella direzione $y$, come descritto per projOffsetX. Espresso in millimetri.
+                    \end{itemize}
                     
-                    9 parametri vengono utilizzati per ciascuna proiezione per definire la sorgente ed il detector relativi ad un sistema di coordinate fisso. I 9 parametri vengono settati con il metodo AddProjection. Vengono utilizzati dei valori di default per tutti quei parametri non esplicitamente espressi.
-                        
-                    const double sid, const double sdd, const double gantryAngle, const double projOffsetX=0., const double projOffsetY=0., const double outOfPlaneAngle=0., const double inPlaneAngle=0., const double sourceOffsetX=0., const double sourceOffsetY=0.
-                        
-                    The projection offset is the offset of the image origin from the
-                    detector origin (the orthogonal projection of the isocenter on the
-                    detector). But as I said, in many normal 2D image
-                    format like .png, .tif, and .bmp, the image origin is not defined, and
-                    ITK/RTK uses the first pixel as the image origin.
-                    Then, there is another mapping from the image coordinate system to the
-                    detector coordinate system. I have already explained the relationship
-                    between the image origin and the detector origin above. How the image
-                    axis (u and v) orientated with regard to the detector axis (x and y)
-                    depends on the direction cosines of the image. Again, this information
-                    does not exist in many 2D image format and the default value in
-                    ITK/RTK is an identity matrix, so u/v and x/y are also aligned.\cite{rtk-users-proj-offset}
+                    Per la descrizione dei rimanenti parametri (outOfPlaneAngle, inPlaneAngle, sourceOffsetX, sourceOffsetY), utilizzabili solamente in particolari geometrie, si rimanda alla documentazione \cite{rtk-geometry}.
                 
-            \subsection{Ricostruzione rtkfdk}
-
         \section{SimpleITK}
-            \subsection{Storia del progetto}
-            \subsection{Wrapper Python}
+            \par
+                SimpleITK, rilasciato sotto licenza Apache 2.0, fornisce un'interfaccia semplificata del software Insight Toolkit - ITK. Può essere utilizzato per poter eseguire un processing generico su varie tipologie di immagini, ma lo scopo principale del Toolkit è quello di processare immagini a scopo medico. Un errato settaggio delle componenti fondamentali, può produrre risultati inconsistenti. Le immagini a scopo medico, senza alcun tipo di informazione spaziale, non dovrebbero assolutamente essere utilizzate per la diagnosi. In altre parole, le immagini a scopo medico che presentano un'inefficienza riguardo le informazioni spaziali, non sono solamente inutili, ma anche pericolose. Come per SimpleRTK, SimpleITK fornisce un'interfaccia per altri linguaggi come Python e Java sfruttando SWIG. Questa descrizione è relativa alla versione di SimpleITK numero 0.9.0, rilasciata il 14/05/2015.
                 
-        \section{Linguaggio Python}
+            \subsection{Descrizione delle immagini}
+                Le componenti fondamentali nella descrizione di un'immagine mediante ITK sono \textit{Spacing}, \textit{Origin}, e \textit{Direction}. Se questi parametri vengono settati correttamente, l'immagine avrà ciascun pixel mappato sullo spazio di coordinate fisiche. Un \textit{pixel} è considerato essere la regione quadrata o rettangolare che ne circonda il suo centro, contenitore dell'informazione. I pixel possono essere visti come la regione di Voronoi \cite{voronoi} della griglia dell’immagine. L’interpolazione lineare dei valori dell’immagine viene eseguita all’interno della regione di Delaunay \cite{delaunay}, i cui angoli sono il centro del pixel.
+                
+                \bigskip
+                \textbf{Spacing} - Lo Spacing tra i pixel viene misurato, in millimetri, tra i vari centri dei pixel e può essere differente lungo ciascuna dimensione. Viene rappresentato come un array fisso le cui dimensioni corrispondono alle dimensioni dell'immagine.
+                
+                \bigskip
+                \textbf{Origin} - Viene gestito vettorialmente, in modo simile allo Spacing. Le coordinate di Origin possono essere assegnate a ciascuna componente. Queste coordinate, di default, corrispondono alla posizione del centro del primo pixel in basso a sinistra dell'immagine rispetto ad un sistema di riferimento fisico, in millimetri. Nel caso in cui Origin non venga impostato, questo assumerà di default il valore $0$ in ciascuna componente. Ad esempio, nel caso in cui si lavori con un'immagine 2D, l'origine del sistema di riferimento fisico giacerà esattamente nel primo pixel in basso a sinistra dell'immagine bidimensionale. 
+                
+                \bigskip
+                \textbf{Direction} - Direction rappresenta la relazione d'orientazione tra i pixel ed il sistema di riferimento fisico. Direction è una matrice ortonormale, che descrive la possibile permutazione dei valori dell'immagine e gli aspetti rotazionali che sono necessari al fine di riconciliare correttamente l'organizzazione degli indici con lo spazio fisico. Questa matrice è quadrata $NxN$ dove $N$ è la dimensione dell'immagine. Nel caso in cui Direction non venga impostato, esso viene impostato come una matrice Identità, ciò sta ad indicare che i pixel sono perfettamente allineati rispetto al sistema di riferimento fisico.
+                
+            \subsection{Formato MHA}
+                \par
+                    Il formato MetaImage è un formato text-based contenente TAG utilizzato per immagini a scopo medico. Attualmente è in grado di supportare una varietà di oggetti quali cubi, sfere, tubi, etc. Questo formato è particolarmente stabile, è stato utilizzato per diversi anni da molti ricercatori all'UNC, Chapel Hill. Occasionalmente vengono introdotte nuove features, ma viene sempre mantenuta la retrocompatibilità con le versioni precedenti. In un'immagine di formato MHA, i TAG fondamentali vengono inseriti all'inizio del file. Questi specificano il la modalità con cui i dati grezzi RAW devono essere letti dal sistema. Oltre al settaggio di Spacing, Origin e Direction, sono disponibili anche altre configurazioni, reperibili nella documentazione ufficiale \cite{mha-doc}. 
+                    
+                \bigskip
+                \par
+                    Spacing può essere impostato, nelle varie direzioni, sfruttando il TAG \textit{ElementSpacing}. Origin può essere impostata nelle varie direzioni, mediante uno dei tre TAG equivalenti: \textit{Position}, \textit{Offset} ed \textit{Origin}. Direction può essere impostata mediante uno dei tre TAG equivalenti: \textit{Rotation}, \textit{Orientation} e \textit{TransformMatrix}. Ad esempio, nel caso in cui si lavori con un'immagine tridimensionale, i TAG per Spacing, Origin e Direction possono essere impostati come segue:
+                    
+                    \begin{lstlisting}[language=bash, frame=bt]
+ElementSpacing = X Y Z
+Position = X Y Z
+Rotation = 1 0 0 0 1 0 0 0 1
+                    \end{lstlisting}
+                    
+                    I parametri X, Y, Z devono necessariamente essere espressi in millimetri, il parametro del TAG Rotation, invece, contiene una matrice identità, specificata secondo il formato MET\textunderscore FLOAT\textunderscore MATRIX (si veda la documentazione).
+                    
             
         \section{Normalizzazione delle Proiezioni}
-            \label{sec:normalizzation}
+            <TODO mettilo in alto>
             \par
-                L'intensità dei pixel componenti una proiezione, diretto risultato d'acquisizione da parte del detector, è direttamente proporzionale all'intensità della sorgente. Gli algoritmi di ricostruzione richiedono, per ogni proiezione, l'informazione relativa alla somma dei coefficienti di attenuazione lineare degli n voxel dell'oggetto attraversati durante l'acquisizione, informazione indipendente dall'intensità del fascio sorgente. La \textit{Normalizzazione dello Stack} non è altro che il processo di ottenimento della somma dei coefficienti di attenuazione a partire dalla rilevazione del detector.
-            \par
-                Per poter meglio comprendere gli effetti di questo procedimento, si osservi il seguente esempio:
-                
+                L'intensità dei pixel componenti una proiezione, diretto risultato d'acquisizione da parte del detector, è direttamente proporzionale all'intensità della sorgente. Gli algoritmi di ricostruzione richiedono, per ogni proiezione, l'informazione relativa alla somma dei coefficienti di attenuazione lineare degli $n$ voxel\footnote{Il voxel è un elemento di volume che rappresenta l'informazione in uno spazio tridimensionale, analogamente al pixel che rappresenta informazioni relative ad un'immagine bidimensionale.} dell'oggetto attraversati durante l'acquisizione, informazione indipendente dall'intensità del fascio sorgente. La \textit{Normalizzazione dello Stack} non è altro che il processo di ottenimento della somma dei coefficienti di attenuazione a partire dalla rilevazione del detector.
+          
                 \begin{figure}[h]
                     \centering
                     \includegraphics[width=0.7\textwidth]{normalization}
@@ -419,14 +434,7 @@
                     \label{fig:skull-phantom}
                 \end{figure}
                 
-                L'immagine a sinistra è la proiezione numero 333 su 641 acquisita dal detector. Come si può notare, l'oggetto presenta una colorazione molto scura
-                <ASK perchè l'oggetto presenta una colorazione scura?> <TODO>
-                
-            
-            \subsection{Aspetto Matematico}
-                \label{sub:norm-math}
-                \par
-                    Le proiezioni appartenenti ad uno Stack, essendo il diretto risultato rilevato dal detector in fase di acquisizione, contengono l'informazione relativa all'attenuazione del fascio dovuta al passaggio attraverso il corpo. Ogni pixel di ciascuna proiezione (ottenuta ad un preciso angolo di acquisizione) registra l'intensità attenuata I, la quale è governata dalla legge di Lambert-Beer\cite{lambert-beer}:
+                Matematicamente, le proiezioni $p(s,\theta)$, essendo il diretto risultato rilevato dal detector in fase di acquisizione, contengono l'informazione relativa all'attenuazione del fascio dovuta al passaggio attraverso il corpo. Ogni pixel di ciascuna proiezione (ottenuta ad un preciso angolo di acquisizione) registra l'intensità attenuata I, la quale è governata dalla legge di Lambert-Beer\cite{lambert-beer}:
 
                     \begin{equation} \label{eq:lambert}
                         \texttt{I} = \texttt{Io} \cdot e^{- (\mu1 + \mu2 + ...  + \mu n)}
@@ -1059,6 +1067,27 @@ Backprojection: 180.379 s
         
     \bibitem{history-radiology}
         \url{https://books.google.it/books?id=KyH_jeT7w3gC&pg=PA99&lpg=PA99&dq=hounsfield+radon&source=bl&ots=Rk_ft6iL6w&sig=51iwXhpOxSCchzwTSABAfvGm6V0&hl=it&sa=X&ved=0ahUKEwirqqOKhIrQAhULtBQKHVKsCTAQ6AEIOzAF#v=onepage&q&f=false}
+    
+    \bibitem{rtk-geometry}
+        \url{http://www.openrtk.org/Doxygen/geometry.pdf}
+    
+    \bibitem{swig-website}    
+        \url{http://www.swig.org/}
+    
+    \bibitem{cuda}
+        \url{https://it.wikipedia.org/wiki/CUDA}
+        
+    \bibitem{rtk-classi}
+        \url{http://www.openrtk.org/Doxygen/namespacertk.html}
+    
+    \bibitem{voronoi}
+        \url{https://en.wikipedia.org/wiki/Voronoi_diagram}
+        
+    \bibitem{delaunay}
+        \url{https://en.wikipedia.org/wiki/Delaunay_triangulation}
+     
+    \bibitem{mha-doc}
+        \url{https://itk.org/Wiki/ITK/MetaIO/Documentation}
         
     \end{thebibliography}
 \end{document}
