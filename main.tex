@@ -258,7 +258,7 @@
                         \centering
                         \includegraphics[width=0.55\textwidth]{cone_beam}
                         \caption{Rappresentazione schematica architettura CBCT.}
-                        \label{fig:spirale}
+                        \label{fig:cbct}
                     \end{figure}
                     
                 \par
@@ -304,7 +304,29 @@
                     \end{equation}
             
             \subsection{Normalizzazione delle Proiezioni}
-                
+                \par
+                    L'intensità dei pixel componenti una proiezione, diretto risultato d'acquisizione da parte del detector, è direttamente proporzionale all'intensità della sorgente. Gli algoritmi di ricostruzione richiedono, per ogni proiezione, l'informazione relativa alla somma dei coefficienti di attenuazione lineare degli $n$ voxel\footnote{Il voxel è un elemento di volume che rappresenta l'informazione in uno spazio tridimensionale, analogamente al pixel che rappresenta informazioni relative ad un'immagine bidimensionale.} dell'oggetto attraversati durante l'acquisizione, informazione indipendente dall'intensità del fascio sorgente. La \textit{Normalizzazione dello Stack} non è altro che il processo di ottenimento della somma dei coefficienti di attenuazione a partire dalla rilevazione del detector.
+              
+                    \begin{figure}[h]
+                        \centering
+                        \includegraphics[width=0.6\textwidth]{normalization}
+                        \caption{Effetti della procedura di normalizzazione. Immagine a sinistra: non normalizzata. Immagine a destra: normalizzata.}
+                        \label{fig:skull-phantom}
+                    \end{figure}
+                    
+                    Le proiezioni, $p(s,\theta)$ (acquisite dal detector) registrano l'intensità attenuata I, la quale è governata dalla legge di Lambert-Beer \cite{lambert-beer} nella forma:
+    
+                    \begin{equation} \label{eq:lambert-beer}
+                        I = Io \cdot e^{- (\mu1 + \mu2 + ...  + \mu n)}
+                    \end{equation}
+                    
+                    $I$ è l'intensità rilevata dal detector, $\mu_i$ sono i coefficienti di attenuazione lineare appartenenti ad $n$ voxel di larghezza unitaria. Avendo a disposizione l'intensità della sorgente $Io$, è possibile ottenere la somma dei coefficienti di attenuazione lineare manipolando algebricamente (\ref{eq:lambert-beer}):
+                        
+                    \begin{equation} \label{eq:normalization}
+                        (\mu1 + \mu2 + ... + \mu n) = - \log_e{(I/Io)}
+                    \end{equation}
+                    
+                    L'intensità $Io$ dev'essere salvata per ciascuno step angolare $\theta_i$ ponendo, ad esempio, un sensore di rilevazione davanti alla sorgente. Esiste la possibilità, in certe condizioni, di poter stimare $Io$, evitandone il salvataggio fisico, analizzando quelle zone del detector non attenuate dal corpo.
             
             \subsection{Retroproiezione}
                 \par
@@ -420,64 +442,7 @@ Rotation = 1 0 0 0 1 0 0 0 1
                     \end{lstlisting}
                     
                     I parametri X, Y, Z devono necessariamente essere espressi in millimetri, il parametro del TAG Rotation, invece, contiene una matrice identità, specificata secondo il formato MET\textunderscore FLOAT\textunderscore MATRIX (si veda la documentazione).
-                    
-            
-        \section{Normalizzazione delle Proiezioni}
-            <TODO mettilo in alto>
-            \par
-                L'intensità dei pixel componenti una proiezione, diretto risultato d'acquisizione da parte del detector, è direttamente proporzionale all'intensità della sorgente. Gli algoritmi di ricostruzione richiedono, per ogni proiezione, l'informazione relativa alla somma dei coefficienti di attenuazione lineare degli $n$ voxel\footnote{Il voxel è un elemento di volume che rappresenta l'informazione in uno spazio tridimensionale, analogamente al pixel che rappresenta informazioni relative ad un'immagine bidimensionale.} dell'oggetto attraversati durante l'acquisizione, informazione indipendente dall'intensità del fascio sorgente. La \textit{Normalizzazione dello Stack} non è altro che il processo di ottenimento della somma dei coefficienti di attenuazione a partire dalla rilevazione del detector.
-          
-                \begin{figure}[h]
-                    \centering
-                    \includegraphics[width=0.7\textwidth]{normalization}
-                    \caption{Effetti della procedura di normalizzazione. Immagine a sinistra: non normalizzata. Immagine a destra: normalizzata.}
-                    \label{fig:skull-phantom}
-                \end{figure}
-                
-                Matematicamente, le proiezioni $p(s,\theta)$, essendo il diretto risultato rilevato dal detector in fase di acquisizione, contengono l'informazione relativa all'attenuazione del fascio dovuta al passaggio attraverso il corpo. Ogni pixel di ciascuna proiezione (ottenuta ad un preciso angolo di acquisizione) registra l'intensità attenuata I, la quale è governata dalla legge di Lambert-Beer\cite{lambert-beer}:
-
-                    \begin{equation} \label{eq:lambert}
-                        \texttt{I} = \texttt{Io} \cdot e^{- (\mu1 + \mu2 + ...  + \mu n)}
-                    \end{equation}
-                    
-                    Dove:
-                    \begin{itemize}
-                      \item \texttt{I} = Intensità rilevata (attenuata).
-                      \item \texttt{$ (\mu1 + \mu2 + ... + \mu n) $} = Somma dei coefficienti di attenuazione lineare appartenenti ad n voxel incontrati.
-                    \end{itemize}
-                    
-                \par
-                    Avendo a disposizione l'intensità della sorgente \texttt{Io}, è possibile ottenere la somma dei coefficienti di attenuazione lineare manipolando algebricamente (\ref{eq:lambert}):
-                    
-                    \begin{equation} \label{eq:normalization}
-                        (\mu1 + \mu2 + ... + \mu n) = - \log_e{(I/Io)}
-                    \end{equation}
-                    
-                    Questo processo viene definito Normalizzazione delle proiezioni.
-                
-            \subsection{Ottenimento Io}
-                \label{sub:io}
-                \par
-                    La sorgente non emette sempre la medesima intensità in ogni fase di acquisizione. Per questo motivo il valore \texttt{Io} dev'essere registrato o calcolato per ciascuna proiezione componente lo Stack (per ogni angolo di acquisizione).
-                    Esistono due principali metodologie per poter ottenere questo valore:
-               
-                    \begin{enumerate}
-                        \item Approssimazione:
-                            \par
-                                Se la dimensione dell'oggetto non ricopre l'intera area del detector, alcune zone del detector assorbono radiazione non attenuata.
-                                
-                                Per poter approssimare l'effettiva intensità della sorgente, è possibile selezionare il pixel avente l'intensità maggiore. Altre tecniche prevedono un calcolo basato sulla media dei pixel che non hanno registrato attenuazione.
-                                E' da notare che questa tecnica non è sempre attuabile: nel caso in cui l'oggetto occupi l'intera area del detector, questo non conterrà aree non attenuate.
-                        
-                        \item Salvataggio Fisico:
-                            \par
-                                Un sensore posto in prossimità della sorgente sorgente registra l'intensità del fascio per quel particolare angolo prima che la radiazione attraversi l'oggetto. Questa alternativa è ideale poichè, oltre ad essere sempre attuabile, fornisce un'intensità \texttt{Io} sempre corretta (non approssimata).
-                    \end{enumerate}                
-                
-                   
-                    
-                    
-                                  
+                                              
     \chapter{Sviluppo del Progetto}
         \section{Obiettivo}
             <TODO>
@@ -802,7 +767,7 @@ gw.Execute( geometry )
         \section{Normalizzazione degli Stack a disposizione}
             \label{sec:norm-disp}
             \par
-                RTK legge lo stack di proiezione meniante una classe chiamata ProjectionsReader() \cite{projections-reader}. Esso fornisce supporto di approssimazione \texttt{Io} (si veda Sottosezione \ref{sub:io}) solo per alcuni formati: .his (Elekta Synergy), .hnd (Varian OBI), .edf (ESRF), .XRad\footnote{Tra parentesi sono indicati gli scanner commerciali che producono Stack di proiezione aventi il formato indicato.}. Per tutti gli altri formati supportati da ITK, l'approssimazione \texttt{Io} non è supportata.
+                RTK legge lo stack di proiezione meniante una classe chiamata ProjectionsReader() \cite{projections-reader}.
             \par    
                 Gli Stack di proiezione a disposizione, essendo in formato .mha, devono necessariamente essere normalizzati manualmente (ottenendo l'informazione \texttt{Io} da file .csv) prima di poter essere letti da un qualunque applicativo di ricostruzione fornito da RTK.
                 La procedura richiesta è la medesima descritta in Sezione \ref{sec:normalizzation} e si compone in queste fasi:
@@ -971,8 +936,8 @@ Backprojection: 180.379 s
             \subsection{Utilizzi futuri}
             
     \chapter{Risultati e Conclusioni}
-        \subsection{Risultati}
-        \subsection{Conclusioni}
+        \section{Risultati}
+        \section{Conclusioni}
 
 
 
