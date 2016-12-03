@@ -110,15 +110,8 @@
         		Spesso l'introduzione è l'ultimo capitolo che viene scritto, sebbene sia il rpimo che si incontra nella lettura della tesi.
         	>
         \par
-            Questa tesi tratta lo studio e l'utilizzo della libreria OpenRTK \cite{openrtk-website} basata su Insight Toolkit (ITK).\cite{itk-website}, la quale fornisce sia un insieme di tools basilari per poter eseguire efficientemente ricostruzioni tomografiche ( filtering, forward projection, backprojection ), sia un set di strumenti per poter eseguire il calcolo a livello multithreaded, sia su CPU che su GPU. Presenta inoltre delle interfacce I/O calibrate per un insieme limitato di CAT scanner attualmente in commercio.
-    
-        \par
-            Per semplificarne l'utilizzo viene realizzato un package Python che si appoggia sia sulla libreria OpenRTK per eseguire le retroproiezioni sia su tools esterni come SimpleITK, una libreria più leggera rispetto ad Insight ToolKit per aiutare nella normalizzazione e conversione delle proiezioni in formato .MHA / .MHD.
-            Il package è eseguibile a linea di comando, ed è facilmente estendibile per coprire anche eventuali evoluzioni della libreria OpenRTK.
-    
-        \par
-            [TODO nella sezione X si fa Y etc bla di blabla, il secondo di blabla]
-    
+            Questa tesi tratta lo studio e l'utilizzo della libreria OpenRTK \cite{openrtk-website} basata su Insight Toolkit (ITK) \cite{itk-website}, la quale fornisce sia un insieme di tools basilari per poter eseguire efficientemente ricostruzioni tomografiche ( filtering, forward projection, backprojection ), sia un set di strumenti per poter eseguire il calcolo a livello multithreaded, sia su CPU che su GPU. Presenta inoltre delle interfacce I/O calibrate per un insieme limitato di CAT scanner attualmente in commercio.
+
     \newpage
     \tableofcontents
     \newpage
@@ -130,7 +123,7 @@
             
             \subsection{Limiti della Radiografia Convenzionale}
                 \par
-                    Questa metodologia è sostanzialmente composta da una sorgente a Raggi X, i quali vengono proiettati attraverso il corpo ed impressi su lastra radiografica bidimensionale. E’ essenzialmente il risultato dell’attenuazione media\cite{hounsfield-nobel-lecture} dei raggi dovuta alla composizione del materiale incontrato dalla sorgente alla pellicola. Nel caso in cui l’oggetto in esame sia il corpo umano, la quantità di attenuazione è direttamente proporzionale alla densità dei vari tessuti incontrati: i polmoni, contenendo aria, assorbono poca radiazione; le ossa, essendo molto dense, ne assorbono maggiormente.
+                    La Radiografia Convenzionale è sostanzialmente composta da una sorgente a Raggi X, i quali vengono proiettati attraverso il corpo ed impressi su lastra radiografica bidimensionale. E' il risultato dell’attenuazione media \cite{hounsfield-nobel-lecture} dei raggi dovuta alla composizione del materiale incontrato dalla sorgente alla pellicola. Nel caso in cui l’oggetto in esame sia il corpo umano, la quantità di attenuazione è direttamente proporzionale alla densità dei vari tessuti incontrati: i polmoni, contenendo aria, assorbono poca radiazione; le ossa, essendo molto dense, ne assorbono maggiormente.
                             
                     \begin{figure}[h]
                         \centering
@@ -140,16 +133,15 @@
                     \end{figure}
                         
                     \bigskip
-                    Dalla radiografia in \texttt{Figura \ref{fig:skull}}, è possibile distinguere solamente cinque vari livelli di densità. Partendo dal meno denso, si visualizza \textit{l'aria}, di colore nero; \textit{l'acqua o i tessuti molli}, che si visualizzano con un grigio chiaro; \textit{il grasso}, evidenziato con un colore grigio scuro; \textit{le ossa}, che presentano una colorazione tendente al bianco; \textit{il campione metallico} (L), di colore bianco. L’acqua ed i tessuti molli\footnote{Sostanzialmente si vuole definire così tutto ciò che non ha la stessa densità dell'osso.} possiedono circa la medesima densità. E' impossibile analizzare il cervello ed evidenziarne un'eventuale patologia, poiché esso è rappresentato come una zona omogeneamente grigia. L'ottenimento di un'immagine del cervello mediante radiografia classica rimase una sfida sin dal periodo immediatamente successivo al 1985, anno in cui vennero scoperti i raggi X. Anche il grande scienziato ed inventore Thomas Edison agli inizi del '900 si cimentò senza successo nell'impresa, a causa delle grosse limitazioni che l'analisi imponeva.\cite{thomas-edison-brain} Il cervello è infatti composto da tessuti molli, racchiusi all’interno di uno scheletro denso che impedisce alla maggior parte della radiazione di penetrarli; fluttua inoltre a bagno in un liquido chiamato \textit{fluido celebro spinale\footnote{Liquido che fornisce nutrienti ed agisce come cuscino al fine di proteggere la materia grigia stessa}} il che rende ancor più ardua l'impresa. Questo tipo di analisi, si scoprì, essere tecnologicamente inaccessibile alla radiografia convenzionale.
+                    Dalla radiografia in \texttt{Figura \ref{fig:skull}}, è possibile distinguere solamente cinque vari livelli di densità. Partendo dal meno denso, si visualizza \textit{l'aria}, di colore nero; \textit{l'acqua o i tessuti molli\footnote{Sostanzialmente si vuole definire tutto ciò che non ha la stessa densità dell'osso.}}, che si visualizzano con un grigio chiaro; \textit{il grasso}, evidenziato con un colore grigio scuro; \textit{le ossa}, che presentano una colorazione tendente al bianco; \textit{il campione metallico} (L), di colore bianco. L’acqua ed i tessuti molli possiedono circa la medesima densità. E' impossibile analizzare il cervello ed evidenziarne un'eventuale patologia, poiché esso è rappresentato come una zona omogeneamente grigia. L'ottenimento di un'immagine del cervello mediante Radiografia Convenzionale divenne una sfida sin dal periodo immediatamente successivo al 1985, anno in cui vennero scoperti i raggi X. Anche il grande scienziato ed inventore Thomas Edison agli inizi del 1900 si cimentò senza successo nell'impresa, a causa delle grosse limitazioni che l'analisi imponeva.\cite{thomas-edison-brain} Il cervello è composto da tessuti molli, racchiusi all’interno di uno scheletro denso che impedisce alla maggior parte della radiazione di penetrarli. Fluttua a bagno in un liquido chiamato \textit{fluido celebro spinale\footnote{Liquido che fornisce nutrienti ed agisce come cuscino al fine di proteggere la materia grigia stessa}} il che rende ancor più ardua l'impresa. Questo tipo di analisi, si scoprì, essere tecnologicamente inaccessibile alla Radiografia Convenzionale.
                 
                 \bigskip 
                 \par
-                    Un radiogramma\footnote{Immagine ottenuta mediante radiografia.} impone diversi limiti diagnostici. Il \textit{problema delle ombre} è una diretta conseguenza del fatto che le complesse strutture tridimensionali del corpo umano, nella radiografia, vengono impresse su lastra bidimensionale. Un tumore, ad esempio, se celato da una struttura ad alta densità come le costole, può passare completamente inosservato alla diagnosi. Questo fu il problema che tormentò i radiologi sin dagli inizi del XX secolo e fu la ragione che portò allo sviluppo delle prime forme di Tomografia Classica (non computerizzata).
-                    La lastra radiografica inoltre risulta un mezzo intrinsecamente inadeguato al fine di registrare le differenze di intensità dovute all'attenuazione dei raggi X durante il passaggio attraverso il corpo, non consentendo la distinzione tra i tessuti molli.
+                    Un radiogramma\footnote{Immagine ottenuta mediante radiografia.} impone diversi limiti diagnostici. Il \textit{problema delle ombre} è una diretta conseguenza del fatto che le complesse strutture tridimensionali del corpo umano, nella radiografia, vengono impresse su lastra bidimensionale. Un tumore, ad esempio, se celato da una struttura ad alta densità come le costole, può passare completamente inosservato alla diagnosi. La lastra radiografica inoltre risulta un mezzo intrinsecamente inadeguato al fine di registrare le differenze di intensità dovute all'attenuazione dei raggi X durante il passaggio attraverso il corpo, non consentendo la distinzione tra i tessuti molli.
                 
                 \bigskip            
                 \par
-                    Il vero problema della radiografia convenzionale è l'immensa perdita di informazione riscontrata in fase di acquisizione. Il \textit{problema delle ombre} verrà parzialmente risolto con lo sviluppo della tomografia convenzionale, l'analisi dei tessuti molli sarà invece possibile solamente con l'avvento della Tomografia Computerizzata (TC), che consentirà l'accurata misurazione dei valori d'assorbimento, riuscendo a distinguere la natura del materiale o del tessuto.
+                    La reale limitazione, nella Radiografia Convenzionale, è l'immensa perdita di informazione riscontrata in fase di acquisizione. Il \textit{problema delle ombre} verrà parzialmente risolto con lo sviluppo della Tomografia Convenzionale, l'analisi dei tessuti molli sarà invece possibile solamente con l'avvento della Tomografia Computerizzata (TC), che consentirà l'accurata misurazione dei valori d'assorbimento, riuscendo a distinguere la natura del materiale o del tessuto.
                             
             \subsection{Tomografia Convenzionale}
             \label{sub:TomografiaConvenzionale}
@@ -158,12 +150,12 @@
                 
                 \bigskip            
                 \par
-                    I primi studi risalgono al primo ventennio del 1900 e la tomografia convenzionale, curiosamente, venne indipendentemente scoperta più volte da diversi ricercatori sia Europei che Americani senza che questi scambiassero informazioni: all'epoca, i livelli di comunicazione non erano affatto sviluppati. Un pensiero espresso da Alessandro Vallebona, uno dei cinque grandi pionieri di questa metodologia, era il seguente: \textit{“quando un settore della scienza e della tecnica è maturo per progredire, per fare un passo avanti, il progresso avviene, a volte contemporaneamente oppure a breve distanza di tempo, promosso da persone diverse, anche in Paesi diversi”}\cite{vallebona-pensiero}.
-                    Non è infatti difficile recuperare manoscritti nei quali si rivendicano la paternità dell'opera e violazioni d'utilizzo dei brevetti\cite{vallebona-difesa}. Queste ricerche produssero differenti nomenclature, generando molta confusione riguardo l'oggetto di studio. Solamente nel 1962, durante la \textit{International Commission of Radiologic Units and Measurements} (ICRU\footnote{\url{http://www.icru.org/}}), venne selezionata la nomenclatura “tomografia”, che venne presto adottata ovunque nel Mondo.
+                    I primi studi risalgono al primo ventennio del 1900 e la tomografia convenzionale, curiosamente, venne indipendentemente scoperta più volte da diversi ricercatori sia Europei che Americani senza che questi scambiassero informazioni: all'epoca, i livelli di comunicazione non erano affatto sviluppati. Un pensiero espresso da Alessandro Vallebona, uno dei cinque grandi pionieri di questa metodologia, era il seguente: \textit{“quando un settore della scienza e della tecnica è maturo per progredire, per fare un passo avanti, il progresso avviene, a volte contemporaneamente oppure a breve distanza di tempo, promosso da persone diverse, anche in Paesi diversi”} \cite{vallebona-pensiero}.
+                    Non è infatti difficile recuperare manoscritti nei quali si rivendicano la paternità dell'opera e violazioni d'utilizzo dei brevetti\cite{vallebona-difesa}. Queste ricerche produssero differenti nomenclature, generando molta confusione riguardo l'oggetto di studio. Solamente nel 1962, durante la \textit{International Commission of Radiologic Units and Measurements} (ICRU), venne selezionata la nomenclatura “\textit{Tomografia}”, che venne presto adottata ovunque nel Mondo.
                             
                 \bigskip
                 \par
-                    I ricercatori condivisero uno scopo comune: superare il problema delle ombre. Furono offerte numerose soluzioni, ma il metodo più convincente risultò la stratificazione dei tessuti del corpo. In questo modo, utilizzando la geometria proiettiva, il problema delle ombre poteva essere parzialmente superato, nonostante gli elevati livelli di radiazione richiesti dalla procedura. Per poter eseguire la Tomografia Convenzionale senza computazione, in un puro sistema meccanico, due dei tre elementi (tubo, paziente e lastra) dovevano necessariamente muoversi in modo sincrono durante l’esposizione alla radiazione.  In questo caso il corpo veniva mantenuto fermo, mentre tubo e lastra si muovevano in modo sincrono ed opposto. Solamente circa 1/10 della lunghezza del fascio che attraversava il corpo intersecava effettivamente il piano di interesse, i restanti 9/10 attraversavano il corpo collezionando informazione inutile, non voluta. Questa è la motivazione per cui, in questi tomogrammi, era facile riscontrare artefatti.\cite{hounsfield-nobel-lecture}.
+                    Il problema delle ombre stimolò la ricerca. Il metodo più convincente per la risoluzione risultò la stratificazione dei tessuti del corpo. In questo modo, utilizzando la geometria proiettiva, il problema poteva essere parzialmente superato, nonostante gli elevati livelli di radiazione richiesti dalla procedura. Per poter eseguire la Tomografia Convenzionale senza computazione, in un puro sistema meccanico, due dei tre elementi (tubo, paziente e lastra) dovevano necessariamente muoversi in modo sincrono durante l’esposizione alla radiazione.  In questo caso il corpo veniva mantenuto fermo, mentre tubo e lastra si muovevano in modo sincrono ed opposto. Solamente circa 1/10 della lunghezza del fascio che attraversava il corpo intersecava effettivamente il piano di interesse, i restanti 9/10 attraversavano il corpo collezionando informazione inutile, non voluta. Questa è la motivazione per cui, in questi tomogrammi, era facile riscontrare artefatti \cite{hounsfield-nobel-lecture}.
                 
                 \bigskip
                 \par
@@ -172,20 +164,20 @@
                 \bigskip
                 \par
                     Lo sviluppo del primo dispositivo clinico, il Polytome, venne sviluppato a Parigi nel 1950. Le immagini ricavate da questo dispositivo stimolarono le ricerche in ambito clinico, inizialmente dagli Europei e successivamente dagli Americani (anni ‘60).
-                    Le applicazioni più frequenti, riguardavano quelle parti del corpo in cui poteva essere presente un alto livello di contrasto, come il cranio. Le immagini sezionali permettevano l’esplorazione dell’intricata rete ossea, tra cui i seni paranasali, la sella turcica\footnote{La sella turcica o sella turca costituisce la faccia superiore del corpo dell'osso sfenoide, un osso impari e mediano del neurocranio.} ed altre aree completamente inaccessibili alla Radiografia Convenzionale. Comparirono successivamente al Polytome diversi nuovi dispositivi che evidenziarono la necessità di ottenere un efficace imaging sezionale.
+                    Le applicazioni più frequenti, riguardavano quelle parti del corpo in cui poteva essere presente un alto livello di contrasto, come il cranio. Le immagini sezionali permettevano l’esplorazione dell’intricata rete ossea, tra cui i seni paranasali, la sella turcica\footnote{La sella turcica o sella turca costituisce la faccia superiore del corpo dell'osso sfenoide, un osso impari e mediano del neurocranio.} ed altre aree completamente inaccessibili alla Radiografia Convenzionale. Comparirono successivamente al Polytome diversi nuovi dispositivi che evidenziarono la necessità di ottenere un efficace imaging sezionale \cite{conventional-tomography}.
                 
                 \bigskip
                 \par
-                    E’ importante notare che la Tomografia Convenzionale non permise l’accesso all’imaging dei tessuti molli, un’immagine sezionale del cervello risulterà quindi possibile solo con l’avvento della Tomografia Computerizzata. Si può storicamente affermare che la Tomografia Convenzionale ha gettato le basi al di sopra delle quali si sono evolute le avanzate tecnologie CT che oggi apprezziamo.
+                    Si ricorda che la Tomografia Convenzionale non permise l’accesso all’imaging dei tessuti molli, un’immagine sezionale del cervello risulterà quindi possibile solo con l’avvento della Tomografia Computerizzata. Si può storicamente affermare che la Tomografia Convenzionale ha gettato le basi al di sopra delle quali si sono evolute le avanzate tecnologie CT che oggi apprezziamo.
                         
             \subsection{Tomografia Computerizzata}
                 \par      
-                    La nascita della Tomografia Computerizzata riflette l'evoluzione della tomografia classica. Il pensiero di Vallebona, citato nella sottosezione \ref{sub:TomografiaConvenzionale}, ha validità anche in questo caso: tre ricercatori, Allan McLeod Cormack, William H. Oldendorf e Godfrey N. Hounsfield, indipendentemente, svilupparono i principi base della TC intorno al 1960. Cormack ed Hounsfield ricevettero il Premio Nobel nel 1979, Oldendorf fu invece vittima di una controversia\cite{nobel-debate} e non venne premiato. 
-                    Sia Cormack che Oldendorf ottennero prototipi funzionanti, ma l'ingegnere britannico Godfrey N. Hounsfield fu l'unico in grado di ottenere diverse realizzazioni commerciali di successo.
+                    La nascita della Tomografia Computerizzata riflette l'evoluzione della tomografia classica. Il pensiero di Vallebona, citato nella sottosezione \ref{sub:TomografiaConvenzionale}, ha validità anche in questo caso: tre ricercatori, Allan McLeod Cormack, William H. Oldendorf e Godfrey N. Hounsfield, indipendentemente, svilupparono i principi base della TC intorno al 1960. Cormack ed Hounsfield ricevettero il Premio Nobel nel 1979, Oldendorf fu invece vittima di una controversia \cite{nobel-debate} e non venne premiato. 
+                    Sia Cormack che Oldendorf ottennero prototipi funzionanti, ma l'ingegnere britannico Sir Godfrey N. Hounsfield fu l'unico in grado di ottenere diverse realizzazioni commerciali di successo.
                 
                 \bigskip
                 \par
-                    Hounsfield lavorò dal 1951 per la EMI Ltd di Londra, periodo nel quale si interessò particolarmente ai computer e contribuì alla costruzione del primo computer a transistor in assoluto assemblato in Gran Bretagna\cite{hounsfield-autobiografia}. Successivamente, negli anni '60, egli concepì l’idea della Tomografia Computerizzata ed iniziò le prime sperimentazioni.
+                    Hounsfield lavorò dal 1951 per la EMI Ltd di Londra, periodo nel quale si interessò particolarmente ai computer e contribuì alla costruzione del primo computer a transistor in assoluto assemblato in Gran Bretagna \cite{hounsfield-autobiografia}. Successivamente, negli anni '60, egli concepì l’idea della Tomografia Computerizzata ed iniziò le prime sperimentazioni.
                             
                     \begin{figure}[h]
                         \centering
@@ -194,41 +186,41 @@
                         \label{fig:second-prototype}
                     \end{figure}
                             
-                    Il primo prototipo era composto da una scatola di piombo con un piccolo foro posto nella parte anteriore, all’interno della quale era presente un materiale radioattivo, l’Americium, capace di fornire una fonte costante, non particolarmente intensa, di raggi gamma. La radiazione fuoriusciva dal foro in singolo fascio collimato a configurazione pencil-beam. Il piatto, sul quale venivano posizionati degli oggetti test (fantocci), veniva traslato orizzontalmente per permettere al singolo fascio di poter raggiungere tutti gli oggetti. Al termine della traslazione, il piatto veniva fatto roteare di 1\degree, ed il procedimento veniva ripetuto fino all'ottenimento di 180 proiezioni. I livelli d'attenuazione erano letti dal singolo detector opposto alla sorgente. Il processo di scansione durava ben nove giorni, la ricostruzione computerizzata degli oggetti richiedeva più di due ore di processamento. Questo fu un risultato molto importante, poiché dimostrò che la Tomografia Computerizzata era tecnologicamente e fisicamente possibile. Il secondo prototipo, di medesima geometria ma avente un generatore di Raggi X anziché l’Americium è visibile in \texttt{Figura \ref{fig:second-prototype}}.
+                    Il primo prototipo era composto da una scatola di piombo con un piccolo foro posto nella parte anteriore, all’interno della quale era presente un materiale radioattivo, l’Americium, capace di fornire una fonte costante, non particolarmente intensa, di raggi gamma. La radiazione fuoriusciva dal foro in un singolo fascio collimato a configurazione pencil-beam. Il piatto, sul quale venivano posizionati degli oggetti test (fantocci), veniva traslato orizzontalmente per permettere al singolo fascio di poter raggiungere tutti gli oggetti. Al termine della traslazione, il piatto veniva fatto roteare di 1\degree, ed il procedimento veniva ripetuto fino all'ottenimento di 180 proiezioni. I livelli d'attenuazione erano letti dal singolo detector opposto alla sorgente. Il processo di scansione durava ben nove giorni, la ricostruzione computerizzata degli oggetti richiedeva più di due ore di processamento. Questo fu un risultato molto importante, poiché dimostrò che la Tomografia Computerizzata era tecnologicamente e fisicamente possibile. Il secondo prototipo di Hounsfield, di medesima geometria ma avente un generatore di Raggi X al posto dell'Americium, è visibile in \texttt{Figura \ref{fig:second-prototype}}.
                 
                 \bigskip
                 \par
-                    Hounsfield ed i suoi collaboratori, mantenendo la stessa geometria a rotazione-traslazione, continuarono la fase di prototipazione diminuendo via via le tempistiche di acquisizione. Si resero presto conto che l'avanzamento tecnologico avrebbe permesso l'analisi dei tessuti molli, ma non furono ancora certi che questo avrebbe permesso la localizzazione spaziale dei tumori. A verifica di ciò venne creato il primo dispositivo ad utilizzo clinico, molto più veloce e sofisticato rispetto ai prototipi precedenti, dedicato alla sola analisi del cranio, che doveva rimanere estremamente fermo durante l'acquisizione. Nel 1972 la prima paziente in assoluto fu una donna, il cui cervello si pensava presentasse anomalie. La prima immagine rivelò in chiaro ed inconfondibile dettaglio una cisti circolare nera situata nel lobo frontale della paziente, che fu successivamente operata con successo. Dopo aver analizzato molti altri pazienti divenne inconfutabile il fatto che la macchina fosse perfettamente in grado di effettuare l'analisi dei tessuti molli e di praticare la distinzione tra tessuti sani e malati.\cite{hounsfield-nobel-lecture}.
+                    Hounsfield ed i suoi collaboratori, mantenendo la stessa geometria a rotazione-traslazione, continuarono la fase di prototipazione diminuendo via via le tempistiche di acquisizione. Si resero presto conto che l'avanzamento tecnologico avrebbe permesso l'analisi dei tessuti molli, ma non furono ancora certi che questo avrebbe permesso la localizzazione spaziale dei tumori. A verifica di ciò venne creato il primo dispositivo ad utilizzo clinico, molto più veloce e sofisticato rispetto ai prototipi precedenti, dedicato alla sola analisi del cranio, che doveva rimanere estremamente fermo durante l'acquisizione. Nel 1972 la prima paziente in assoluto fu una donna, il cui cervello si pensava presentasse anomalie. La prima immagine rivelò in chiaro ed inconfondibile dettaglio una cisti circolare nera situata nel lobo frontale della paziente, che fu successivamente operata con successo \cite{scanner-story}. Dopo aver analizzato molti altri pazienti divenne inconfutabile il fatto che la macchina fosse perfettamente in grado di effettuare l'analisi dei tessuti molli e di praticare la distinzione tra tessuti sani e malati \cite{hounsfield-nobel-lecture}.
                     
                 \bigskip
                 \par
-                    Per la prima volta nella storia, i limiti imposti dalla radiografia convenzionale risultarono completamente superati e si aprì la strada ad una rapida innovazione che coinvolse la riduzione dei tempi di esposizione e l'analisi di tutte le parti del corpo. Il team coordinato da Hounsfield già qualche anno dopo, riuscì a costruire macchinari sempre più complessi, con un tempo di acquisizione prossimo ai tre secondi.
+                    Per la prima volta nella storia, i limiti imposti dalla Radiografia Convenzionale risultarono completamente superati e si aprì la strada ad una rapida innovazione che coinvolse la riduzione dei tempi di esposizione e l'analisi di tutte le parti del corpo. Il team coordinato da Hounsfield già qualche anno dopo, riuscì a costruire macchinari sempre più complessi, con un tempo di acquisizione prossimo ai tre secondi.
                             
             \subsection{Evoluzione generazionale}
                 \par
-                    Per evoluzione generazionale si intende la sequenza temporale nel quale un particolare tipo di CT scanner, avente una ben precisa disposizione dei componenti e specifiche caratteristiche nei movimenti meccanici di base, è stato introdotto nel mercato. Va precisato che, al crescere del numero di generazione, non crescono necessariamente le performance del sistema.
+                    Per evoluzione generazionale si intende la sequenza temporale nel quale un particolare tipo di CT scanner, avente una ben precisa disposizione dei componenti e specifiche caratteristiche nei movimenti meccanici di base, è stato introdotto nel mercato. Va precisato che, al crescere del numero di generazione, non crescono necessariamente le performance del sistema \cite{generazionale}.
                         
                 \bigskip
                 \par
-                    \textbf{Scanner di prima generazione.} La sorgente veniva collimata in un raggio pencil-beam direzionato ad un singolo detector allineato alla sorgente e posizionato all’altro lato dell'oggetto in analisi. Una singola proiezione veniva ottenuta muovendo il tubo sorgente ed il detector in una traslazione sincrona. Per poter ottenere la successiva proiezione, l'apparato di acquisizione ruotava di 1\degree e veniva traslata nella direzione opposta. Questo processo, di rotazione e traslazione, doveva essere ripetuto fino all’ottenimento di 180 proiezioni. Le prime versioni richiedevano circa 4 o 5 minuti per poter portare a termine la scansione, ed erano limitate a quelle parti del corpo dove il movimento del paziente poteva essere controllato (cranio). Questa particolare configurazione viene anche detta "\textit{parallel-beam}".
+                    \textbf{Scanner di prima generazione.} La sorgente veniva collimata in un raggio pencil-beam direzionato ad un singolo detector allineato alla sorgente e posizionato all’altro lato dell'oggetto in analisi. Una singola proiezione veniva ottenuta muovendo il tubo sorgente ed il detector in una traslazione sincrona. Per poter ottenere la successiva proiezione, l'apparato di acquisizione ruotava di 1\degree e veniva traslata nella direzione opposta. Questo processo doveva essere ripetuto fino all’ottenimento di 180 proiezioni. Le prime versioni richiedevano circa 4 o 5 minuti per poter portare a termine la scansione, ed erano limitate a quelle parti del corpo dove il movimento del paziente poteva essere controllato (cranio). Questa particolare configurazione viene anche detta "\textit{parallel-beam}".
                             
                 \bigskip
                 \par
-                    \textbf{Scanner di seconda generazione.} Il maggiore sforzo fu concentrato nella riduzione dei tempi di acquisizione, fino all'ottenimento dell'imaging in sezioni caratterizzate da movimento naturale, quali il tronco. Aggiungendo multipli detector disposti circolarmente, diverse proiezioni potevano essere ottenute in una singola traslazione. Uno dei primi prototipi, che presentava 3 detector con displacement di 1\degree, poteva effettuare 60 traslazioni anzichè 180. Questo era possibile poichè ciascun detector vedeva la sorgente ad un angolo differente, ottenendo in una singola traslazione ben 3 proiezioni. Il sistema, una volta terminata la traslazione, poteva roteare di 3\degree  ed ottenere la nuova proiezione. I tempi di scansione erano quindi ridotti di un terzo. 
+                    \textbf{Scanner di seconda generazione.} Aggiungendo multipli detector disposti circolarmente, diverse proiezioni potevano essere ottenute in una singola traslazione. Uno dei primi prototipi, che presentava 3 detector con displacement di 1\degree, poteva effettuare 60 traslazioni anziché 180. Questo era possibile poiché ciascun detector vedeva la sorgente ad un angolo differente, ottenendo in una singola traslazione ben 3 proiezioni. Il sistema, una volta terminata la traslazione, poteva roteare di 3\degree  ed ottenere la nuova proiezione. I tempi di scansione venivano quindi ridotti di un terzo. 
                         
                 \bigskip
                 \par
-                    \textbf{Scanner di terza generazione.} In questi scanner, la sorgente è collimata in una struttura a ventaglio (fan-beam) diretta verso i detector disposti ad arco. Durante la scansione, il tubo e l’array di detector ruotano lungo il paziente e differenti proiezioni vengono ottenute durante la rotazione facendo pulsare la sorgente a raggi X oppure campionando i detector ad una frequenza elevata. Il sistema puramente rotazionale ha permesso l’accesso a sorgenti a più elevata potenza, permettendo una notevole riduzione dei tempi d’acquisizione. Un aspetto di questa geometria è che i raggi in una singola proiezione sono divergenti anziché paralleli. La divergenza dei raggi richiede qualche modifica all’interno degli algoritmi di ricostruzione. Tutti gli scanner CT odierni sono basati su modifiche di questo design. 
+                    \textbf{Scanner di terza generazione.} In questi scanner, la sorgente è collimata in una struttura a ventaglio (fan-beam) diretta verso i detector disposti ad arco. Durante la scansione, il tubo e l’array di detector ruotano lungo il paziente e differenti proiezioni vengono ottenute durante la rotazione facendo pulsare la sorgente a raggi X oppure campionando i detector ad una frequenza elevata. Il sistema puramente rotazionale ha permesso l’accesso a sorgenti a più elevata potenza, permettendo una notevole riduzione dei tempi d’acquisizione. La divergenza dei raggi, richiede qualche modifica all’interno degli algoritmi di ricostruzione. Tutti gli scanner CT odierni sono basati su modifiche di questo design. 
                             
                 \bigskip
                 \par
-                    \textbf{Scanner di quarta generazione.} Questo particolare design si evolse simultaneamente alla terza generazione. In questo particolare caso, venne fatta roteare solo la sorgente mantenendo fisso un intero anello composto da detector. Inizialmente questi dispositivi possedevano 600 detector, successivamente arrivarono fino a 4800, con tempi di acquisizione comparabili agli scanner di terza generazione. Questo design tuttavia presentò diverse limitazioni, una tra queste fu dovuta all’inefficiente utilizzo dei detector (meno di 1/4 venne effettivamente utilizzato ad ogni istante della scansione). L'altra limitazione era dovuta ad una maggior suscettibilità alla presenza di artefatti (dovuti allo scattering\footnote{Deflessione dei raggi X dovuta collisione con altri raggi X.}). Per queste ragioni questi scanner non vennero più prodotti.
+                    \textbf{Scanner di quarta generazione.} Questo particolare design si evolse parallelamente alla terza generazione. In questo caso, venne fatta roteare solo la sorgente mantenendo fisso un intero anello composto da detector. Inizialmente questi dispositivi possedevano 600 detector, successivamente arrivarono fino a 4800, con tempi di acquisizione comparabili agli scanner di terza generazione. Questo design tuttavia presentò diverse limitazioni, quali l’inefficiente utilizzo dei detector (meno di 1/4 venne effettivamente utilizzato ad ogni istante della scansione) ed una maggior suscettibilità alla presenza di artefatti (dovuti allo scattering\footnote{Deflessione dei raggi X dovuta collisione con altri raggi X.}). Per queste ragioni questi scanner non vennero più prodotti..
                             
         \section{Moderne Architetture X-Ray CT}
             \subsection{A Spirale}
                 \par
                     Nel 1990, lo sviluppo di questa architettura, (evolutasi dalla geometria Fan-Beam, 3\degree Generazione) fu una vera rivoluzione nell'acquisizione CT. Per la prima volta nella storia fu possibile ottenere una scansione tridimensionale dell'intero corpo del paziente con un unica trattenuta di respiro.
-                    La tecnica consiste in un'acquisizione continua: mentre sorgente e detector ruotano continuamente, il lettino del paziente viene fatto traslare orizzontalmente all'interno dell'apparato di acquisizione. Questa tecnologia richiese tre avanzamenti tecnologici: la Slip Ring Technology, sorgenti a raggi X ad elevata intensità ed algoritmi di interpolazione che gestiscano le proiezioni non complanari.
+                    La tecnica consiste in un'acquisizione continua: mentre sorgente e detector ruotano continuamente, il lettino del paziente viene fatto traslare orizzontalmente all'interno dell'apparato di acquisizione. Questa tecnologia richiese tre avanzamenti tecnologici: la Slip Ring Technology, sorgenti a Raggi X ad elevata intensità ed algoritmi di interpolazione che gestiscano le proiezioni non complanari.
                     
                     \begin{figure}[h]
                         \centering
@@ -248,7 +240,7 @@
                     
             \subsection{Cone Beam CT}
                 \par
-                    L'architettura Cone Beam, abbreviata CBCT, prevede l'utilizzo di un detector bidimensionale ed una sorgente che consente la distribuzione del fascio a raggi X a forma conica. Fu sviluppato a partire dal 1980 ma il vero potenziale venne apprezzato grazie al lavoro di ricercatori Veronesi che proposero l'utilizzo CBCT in ambito dento-maxillo-facciale\footnote{Imaging di bocca, mascella, mandibola, viso e collo.}. Questa tecnologia trova applicazioni anche nelle procedure angiografiche\footnote{Rappresentazione a scopo diagnostico dei vasi sanguigni o linfatici del corpo umano}, nella radiologia interventistica, radioterapia guidata (IGRT)\footnote{La radioterapia guidata permette di monitorare la reale posizione del volume bersaglio immediatamente prima del trattamento mediante radiazione.} nella mammografia ed alcuni utilizzi in ambito osteoarticolare e veterinario.
+                    L'architettura Cone Beam, abbreviata CBCT, prevede l'utilizzo di un detector bidimensionale ed una sorgente che consente la distribuzione del fascio a raggi X a forma conica o piramidale. Fu sviluppato a partire dal 1980 ma il vero potenziale venne apprezzato grazie al lavoro di ricercatori Veronesi che proposero l'utilizzo CBCT in ambito dento-maxillo-facciale\footnote{Imaging di bocca, mascella, mandibola, viso e collo.}. Questa tecnologia trova applicazioni anche nelle procedure angiografiche\footnote{Rappresentazione a scopo diagnostico dei vasi sanguigni o linfatici del corpo umano}, nella radiologia interventistica, radioterapia guidata (IGRT)\footnote{La radioterapia guidata permette di monitorare la reale posizione del volume bersaglio immediatamente prima del trattamento mediante radiazione.}, nella mammografia ed alcuni utilizzi in ambito osteoarticolare e veterinario.
                 
                 \bigskip
                 \par
@@ -262,18 +254,18 @@
                     \end{figure}
                     
                 \par
-                    Gli algoritmi di ricostruzione risultano molto più complessi rispetto alle ricostruzioni da proiezioni bidimensionali in quanto non esiste un equivalente del "teorema della proiezione".
+                    Gli algoritmi di ricostruzione risultano molto più complessi rispetto alle ricostruzioni da proiezioni bidimensionali in quanto non esiste un equivalente del "teorema della proiezione" \cite{zeng}.
                     Il primo e più popolare algoritmo di ricostruzione FDK, che prende nome dai ricercatori Feldkamp, Davis e Kress, fornisce solamente ricostruzioni approssimate. Le ricostruzioni contengono artefatti in quelle regioni lontane dal piano orbitale, in quanto il quantitativo di dati selezionati risulta inferiore.
                     Questo algoritmo non è nient'altro che una versione dell'algoritmo di Retroproiezione Filtrata FBP modificato per un set di proiezioni bidimensionale.   
                                             
         \section{Principi di Funzionamento CT}
             \par
                 Lo scopo della Tomografia Computerizzata è quello di determinare le strutture interne di un oggetto non trasparente inviando verso questo dei segnali sotto forma di onde/particelle. Possono essere utilizzate onde elettromagnetiche di diversa frequenza ed onde acustiche. La ricostruzione CT è intrinsecamente un problema inverso.
-                Il matematico Mark Kac espose chiaramente il concetto di problema inverso nella nota pubblicazione "\textit{Can one hear the shape of the drum?}"\cite{mark-kac}, nel quale essenzialmente si cercò una risposta alla domanda: "E' possibile determinare la forma di una membrana oscillante ascoltando esclusivamente le pure tonalità prodotte da questa?" Il problema affrontato nella CT è analogo.
+                Il matematico Mark Kac espose chiaramente il concetto di problema inverso nella nota pubblicazione "\textit{Can one hear the shape of the drum?}" \cite{mark-kac}, nel quale essenzialmente si cercò una risposta alla domanda: "E' possibile determinare la forma di una membrana oscillante ascoltando esclusivamente le tonalità prodotte da questa?" Il problema affrontato nella CT è analogo.
             
             \bigskip
             \par
-                Johann Radon, matematico Austriaco, pubblicò nel 1917 il suo lavoro relativo alla "Trasformata di Radon". Questo dimostra matematicamente che se gli integrali di linea di una particolare proprietà dell'oggetto in esame, come la densità, possono essere conosciuti per tutte le linee che intersecano una slice di un corpo, complanari alla slice stessa, allora la densità può essere ricostruita esattamente.\cite{history-radiology}. Nella pratica l'Antitrasformata di Radon, la procedura che permetterebbe la ricostruzione dei livelli di densità, risulta particolarmente instabile. Per questo si utilizzano versioni discretizzate e stabilizzate.
+                Johann Radon, matematico Austriaco, pubblicò nel 1917 il suo lavoro relativo alla "Trasformata di Radon". Questo dimostra matematicamente che se gli integrali di linea di una particolare proprietà dell'oggetto in esame, come la densità, possono essere conosciuti per tutte le linee che intersecano una slice di un corpo, complanari alla slice stessa, allora la densità può essere ricostruita esattamente \cite{history-radiology}. Nella pratica l'Antitrasformata di Radon, la procedura che permetterebbe la ricostruzione dei livelli di densità, risulta particolarmente instabile. Per questo, negli algoritmi, si utilizzano versioni discretizzate e stabilizzate.
                 
             \subsection{Proiezione}
                 \par
@@ -288,11 +280,12 @@
                 
                 \bigskip
                 \par
-                    Nel caso continuo in cui l'oggetto in esame venga rappresentato come una generica funzione densità $f(x,y)$, la Trasformata di Radon a raggi paralleli descrive la procedura di Proiezione in un caso continuo:
+                    Nel caso continuo, se l'oggetto in esame viene rappresentato come una generica funzione densità $f(x,y)$, la Trasformata di Radon a raggi paralleli descrive la procedura di Proiezione in un caso continuo:
                 
                     \begin{equation} \label{eq:radon-fwd}
                         p(s,\theta) = \int_{-\infty}^{\infty} \int_{-\infty}^{\infty} f(x,y) \delta(x \cos \theta + y \sin \theta -s) dx dy 
                     \end{equation}
+                    
                     Il parametro della funzione $\delta$ assume valore nullo se e solo se il punto $(x,y)$ viene raggiunto dal fascio, in questo caso il contributo $f(x,y)$ viene sommato. Nel caso in cui il punto non sia raggiunto dal fascio, la funzione $\delta$ assume il valore $0$ annullando il contributo di $f$. La funzione $\delta$ è la funzione \textit{delta di Dirac}, dipendente da un parametro reale, così definita:
                     \begin{equation}
                         \delta(x) = \begin{cases} +\infty, & x = 0 \\ 0, & x \ne 0 \end{cases}
@@ -305,7 +298,7 @@
             
             \subsection{Normalizzazione delle Proiezioni}
                 \par
-                    L'intensità dei pixel componenti una proiezione, diretto risultato d'acquisizione da parte del detector, è direttamente proporzionale all'intensità della sorgente. Gli algoritmi di ricostruzione richiedono, per ogni proiezione, l'informazione relativa alla somma dei coefficienti di attenuazione lineare degli $n$ voxel\footnote{Il voxel è un elemento di volume che rappresenta l'informazione in uno spazio tridimensionale, analogamente al pixel che rappresenta informazioni relative ad un'immagine bidimensionale.} dell'oggetto attraversati durante l'acquisizione, informazione indipendente dall'intensità del fascio sorgente. La \textit{Normalizzazione dello Stack} non è altro che il processo di ottenimento della somma dei coefficienti di attenuazione a partire dalla rilevazione del detector.
+                    L'intensità dei pixel componenti una proiezione, diretto risultato d'acquisizione da parte del detector, è direttamente proporzionale all'intensità della sorgente. Gli algoritmi di ricostruzione richiedono, per ogni proiezione, l'informazione relativa alla somma dei coefficienti di attenuazione lineare degli $n$ voxel\footnote{Il voxel è un elemento di volume che rappresenta l'informazione in uno spazio tridimensionale, analogamente al pixel che rappresenta informazioni relative ad un'immagine bidimensionale.} dell'oggetto attraversati, informazione indipendente dall'intensità del fascio sorgente. La \textit{Normalizzazione dello Stack} non è altro che il processo di ottenimento della somma dei coefficienti di attenuazione a partire dalla rilevazione del detector.
               
                     \begin{figure}[h]
                         \centering
@@ -326,7 +319,7 @@
                         (\mu1 + \mu2 + ... + \mu n) = - \log_e{(I/Io)}
                     \end{equation}
                     
-                    L'intensità $Io$ dev'essere salvata per ciascuno step angolare $\theta_i$ ponendo, ad esempio, un sensore di rilevazione davanti alla sorgente. Esiste la possibilità, in certe condizioni, di poter stimare $Io$, evitandone il salvataggio fisico, analizzando quelle zone del detector non attenuate dal corpo.
+                    L'intensità $Io$ dev'essere salvata per ciascuno step angolare $\theta_i$ ponendo, ad esempio, un sensore di rilevazione davanti alla sorgente. Esiste la possibilità, in certe condizioni, di poter stimare $Io$, analizzando quelle zone del fascio rilevate del detector non attenuate dal corpo.
             
             \subsection{Retroproiezione}
                 \par
@@ -353,11 +346,7 @@
                 
                 \bigskip
                 \par
-                    $P(w)$ per ciascuna frequenza $w$ viene chiamata Trasformata di Fourier di $p(s)$. Uno può facilmente utilizzare formule matematiche per poter ricavare $P(w)$ partendo da $p(s)$ e recuperare $p(s)$ da $P(w)$. Questo significa che nel caso si conosca una delle due funzioni, si conosce anche l'altra. Utilizzare la Trasformata di Fourier permette di poter comprendere alcune relazioni matematiche nascoste, non facili da osservare senza applicare la Trasformata. 
-                
-                \bigskip
-                \par
-                    E' anche possibile applicare la Trasformata di Fourier ad una funzione con due o più variabili. E' possibile denotare la Trasformata della funzione $f(x,y)$ come $F(w_x,w_y)$, dove $w_x$ rappresenta la frequenza nella direzione $x$ e $w_y$ rappresenta la frequenza nella direzione $y$.
+                    $P(w)$ per ciascuna frequenza $w$ viene chiamata Trasformata di Fourier di $p(s)$. Uno può facilmente utilizzare formule matematiche per poter ricavare $P(w)$ partendo da $p(s)$ e recuperare $p(s)$ da $P(w)$. Questo significa che nel caso si conosca una delle due funzioni, si conosce anche l'altra. Utilizzare la Trasformata di Fourier permette di poter comprendere alcune relazioni matematiche nascoste, non facili da osservare senza applicare la Trasformata. E' anche possibile applicare la Trasformata di Fourier ad una funzione con due o più variabili. La Trasformata della funzione $f(x,y)$, viene indicata come $F(w_x,w_y)$, dove $w_x$ rappresenta la frequenza nella direzione $x$ e $w_y$ rappresenta la frequenza nella direzione $y$.
                     
             \subsection{Teorema della Proiezione}
                 \par
@@ -368,15 +357,15 @@
                         \item Selezionare una slice avente la stessa angolazione $\theta_i$ passante per l'origine della Trasformata di Fourier bidimensionale $F(w_x,w_y)$ eseguita sulla funzione densità $f(x,y)$.  
                     \end{enumerate}
                 \par
-                    L'angolazione del detector è rappresentata da $\theta_i$. Roteando il detector di almeno 180\degree è possibile ottenere l'intera trasformata di Fourier bidimensionale $F(w_x,w_y)$ senza che questa venga direttamente eseguita sulla funzione densità $f(x,y)$.
-                    Una volta ottenuta $F(w_x,w_y)$, la funzione di densità originale $f(x,y)$ può essere facilmente ottenuta mediante una procedura matematica chiamata Antitrasformata di Fourier. Nonostante quest'ultima procedura possa completamente rimpiazzare la fase di retroproiezione, all'atto pratico ciò non avviene, a causa degli elevati errori di interpolazione che vengono generati dagli algoritmi.
+                    L'angolazione del detector è rappresentata da $\theta_i$, roteando il detector di almeno 180\degree è possibile ottenere l'intera trasformata di Fourier bidimensionale $F(w_x,w_y)$ senza che questa venga direttamente eseguita sulla funzione densità $f(x,y)$.
+                    Una volta ottenuta $F(w_x,w_y)$, la funzione di densità originale $f(x,y)$ può essere facilmente ottenuta mediante una procedura matematica chiamata Antitrasformata di Fourier. Nonostante questa procedura possa teoricamente rimpiazzare la fase di retroproiezione, all'atto pratico ciò non avviene, a causa degli elevati errori di interpolazione che vengono generati dagli algoritmi.
             
             \subsection{Ricostruzione}
                 \par
                     In molti algoritmi di ricostruzione si sfrutta la Trasformata di Fourier per poter applicare dei filtri in grado di rendere minimo il rumore che differenzia le due immagini $x$ e $\bar{x}$. Ad esempio, L'algoritmo FBP - Filtered Back Projection, uno tra i più conosciuti ed utilizzati, prevede come filtro la moltiplicazione della Trasformata di Fourier monodimensionale $P(w,\theta)$ per un filtro detto "a rampa" $|w|$. Successivamente, applica l'Antitrasformata di Fourier al prodotto $|w|P(w, \theta)$ e procede alla retroproiezione. In questo caso, avendo applicato il filtro, l'immagine $\bar{x}$ contiene meno rumore ed è comparabile all'originale $x$. Esistono molti algoritmi di ricostruzione e diverse soluzioni riguardo l'applicazione dei filtri. Alcuni algoritmi applicano i filtri senza calcolare la trasformata di Fourier, altri utilizzano altri tipi di trasformazione come quella di Hilbert. 
                 \bigskip
                 \par
-                    Esistono algoritmi di ricostruzione che effettuano procedimenti iterativi, combinando procedure di Simulated Forward e Back Projection. Un algoritmo iterativo FBP, può essere matematicamente espresso come segue:
+                    Esistono algoritmi di ricostruzione che effettuano procedimenti iterativi, combinando procedure di Simulated Forward e Back Projection. Un algoritmo iterativo FBP, può essere matematicamente espresso come segue \cite{fessler}:
                    
                    \begin{equation}
                         x_{n+1} = x_n + \alpha FBP( y - Ax_n)
@@ -386,16 +375,16 @@
                     
         \section{OpenRTK}
             \par
-                Il progetto, rilasciato sotto licenza Apache 2.0, nacque nel Giugno 2010 quando i founder Simon Rit e Gregory Sharp discussero riguardo la scarsità di soluzioni open-source nell'ambito della Cone Beam CT. Infatti, l'unica alternativa presente era una libreria chiamata Plastimatch, la quale poteva già effettuare retroproiezioni filtrate sia su CPU che su GPU, ma l'architettura del software non teneva conto dell'evoluzione verso nuove tipologie di algoritmi iterativi. Decidettero quindi di dar vita ad una nuova piattaforma basata su Insight ToolKit (ITK), una libreria di elaborazione delle immagini già famosa in quegli anni. Gli sviluppi iniziali furono basati su codici preesistenti, la piattaforma permise in breve tempo l'ottenimento di ricostruzioni FBP utilizzando dati provenienti da diversi scanner commerciali CBCT. Questi sviluppi attirarono l'interesse dell'Università Cattolica di Lovanio e dell'azienda Beam Application (IBA). RTK è ora utilizzato negli scanner commerciali CBCT di IBA. Al giorno d'oggi questi partner sono riuniti presso l'RTK Consortium.
+                Il progetto, rilasciato sotto licenza Apache 2.0, nacque nel Giugno 2010 quando i founder Simon Rit e Gregory Sharp discussero riguardo la scarsità di soluzioni open-source nell'ambito della Cone Beam CT. Infatti, l'unica alternativa presente era una libreria chiamata Plastimatch, la quale poteva già effettuare retroproiezioni filtrate sia su CPU che su GPU, ma l'architettura del software non teneva conto dell'evoluzione verso nuove tipologie di algoritmi iterativi. Decidettero quindi di dar vita ad una nuova piattaforma basata su Insight ToolKit (ITK), una libreria di elaborazione delle immagini già famosa in quegli anni. Gli sviluppi iniziali furono basati su codici preesistenti, la piattaforma permise in breve tempo l'ottenimento di ricostruzioni FBP utilizzando dati provenienti da diversi scanner commerciali CBCT. Questi sviluppi attirarono l'interesse dell'Università Cattolica di Lovanio e dell'azienda Beam Application (IBA). RTK è ora utilizzato negli scanner commerciali di IBA. Al giorno d'oggi questi partner sono riuniti presso l'RTK Consortium.
             
             \bigskip
             \par
-                RTK è una libreria scritta in linguaggio C++ ma presenta un interfaccia di utilizzo per altri linguaggi. SimpleRTK\cite{simplertk-wiki} permette l'utilizzo RTK per i linguaggi C\# e Python, ma sono possibili estensioni anche ad altri linguaggi quali Lua e Java, sfruttando SWIG\cite{swig-website}.  RTK fornisce algoritmi di ricostruzione sia sequenziali (FDK) che iterativi (ADMM, SART, Conjugate Gradient, ...), presentando delle varianti degli stessi a seconda delle tipologie di filtering applicate. Sono inoltre presenti delle classi ottimizzate per il calcolo parallelo su architetture CUDA \cite{cuda}. E' possibile consultare l'intera lista delle classi che implementano documentazione ufficiale \cite{rtk-classi}. 
+                RTK è una libreria scritta in linguaggio C++ ma presenta un'interfaccia di utilizzo per altri linguaggi. SimpleRTK \cite{simplertk-wiki} permette l'utilizzo RTK per i linguaggi C\# e Python, ma sono possibili estensioni anche ad altri linguaggi quali Lua e Java, sfruttando SWIG \cite{swig-website}.  RTK fornisce algoritmi di ricostruzione sia sequenziali (FDK) che iterativi (ADMM, SART, Conjugate Gradient, Iterative FDK, ...), presentando delle varianti degli stessi a seconda delle tipologie di filtering applicate. Sono inoltre presenti delle classi ottimizzate per il calcolo parallelo su architetture CUDA \cite{cuda}. E' possibile consultare l'intera lista delle classi che implementano documentazione ufficiale \cite{rtk-classi}. 
                 Questa descrizione è relativa alla versione di RTK numero 1.3.0, rilasciata il 22/09/2016.
                     
             \subsection{Geometria}
                 \par
-                    RTK necessita di informazioni relative alla geometria di acquisizione per poter correttamente ricostruire un set di proiezioni. La classe che gestisce queste informazioni è\texttt{ ThreeDCircularProjectionGeometry}, il cui scopo è quello di definire un set di proiezioni 2D, acquisite mediante un detector bidimensionale lungo una traiettoria circolare. La descrizione della geometria è basata nello standard internazionale IEC 61217 che è stato progettato per dispositivi cone-beam su sistemi isocentrici. Il sistema a coordinate fisse di RTK ed il sistema di coordinate fisse dell'IEC 61217 sono esattamente uguali. La geometria può anche essere letta e salvata mediante l'esportazione in file XML.
+                    RTK necessita di informazioni relative alla geometria di acquisizione per poter correttamente ricostruire un set di proiezioni. La classe che gestisce queste informazioni è\texttt{ ThreeDCircularProjectionGeometry}, basata nello standard internazionale IEC 61217 che è stato progettato per dispositivi cone-beam su sistemi isocentrici. Il sistema a coordinate fisse di RTK ed il sistema di coordinate fisse dell'IEC 61217 sono esattamente uguali. Il sistema consente anche il salvataggio e la lettura della geometria su file XML.
                 
                 \bigskip
                 \par
@@ -404,7 +393,7 @@
                     \begin{itemize}
                         \item \textbf{SID} - Source to Isocenter\footnote{L’asse centrale del fascio interseca l’asse di rotazione dell'apparato di acquisizione in un punto dello spazio chiamato Isocentro} Distance, espressa in millimetri.
                         \item \textbf{SDD} - Source to Detector Distance, espressa in millimetri.
-                        \item \textbf{gantryAngle} - E' l'angolo di rotazione del Gantry\footnote{Apparato di acquisizione, composto da sorgente e detector allineati.}. Un incremento di questo parametro corrisponde ad una rotazione oraria del Gantry visto dall'Isocentro.
+                        \item \textbf{gantryAngle} - E' l'angolo di rotazione del Gantry\footnote{Asse di rotazione dell'apparato di acquisizione, composto da sorgente e detector allineati.}. Un incremento di questo parametro corrisponde ad una rotazione oraria del Gantry visto dall'Isocentro.
                         \item \textbf{projOffsetX} - Offset nella direzione $x$ dall'origine del detector (proiezione ortogonale dell'isocentro sul detector) all'origine dell'immagine di proiezione \cite{rtk-users-proj-offset}. Espresso in millimetri. 
                         \item \textbf{projOffsetY} - Offset nella direzione $y$, come descritto per projOffsetX. Espresso in millimetri.
                     \end{itemize}
@@ -413,7 +402,7 @@
                 
         \section{SimpleITK}
             \par
-                SimpleITK, rilasciato sotto licenza Apache 2.0, fornisce un'interfaccia semplificata del software Insight Toolkit - ITK. Può essere utilizzato per poter eseguire un processing generico su varie tipologie di immagini, ma lo scopo principale del Toolkit è quello di processare immagini a scopo medico. Un errato settaggio delle componenti fondamentali, può produrre risultati inconsistenti. Le immagini a scopo medico, senza alcun tipo di informazione spaziale, non dovrebbero assolutamente essere utilizzate per la diagnosi. In altre parole, le immagini a scopo medico che presentano un'inefficienza riguardo le informazioni spaziali, non sono solamente inutili, ma anche pericolose. Come per SimpleRTK, SimpleITK fornisce un'interfaccia per altri linguaggi come Python e Java sfruttando SWIG. Questa descrizione è relativa alla versione di SimpleITK numero 0.9.0, rilasciata il 14/05/2015.
+                SimpleITK, rilasciato sotto licenza Apache 2.0, fornisce un'interfaccia semplificata del software Insight Toolkit - ITK. Può essere utilizzato per poter eseguire un processing generico su varie tipologie di immagini, ma lo scopo principale del Toolkit è quello di processare immagini a scopo medico. Un errato settaggio delle componenti fondamentali, può produrre risultati inconsistenti. Le immagini a scopo medico, senza alcun tipo di informazione spaziale, non dovrebbero assolutamente essere utilizzate per la diagnosi. In altre parole, le immagini a scopo medico che presentano un'inefficienza riguardo le informazioni spaziali, non sono solamente inutili, ma anche pericolose \cite{itk-doc}. Come per SimpleRTK, SimpleITK fornisce supporto ad ITK per altri linguaggi come Python e Java, sfruttando SWIG. Questa descrizione è relativa alla versione di SimpleITK numero 0.9.0, rilasciata il 14/05/2015.
                 
             \subsection{Descrizione delle immagini}
                 Le componenti fondamentali nella descrizione di un'immagine mediante ITK sono \textit{Spacing}, \textit{Origin}, e \textit{Direction}. Se questi parametri vengono settati correttamente, l'immagine avrà ciascun pixel mappato sullo spazio di coordinate fisiche. Un \textit{pixel} è considerato essere la regione quadrata o rettangolare che ne circonda il suo centro, contenitore dell'informazione. I pixel possono essere visti come la regione di Voronoi \cite{voronoi} della griglia dell’immagine. L’interpolazione lineare dei valori dell’immagine viene eseguita all’interno della regione di Delaunay \cite{delaunay}, i cui angoli sono il centro del pixel.
@@ -425,11 +414,11 @@
                 \textbf{Origin} - Viene gestito vettorialmente, in modo simile allo Spacing. Le coordinate di Origin possono essere assegnate a ciascuna componente. Queste coordinate, di default, corrispondono alla posizione del centro del primo pixel in basso a sinistra dell'immagine rispetto ad un sistema di riferimento fisico, in millimetri. Nel caso in cui Origin non venga impostato, questo assumerà di default il valore $0$ in ciascuna componente. Ad esempio, nel caso in cui si lavori con un'immagine 2D, l'origine del sistema di riferimento fisico giacerà esattamente nel primo pixel in basso a sinistra dell'immagine bidimensionale. 
                 
                 \bigskip
-                \textbf{Direction} - Direction rappresenta la relazione d'orientazione tra i pixel ed il sistema di riferimento fisico. Direction è una matrice ortonormale, che descrive la possibile permutazione dei valori dell'immagine e gli aspetti rotazionali che sono necessari al fine di riconciliare correttamente l'organizzazione degli indici con lo spazio fisico. Questa matrice è quadrata $NxN$ dove $N$ è la dimensione dell'immagine. Nel caso in cui Direction non venga impostato, esso viene impostato come una matrice Identità, ciò sta ad indicare che i pixel sono perfettamente allineati rispetto al sistema di riferimento fisico.
+                \textbf{Direction} - Direction rappresenta la relazione d'orientazione tra i pixel ed il sistema di riferimento fisico. Direction è una matrice ortonormale, che descrive la possibile permutazione dei valori dell'immagine e gli aspetti rotazionali che sono necessari al fine di riconciliare correttamente l'organizzazione degli indici dell'immagine con lo spazio fisico. Questa matrice è quadrata $NxN$ dove $N$ è la dimensione dell'immagine. Nel caso in cui Direction non venga impostato, esso è di default una matrice Identità, ciò sta ad indicare che i pixel (voxel) sono perfettamente allineati rispetto al sistema di riferimento fisico.
                 
             \subsection{Formato MHA}
                 \par
-                    Il formato MetaImage è un formato text-based contenente TAG utilizzato per immagini a scopo medico. Attualmente è in grado di supportare una varietà di oggetti quali cubi, sfere, tubi, etc. Questo formato è particolarmente stabile, è stato utilizzato per diversi anni da molti ricercatori all'UNC, Chapel Hill. Occasionalmente vengono introdotte nuove features, ma viene sempre mantenuta la retrocompatibilità con le versioni precedenti. In un'immagine di formato MHA, i TAG fondamentali vengono inseriti all'inizio del file. Questi specificano il la modalità con cui i dati grezzi RAW devono essere letti dal sistema. Oltre al settaggio di Spacing, Origin e Direction, sono disponibili anche altre configurazioni, reperibili nella documentazione ufficiale \cite{mha-doc}. 
+                    Il formato MetaImage è un formato text-based contenente TAG utilizzato per immagini a scopo medico. Attualmente è in grado di supportare una varietà di oggetti quali cubi, sfere, tubi, etc. Questo formato è particolarmente stabile, utilizzato per diversi anni da molti ricercatori all'UNC, Chapel Hill. Occasionalmente vengono introdotte nuove features, ma viene sempre mantenuta la retrocompatibilità con le versioni precedenti. In un'immagine di formato MHA, i TAG fondamentali vengono inseriti all'inizio del file. Questi specificano il la modalità con cui i dati grezzi RAW, collocati nella linea immediatamente successiva ai TAG, devono essere letti dal sistema. Oltre al settaggio di Spacing, Origin e Direction, sono disponibili anche altre configurazioni, reperibili nella documentazione ufficiale \cite{mha-doc}. 
                     
                 \bigskip
                 \par
@@ -943,56 +932,98 @@ Backprojection: 180.379 s
 
 \newpage
 \begin{thebibliography}{1}
-    \bibitem{zeng-tomos}
-        Gengsheng, Z. L. (2010). Basic Principles of Tomography. In Springer (Ed.), \textit{Medical Image Reconstruction: A Conceptual Tutorial}.
+    
+    \bibitem{hounsfield-nobel-lecture}
+        Godfrey N. Hounsfield - Nobel Lecture, 8 December 1979.
+    
+    \bibitem{thomas-edison-brain}
+        Shephard, D.A., Edison's attempts at radiography of the brain (1896), Mayo Clin. Proc., 1974.
+    
+    \bibitem{vallebona-pensiero}
+        Vallebona A. - Gli ottanta anni della radiologia medica in Liguria. Atti dell’Accademia Ligure di Scienze e Lettere, XXXI: 18-46, 1974.
+      
+    \bibitem{vallebona-difesa}
+        Vallebona A. - A proposito di un nuovo metodo radiografico chiamato "Planigrafia", Radiologia Medica Vol.XIX, fase 8, 1932-X.
+    
+    \bibitem{vallebona-ricordo}
+        Franco Bistolfi, Alessandro Vallebona 1899-1987. Ricordo di un grande radiologo e del suo contributo allo sviluppo delle scienze radiologiche (PDF), in Fisica in Medicina, nº 2, 2005, pp. 115-123.  
+    
+    \bibitem{conventional-tomography}
+        Littleton, J.T. "Conventional Tomography". A History of the Radiological Sciences (PDF). American Roentgen Ray Society. Retrieved 11 January 2014.
+    
+    \bibitem{nobel-debate}
+        Riddle of the Nobel debate - Science 04 Jan 1980: Vol. 207, Issue 4426, pp. 37-38
+    
+    \bibitem{hounsfield-autobiografia}
+        Les Prix Nobel. The Nobel Prizes 1979, Editor Wilhelm Odelberg, (Nobel Foundation), Stockholm, 1980. 
+    
+    \bibitem{scanner-story}
+        Garry Pownall - The Scanner Story - Film, 1977.
+    
+    \bibitem{generazionale}
+        Mahadevappa Mahesh. "Historical Developments." MDCT Physics: The Basics: Technology, Image Quality and Radiation Dose. 1st ed. N.p.: LWW, 2009.
+    
+    \bibitem{zeng}
+        Gengsheng, Z. L. - Medical Image Reconstruction, a Conceptual Tutorial. In Springer (Ed.), 2010.
+    
+    \bibitem{mark-kac}
+        \url{https://en.wikipedia.org/wiki/Hearing_the_shape_of_a_drum}
+    
+    \bibitem{history-radiology}
+        Arpan K., Banerjee. "Chapter 6" The History of Radiology. By Adrian M. K. Oxford: OUP, 2013.
         
+    \bibitem{lambert-beer}
+        \url{https://en.wikipedia.org/wiki/Beer%E2%80%93Lambert_law}
+        
+    \bibitem{fessler}
+        \url{http://web.eecs.umich.edu/~fessler/papers/files/talk/11/spie.pdf}    
+        
+    \bibitem{simplertk-wiki}
+        \url{http://wiki.openrtk.org/index.php/SimpleRTK}
+        
+    \bibitem{swig-website}    
+        \url{http://www.swig.org/}    
+        
+    \bibitem{cuda}
+        \url{https://it.wikipedia.org/wiki/CUDA}
+        
+    \bibitem{rtk-classi}
+        \url{http://www.openrtk.org/Doxygen/namespacertk.html}
+        
+    \bibitem{rtk-users-proj-offset}
+        \url{http://public.kitware.com/pipermail/rtk-users/2014-December/000344.html}
+    
+    \bibitem{rtk-geometry}
+        \url{http://www.openrtk.org/Doxygen/geometry.pdf}
+        
+    \bibitem{itk-doc}
+        \url{https://itk.org/ItkSoftwareGuide.pdf}   
+        
+    \bibitem{voronoi}
+        \url{https://en.wikipedia.org/wiki/Voronoi_diagram}
+        
+    \bibitem{delaunay}
+        \url{https://en.wikipedia.org/wiki/Delaunay_triangulation}
+        
+    \bibitem{mha-doc}
+        \url{https://itk.org/Wiki/ITK/MetaIO/Documentation} 
+
+    
+
+
+
+
     \bibitem{openrtk-website}
         \url{http://www.openrtk.org/}
     
     \bibitem{itk-website}
         \url{https://itk.org/}
-    
-    \bibitem{conventional-tomography}
-        Littleton, J.T. "Conventional Tomography". A History of the Radiological Sciences (PDF). American Roentgen Ray Society. Retrieved 11 January 2014.
-    
-    \bibitem{vallebona-ricordo}
-        Franco Bistolfi, Alessandro Vallebona 1899-1987. Ricordo di un grande radiologo e del suo contributo allo sviluppo delle scienze radiologiche (PDF), in Fisica in Medicina, nº 2, 2005, pp. 115-123.
-        
-    \bibitem{vallebona-pensiero}
-        Vallebona A. - Gli ottanta anni della radiologia medica in Liguria. Atti dell’Accademia Ligure di Scienze e Lettere, XXXI: 18-46,1974
-        
-    \bibitem{thomas-edison-brain}
-        \url{https://www.researchgate.net/publication/18576763_Thomas_Edison's_attempts_at_radiography_of_the_brain_1896}
-        
-    \bibitem{hounsfield-nobel-lecture}
-        Godfrey N. Hounsfield - Nobel Lecture, 8 December 1979
-        
-    \bibitem{vallebona-difesa}
-        \url{http://www.fisicamedica.it/museo_virtuale/02_sezioni/articoli/data/Vallebona%20difesa.pdf}
-        
-    \bibitem{nobel-debate}
-        Riddle of the Nobel debate - Science 04 Jan 1980: Vol. 207, Issue 4426, pp. 37-38
-        
-    \bibitem{hounsfield-autobiografia}
-        \url{https://www.nobelprize.org/nobel_prizes/medicine/laureates/1979/hounsfield-bio.html}
-    
-    \bibitem{-j-gnu-docs}
-        \url{https://www.gnu.org/software/make/manual/html_node/Parallel.html}
         
     \bibitem{wiki-rtk}
         \url{wiki.openrtk.org}
-        
-    \bibitem{rtk-users-proj-offset}
-        \url{http://public.kitware.com/pipermail/rtk-users/2014-December/000344.html}
-        
-    \bibitem{simplertk-wiki}
-        \url{http://wiki.openrtk.org/index.php/SimpleRTK}
-        
+
     \bibitem{imagej-3dio-plugin}
         \url{http://ij-plugins.sourceforge.net/plugins/3d-io/index.html}
-    
-    \bibitem{lambert-beer}
-        \url{https://en.wikipedia.org/wiki/Beer%E2%80%93Lambert_law}
         
     \bibitem{pyexcel-docs}
         \url{http://pyexcel.readthedocs.io/en/latest/generated/pyexcel.Sheet.html#pyexcel.Sheet}
@@ -1027,32 +1058,8 @@ Backprojection: 180.379 s
     \bibitem{sitk-paste}
         \url{https://itk.org/SimpleITKDoxygen/html/namespaceitk_1_1simple.html#a49f5bb557f802ce6acc94f4ad10e6838}
         
-    \bibitem{mark-kac}
-        \url{https://en.wikipedia.org/wiki/Hearing_the_shape_of_a_drum}
-        
-    \bibitem{history-radiology}
-        \url{https://books.google.it/books?id=KyH_jeT7w3gC&pg=PA99&lpg=PA99&dq=hounsfield+radon&source=bl&ots=Rk_ft6iL6w&sig=51iwXhpOxSCchzwTSABAfvGm6V0&hl=it&sa=X&ved=0ahUKEwirqqOKhIrQAhULtBQKHVKsCTAQ6AEIOzAF#v=onepage&q&f=false}
+    \bibitem{-j-gnu-docs}
+        \url{https://www.gnu.org/software/make/manual/html_node/Parallel.html}
     
-    \bibitem{rtk-geometry}
-        \url{http://www.openrtk.org/Doxygen/geometry.pdf}
-    
-    \bibitem{swig-website}    
-        \url{http://www.swig.org/}
-    
-    \bibitem{cuda}
-        \url{https://it.wikipedia.org/wiki/CUDA}
-        
-    \bibitem{rtk-classi}
-        \url{http://www.openrtk.org/Doxygen/namespacertk.html}
-    
-    \bibitem{voronoi}
-        \url{https://en.wikipedia.org/wiki/Voronoi_diagram}
-        
-    \bibitem{delaunay}
-        \url{https://en.wikipedia.org/wiki/Delaunay_triangulation}
-     
-    \bibitem{mha-doc}
-        \url{https://itk.org/Wiki/ITK/MetaIO/Documentation}
-        
     \end{thebibliography}
 \end{document}
