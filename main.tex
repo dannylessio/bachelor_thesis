@@ -107,11 +107,9 @@
         
         		E' bene riportare nell'introduzione il riferimento ai capitoli di cui si compone la tesi con una breve descrizione dei contenuti di ogni singolo capitolo senza esplicitare gli eventuali sottocapitoli/paragrafi che saranno indicati nell'indice.
         
-        		Spesso l'introduzione è l'ultimo capitolo che viene scritto, sebbene sia il rpimo che si incontra nella lettura della tesi.
+        		Spesso l'introduzione è l'ultimo capitolo che viene scritto, sebbene sia il primo che si incontra nella lettura della tesi.
         	>
-        \par
-            Questa tesi tratta lo studio e l'utilizzo della libreria OpenRTK \cite{openrtk-website} basata su Insight Toolkit (ITK) \cite{itk-website}, la quale fornisce sia un insieme di tools basilari per poter eseguire efficientemente ricostruzioni tomografiche ( filtering, forward projection, backprojection ), sia un set di strumenti per poter eseguire il calcolo a livello multithreaded, sia su CPU che su GPU. Presenta inoltre delle interfacce I/O calibrate per un insieme limitato di CAT scanner attualmente in commercio.
-
+    
     \newpage
     \tableofcontents
     \newpage
@@ -297,6 +295,7 @@
                     \end{equation}
             
             \subsection{Normalizzazione delle Proiezioni}
+                \label{sec:normalizzazione}
                 \par
                     L'intensità dei pixel componenti una proiezione, diretto risultato d'acquisizione da parte del detector, è direttamente proporzionale all'intensità della sorgente. Gli algoritmi di ricostruzione richiedono, per ogni proiezione, l'informazione relativa alla somma dei coefficienti di attenuazione lineare degli $n$ voxel\footnote{Il voxel è un elemento di volume che rappresenta l'informazione in uno spazio tridimensionale, analogamente al pixel che rappresenta informazioni relative ad un'immagine bidimensionale.} dell'oggetto attraversati, informazione indipendente dall'intensità del fascio sorgente. La \textit{Normalizzazione dello Stack} non è altro che il processo di ottenimento della somma dei coefficienti di attenuazione a partire dalla rilevazione del detector.
               
@@ -383,6 +382,7 @@
                 Questa descrizione è relativa alla versione di RTK numero 1.3.0, rilasciata il 22/09/2016.
                     
             \subsection{Geometria}
+                \label{sub:geometry}
                 \par
                     RTK necessita di informazioni relative alla geometria di acquisizione per poter correttamente ricostruire un set di proiezioni. La classe che gestisce queste informazioni è\texttt{ ThreeDCircularProjectionGeometry}, basata nello standard internazionale IEC 61217 che è stato progettato per dispositivi cone-beam su sistemi isocentrici. Il sistema a coordinate fisse di RTK ed il sistema di coordinate fisse dell'IEC 61217 sono esattamente uguali. Il sistema consente anche il salvataggio e la lettura della geometria su file XML.
                 
@@ -402,316 +402,301 @@
                 
         \section{SimpleITK}
             \par
-                SimpleITK, rilasciato sotto licenza Apache 2.0, fornisce un'interfaccia semplificata del software Insight Toolkit - ITK. Può essere utilizzato per poter eseguire un processing generico su varie tipologie di immagini, ma lo scopo principale del Toolkit è quello di processare immagini a scopo medico. Un errato settaggio delle componenti fondamentali, può produrre risultati inconsistenti. Le immagini a scopo medico, senza alcun tipo di informazione spaziale, non dovrebbero assolutamente essere utilizzate per la diagnosi. In altre parole, le immagini a scopo medico che presentano un'inefficienza riguardo le informazioni spaziali, non sono solamente inutili, ma anche pericolose \cite{itk-doc}. Come per SimpleRTK, SimpleITK fornisce supporto ad ITK per altri linguaggi come Python e Java, sfruttando SWIG. Questa descrizione è relativa alla versione di SimpleITK numero 0.9.0, rilasciata il 14/05/2015.
+                SimpleITK, rilasciato sotto licenza Apache 2.0, fornisce un'interfaccia semplificata del software Insight Toolkit - ITK. Può essere utilizzato per poter eseguire un processing generico su varie tipologie di immagini, ma lo scopo principale del Toolkit è quello di processare immagini a scopo medico. Un errato settaggio delle componenti fondamentali, può produrre risultati inconsistenti. Le immagini a scopo medico, senza alcun tipo di informazione spaziale, non dovrebbero assolutamente essere utilizzate per la diagnosi. In altre parole, le immagini a scopo medico che presentano un'inefficienza riguardo le informazioni spaziali, non sono solamente inutili, ma anche pericolose \cite{itk-doc}. Come per SimpleRTK, SimpleITK permette l'utilizzo di ITK su linguaggi quali Python e Java, sfruttando SWIG. Questa descrizione è relativa alla versione di SimpleITK numero 0.9.0, rilasciata il 14/05/2015.
                 
             \subsection{Descrizione delle immagini}
-                Le componenti fondamentali nella descrizione di un'immagine mediante ITK sono \textit{Spacing}, \textit{Origin}, e \textit{Direction}. Se questi parametri vengono settati correttamente, l'immagine avrà ciascun pixel mappato sullo spazio di coordinate fisiche. Un \textit{pixel} è considerato essere la regione quadrata o rettangolare che ne circonda il suo centro, contenitore dell'informazione. I pixel possono essere visti come la regione di Voronoi \cite{voronoi} della griglia dell’immagine. L’interpolazione lineare dei valori dell’immagine viene eseguita all’interno della regione di Delaunay \cite{delaunay}, i cui angoli sono il centro del pixel.
+                Le componenti fondamentali nella descrizione di un'immagine mediante ITK sono \textit{Spacing}, \textit{Origin}, e \textit{Direction}. Se questi parametri vengono settati correttamente, l'immagine avrà ciascun pixel mappato sullo spazio di coordinate fisiche. Un \textit{pixel} è considerato essere la regione quadrata o rettangolare che ne circonda il suo centro, contenitore di informazione. I pixel possono essere visti come la regione di Voronoi \cite{voronoi} della griglia dell’immagine. L’interpolazione lineare dei valori dell’immagine viene eseguita all’interno della regione di Delaunay \cite{delaunay}, i cui angoli sono il centro del pixel. 
+                
+                \begin{figure}[h]
+                    \centering
+                    \includegraphics[width=0.5\textwidth]{itk}
+                    \caption{Gestione immagini in ITK, configurazione di default.}
+                    \label{fig:itk}        
+                \end{figure}
                 
                 \bigskip
-                \textbf{Spacing} - Lo Spacing tra i pixel viene misurato, in millimetri, tra i vari centri dei pixel e può essere differente lungo ciascuna dimensione. Viene rappresentato come un array fisso le cui dimensioni corrispondono alle dimensioni dell'immagine.
+                \textbf{Spacing} - Lo Spacing, la distanza fisica tra i centri dei pixel, viene misurato in millimetri. Viene rappresentato come un array fisso le cui dimensioni corrispondono alle dimensioni dell'immagine. Nel caso in cui Spacing non venga impostato, assume di default il valore $1$ in ciascuna componente.
                 
                 \bigskip
-                \textbf{Origin} - Viene gestito vettorialmente, in modo simile allo Spacing. Le coordinate di Origin possono essere assegnate a ciascuna componente. Queste coordinate, di default, corrispondono alla posizione del centro del primo pixel in basso a sinistra dell'immagine rispetto ad un sistema di riferimento fisico, in millimetri. Nel caso in cui Origin non venga impostato, questo assumerà di default il valore $0$ in ciascuna componente. Ad esempio, nel caso in cui si lavori con un'immagine 2D, l'origine del sistema di riferimento fisico giacerà esattamente nel primo pixel in basso a sinistra dell'immagine bidimensionale. 
+                \textbf{Origin} - Viene gestito vettorialmente, in modo simile allo Spacing. Le coordinate di Origin possono essere assegnate a ciascuna componente. Queste coordinate, di default, corrispondono alla posizione del centro del primo pixel in basso a sinistra dell'immagine rispetto ad un sistema di riferimento fisico, in millimetri. Nel caso in cui Origin non venga impostato, questo assumerà di default il valore $0$ in ciascuna componente. Ad esempio, nel caso in cui si lavori con un'immagine 2D, l'origine del sistema di riferimento fisico giacerà esattamente nel primo pixel in basso a sinistra dell'immagine bidimensionale (Figura \ref{fig:itk}). 
                 
                 \bigskip
-                \textbf{Direction} - Direction rappresenta la relazione d'orientazione tra i pixel ed il sistema di riferimento fisico. Direction è una matrice ortonormale, che descrive la possibile permutazione dei valori dell'immagine e gli aspetti rotazionali che sono necessari al fine di riconciliare correttamente l'organizzazione degli indici dell'immagine con lo spazio fisico. Questa matrice è quadrata $NxN$ dove $N$ è la dimensione dell'immagine. Nel caso in cui Direction non venga impostato, esso è di default una matrice Identità, ciò sta ad indicare che i pixel (voxel) sono perfettamente allineati rispetto al sistema di riferimento fisico.
+                \textbf{Direction} - Direction rappresenta la relazione d'orientazione tra i pixel ed il sistema di riferimento fisico. Direction è una matrice ortonormale, che descrive la possibile permutazione dei valori dell'immagine e gli aspetti rotazionali che sono necessari al fine di riconciliare correttamente l'organizzazione degli indici dell'immagine con lo spazio fisico. Nel caso in cui Direction non venga impostato, esso è di default una matrice Identità, ciò sta ad indicare che i pixel (voxel) sono perfettamente allineati rispetto al sistema di riferimento fisico.
                 
-            \subsection{Formato MHA}
+            \subsection{Formati MHA/MHD}
+                \label{sec:mha}
                 \par
-                    Il formato MetaImage è un formato text-based contenente TAG utilizzato per immagini a scopo medico. Attualmente è in grado di supportare una varietà di oggetti quali cubi, sfere, tubi, etc. Questo formato è particolarmente stabile, utilizzato per diversi anni da molti ricercatori all'UNC, Chapel Hill. Occasionalmente vengono introdotte nuove features, ma viene sempre mantenuta la retrocompatibilità con le versioni precedenti. In un'immagine di formato MHA, i TAG fondamentali vengono inseriti all'inizio del file. Questi specificano il la modalità con cui i dati grezzi RAW, collocati nella linea immediatamente successiva ai TAG, devono essere letti dal sistema. Oltre al settaggio di Spacing, Origin e Direction, sono disponibili anche altre configurazioni, reperibili nella documentazione ufficiale \cite{mha-doc}. 
-                    
+                    I formati MetaImage MHA ed MHD sono file text-based contenenti TAG utilizzati per immagini a scopo medico. Attualmente MetaImage è in grado di supportare una varietà di oggetti quali cubi, sfere, tubi, etc. Questo formato è particolarmente stabile, utilizzato per diversi anni da molti ricercatori all'UNC, Chapel Hill. Occasionalmente vengono introdotte nuove features, ma viene sempre mantenuta la retrocompatibilità con le versioni precedenti. 
+                
                 \bigskip
                 \par
-                    Spacing può essere impostato, nelle varie direzioni, sfruttando il TAG \textit{ElementSpacing}. Origin può essere impostata nelle varie direzioni, mediante uno dei tre TAG equivalenti: \textit{Position}, \textit{Offset} ed \textit{Origin}. Direction può essere impostata mediante uno dei tre TAG equivalenti: \textit{Rotation}, \textit{Orientation} e \textit{TransformMatrix}. Ad esempio, nel caso in cui si lavori con un'immagine tridimensionale, i TAG per Spacing, Origin e Direction possono essere impostati come segue:
+                    Il formato MetaImage prevede alcuni TAG obbligatori, che devono essere inseriti all'inizio del file. Ad eccezione del TAG \textit{ElementDataFile}, posizionato necessariamente come ultimo della lista, l'ordine dei TAG non è rilevante. Il formato MHA prevede che \textit{ElementDataFile} contenga il valore \textit{Local} e che i dati grezzi RAW \cite{raw} siano posizionati nella riga immediatamente successiva alla lista dei TAG. Un file avente estensione MHD, al contrario, prevede che i dati RAW siano collocati in un file esterno e che \textit{ElementDataFile} ne contenga il nome o il percorso. SimpleITK non è fornita di una classe che permette la lettura diretta di un file RAW, per questo motivo il formato MHD risulta particolarmente utile.
+                
+                \bigskip
+                \par
+                    I TAG obbligatori sono: NDims, DimSize, ElementType, ElementByteOrderMSB, ed ElementDataFile. I TAG relativi a Spacing, Origin e Direction assumeranno i valori di default precedentemente descritti se non espressamente indicati. Un file MHD si visualizza come in questo esempio:
                     
                     \begin{lstlisting}[language=bash, frame=bt]
-ElementSpacing = X Y Z
-Position = X Y Z
+NDims = 3
+DimSize = 256 250 64
+ElementType = MET_FLOAT
+ElementByteOrderMSB = True
+ElementDataFile = data.raw
+                    \end{lstlisting}
+                    
+                    \begin{itemize}
+                        \item \textbf{NDims} Intero che sta ad indicare la dimensione dell'immagine.
+                        \item \textbf{DimSize} Array intero, specifica la dimensione in pixel dell'immagine nelle componenti indicate mediante NDims.
+                        \item \textbf{ElementType} Specifica il tipo di dato che il sistema andrà a leggere. Può assumere uno tra i valori specificati in \textit{metaTypes.h} reperibile nella documentazione ufficiale \cite{mha-doc}.
+                        \item \textbf{ElementByteOrderMSB} Può assumere i valori \textit{True} oppure \textit{False} a seconda dell'architettura del sistema \cite{endianness}.
+                        \item \textbf{ElementDataFile} Come già descritto, può assumere il valore \textit{Local} oppure il nome del file RAW esterno a seconda che si stia descrivendo un file MHA oppure un file MHD. Dev'essere posizionato obbligatoriamente come ultimo TAG della lista.
+                    \end{itemize}
+                    
+                    Spacing può essere impostato nelle varie direzioni sfruttando uno dei TAG equivalenti \textit{ElementSpacing} e \textit{ElementSize}. Origin può essere impostato nelle varie direzioni, mediante uno dei tre TAG equivalenti: \textit{Position}, \textit{Offset} ed \textit{Origin}. Direction può essere impostata mediante uno dei tre TAG equivalenti: \textit{Rotation}, \textit{Orientation} e \textit{TransformMatrix}. Ad esempio, nel caso in cui ci si riferisca all'esempio precedente, i TAG per Spacing, Origin e Direction possono essere impostati come segue:
+                    
+                    \begin{lstlisting}[language=bash, frame=bt]
+ElementSpacing = 1.5 1.5 1.5
+Position = -10 -10 -10
 Rotation = 1 0 0 0 1 0 0 0 1
                     \end{lstlisting}
                     
-                    I parametri X, Y, Z devono necessariamente essere espressi in millimetri, il parametro del TAG Rotation, invece, contiene una matrice identità, specificata secondo il formato MET\textunderscore FLOAT\textunderscore MATRIX (si veda la documentazione).
+                    Spacing è stato impostato ad 1.5 millimetri in ogni direzione, Origin è stato impostato a -10 millimetri in ogni direzione e Rotation è stata impostata, come di default, ad una matrice Identità. Il parametro Rotation rispetta il formato MET\textunderscore FLOAT\textunderscore MATRIX, consultabile nella documentazione ufficiale.
+                                     
                                               
     \chapter{Sviluppo del Progetto}
-        \section{Obiettivo}
+        \par
             <TODO>
             Lo scopo principale del progetto riguarda la comprensione di OpenRTK come poter ottenere da questo una ricostruzione delle proiezioni a disposizione.
-            Nonostante RTK sia originariamente scritto in C++, presenta un interfaccia wrapping nominata SimpleRTK. Nella descrizione della geometria, verrà trattata l'interfaccia OpenRKT.
-         
-        \section{Gli Stack di Proiezione a disposizione}
-            <TODO>
-            <ASK descrivo anche la conversione da .RAW ad .MHA? questo implica una descrizione approfondita di imagej?>
-            La Facoltà ha messo a disposizione una decina di stack di proiezione, i quali presentavano le medesime caratteristiche. Originariamente composte in formato .RAW, sono stati convertiti mediante un estensione di ImageJ in immagini .MHA, per poterne favorire la lettura da parte di RTK. Uno stack era inoltre accompagnato da informazioni aggiuntive sull'apparato di acquisizione (SID, SDD, etc) inserite in un semplice file di testo. Per ogni proiezione appartenente ad un particolare stack era inoltre presente un file in formato .csv contenente informazioni riguardanti il preciso angolo di acquisizione, eventuali offset e l'intensità della sorgente non attenuata.
-            Tutte le distanze erano espresse in millimetri.
-            
-            \subsection{Informazioni sull'acquisizione}
-                \label{sub:acq_file}
+            Nonostante RTK sia originariamente scritto in C++, presenta un interfaccia wrapping nominata SimpleRTK. Nella descrizione della geometria, verrà trattata l'interfaccia OpenRTK. <TODO>
+        
+        \bigskip
+        \par
+            La procedura di compilazione di \textit{RTK}, che coinvolge anche la compilazione di ITK, è stata riscritta in uno script Bash \cite{script-bash} che automatizza completamente le operazioni descritte nel tutorial ufficiale. Sfruttando l'adozione di uno speciale parametro per la compilazione \cite{parallel-j}, è stato possibile ottenere un consistente risparmio in termini di tempo. La community OpenRTK, dopo averne discusso sulla mailing list Rtk-users, ha accettato lo script e lo ha inserito nel tutorial di installazione ufficiale \cite{wiki-rtk}. La procedura di configurazione ed installazione di \textit{SimpleRTK}, non inserita nello script, è stata eseguita seguendo esattamente le indicazioni fornite dal sito ufficiale \cite{simplertk-install}. SimpleITK è stato aggiunto all'environment locale Python semplicemente utilizzando il package manager PIP, come descritto nella rispettiva documentazione \cite{simpleitk-install}.    
+
+
+        \section{Gestione degli Stack di Proiezione}
+            \subsection{Stack RAW}
                 \par
-                    Queste informazioni erano presenti su un file di testo esterno, in quanto riguardano esclusivamente l'apparato di acquisizione. 
+                    La Facoltà ha messo a disposizione una decina di Stack di Proiezione in formato RAW (grezzo), acquisiti mediante architettura CBCT. Ogni Stack (non normalizzato) era accompagnato da un file CSV e da un file di testo descrittivo. Le informazioni contenute nel file di testo descrittivo, valide per ciascuna proiezione appartenente allo Stack, erano le seguenti:
                     
                     \begin{itemize}
-                        \item SID/SDD: Stanno per \textit{Source to Isocenter Distance} e \textit{Source to Detector Distance}. L'isocentro è l'asse di rotazione del gantry\footnote{Termine tecnico che sta ad indicare il sistema rotazionale composto dall'accoppiata sorgente-detector.}.
-                        \item Detector Size: Specificata come coppia di valori relativi alle direzioni (u,v). Rappresentano il numero di pixel che si trovano in ciascuna direzione. Questa informazione può essere anche ricavata osservando la dimensione in pixel di una proiezione: una proiezione non è nient'altro che l'informazione letta dal detector, ha dunque la medesima dimensione.
-                        \item Pixel Detector Size: Specificata come una coppia di valori per entrambe le direzioni (u,v), sta ad indicare la dimensione di un singolo pixel del detector in millimetri.
+                        \item \textit{Dimensione dello Stack} nelle direzioni X, Y, Z. La direzione Z indica il numero di proiezioni, X ed Y indicano la dimensione della singola proiezione in pixel.
+                        \item $SID$ - $SDD$ Distanza Sorgente Isocentro e Distanza Sorgente Detector, in millimetri.
+                        \item $du$ - $dv$ Larghezza ed altezza di un singolo pixel nelle direzioni $u$ e $v$, in millimetri.
+                        \item $Nu$ - $Nv$ Numero di pixel componenti l'immagine nelle due direzioni;
+                        \item $Niso_u$ - $Niso_v$ Posizione dell'isocentro nel sistema di riferimento $(u,v)$, in numero di pixel.
                     \end{itemize}
                     
-                    
-            
-            \subsection{Composizione File .csv}
-                \label{sub:csv}
-                <ASK accertati iso u iso v> <TODO>
-                \par
-                    Le proiezioni a nostra disposizione erano affiancate ad un file .csv il quale, per ogni riga, conteneva le seguenti informazioni:
-                    \begin{lstlisting}[language=bash, frame=bt]
-+-----------+-------+-------+-------+----+
-| proj_name | angle | iso_u | iso_v | Io |
-+-----------+-------+-------+-------+----+
-                    \end{lstlisting}
-                    
-                    \begin{itemize}
-                        \item \texttt{proj\textunderscore name}: Nome del file contenente tale proiezione;
-                        \item \texttt{angle}: Angolo nel quale è stata acquisita la proiezione;
-                        \item \texttt{iso\textunderscore u}:  Allineamento del detector alla sorgente. Nel caso in cui questi siano allineati, questo corrisponde esattamente a:
-                        \newline
-                        Detector\textunderscore Size\textunderscore u / 2 + 0.5
-                        \newline
-                        Esempio in \texttt{Figura \ref{fig:iso}}.
-                        \item \texttt{iso\textunderscore v}: Allineamento del detector alla sorgente. Nel caso in cui questi siano allineati, questo corrisponde esattamente a:
-                        \newline
-                        Detector\textunderscore Size\textunderscore v / 2 + 0.5
-                        \newline
-                        Esempio in \texttt{Figura \ref{fig:iso}}.
-                        \item \texttt{Io}: Intensità del fascio sorgente, non attenuato, registrato in fase di acquisizione. 
-                    \end{itemize}
+                    Il sistema di riferimento $(u,v)$ differisce rispetto al sistema $(x,y)$ di ITK in quanto $v$ ha direzione opposta rispetto ad $y$ e l'origine del sistema di riferimento è situata nel centro del pixel in alto a sinistra dell'immagine (Si confronti Figura \ref{fig:itk} con Figura \ref{fig:uv}).
                     
                     \begin{figure}[h]
                         \centering
-                        \includegraphics[width=0.6\textwidth]{iso}
-                        \caption{In questa proiezione sorgente e detector sono allineati: Detector\textunderscore size\textunderscore x = 4 ; Detector\textunderscore size\textunderscore y = 2. Iso\textunderscore u = 2.5 ; Iso\textunderscore v = 1.5. In questo caso Iso\textunderscore u ed Iso\textunderscore v identificano il punto centrale. }
-                        \label{fig:iso}
+                        \includegraphics[width=0.55\textwidth]{uv}
+                        \caption{Il sistema di riferimento $(u,v)$.}
+                        \label{fig:uv}
                     \end{figure}
-                    
-                    Le prime 4 informazioni verranno utilizzate al fine di generare il file di geometria per RTK. L'ultima informazione (Io) verrà utilizzata per effettuare la normalizzazione delle proiezioni. Il numero di righe del file .csv è pari al numero di proiezioni esistenti nello Stack.
-                    
-            \subsection{Composizione Stack .mha} 
-                <TODO>
-                <ASK sono necessari tutti i token?>
-          
             
-        \section{Configurazione e settaggio degli Strumenti Utilizzati}
-            \subsection{Complilazione ITK}
+                    Il file CSV conteneva, per ciascun angolo di proiezione $\theta_i$, l'informazione $Io$. Ogni riga era così composta:
+                    
+                    \begin{lstlisting}[language=bash, frame=bt] 
++-----------------+-------+----+
+| Projection Name | Angle | Io |
++-----------------+-------+----+
+                    \end{lstlisting}
+                    
+                    Il nome della proiezione è un dato puramente indicativo. Può essere utilizzato come nomenclatura nel caso in cui lo Stack tridimensionale RAW venga sezionato in $n$ file di proiezione bidimensionali. Angle ed $Io$, informazioni relative a ciascuna singola proiezione, saranno utilizzati nella generazione della geometria di RTK e nella normalizzazione dello Sack.
+                    
+            \subsection{Generazione immagine MHA da Stack RAW}
+                \label{sec:conversione}
                 \par
-                    La procedura di compilazione reperibile al sito \url{wiki.openrtk.org} soffre di alcuni mancati accorgimenti che non rendono chiara la procedura e la rendono onerosa in termini di tempo. L'intera procedura è stata automatizzata in uno script bash immediatamente accettato dalla comunity OpenRTK ed inserito nella wiki ufficiale
-                    \cite{wiki-rtk}. Descriverò quindi la personale configurazione utilizzata all'interno dello script, visualizzabile nei listati <TODO>.
-                \par    
-                    RTK dipende direttamente da ITK, che dev'essere compilato e configurato manualmente. 
-                    Inizialmente è necessario procurarsi i sorgenti da repository git mediante la procedura clone :
-                    \begin{lstlisting}[language=bash, frame=bt]
-$ git clone http://itk.org/ITK.git
-                    \end{lstlisting}
-                    
-                    \bigskip
-                    Si crea ora un nuovo direttorio, ITK-bin, e ci si posiziona all'interno di questo :
-                    \begin{lstlisting}[language=bash, frame=bt]
-$ mkdir ITK-bin
-$ cd ITK-bin
-                    \end{lstlisting}
-                    
-                    \bigskip
-                    Mediante il comando \texttt{cmake} si abilitano/disabilitano i moduli desiderati:
+                    La gestione di un'immagine MHA risulta più semplice, in quanto tutta l'informazione (Meta-informazioni e dati grezzi) è descritta in un singolo file. Si è inizialmente generato un file MHD contenente i TAG obbligatori (Sezione \ref{sec:mha}) e contenente le informazioni relative allo Spacing, come in questo esempio:
                     
                     \begin{lstlisting}[language=bash, frame=bt]
-$ cmake -DModule_ITKReview=ON -DITK_USE_FFTWD=ON 
--DITK_USE_FFTWF=ON -DBUILD_DOCUMENTATION=OFF 
--DBUILD_EXAMPLES=OFF -DBUILD_TESTING=OFF 
--DCMAKE_CXX_FLAGS=-fPIC -DCMAKE_C_FLAGS=-fPIC ../ITK
+NDims = 3
+DimSize = 1024 512 200
+ElementSpacing = 0.096 0.096 1.8
+ElementType = MET_FLOAT
+ElementByteOrderMSB = True
+ElementDataFile = Contra_40kV_Al_2mm_1024_512_200f.raw
                     \end{lstlisting}
                     
-                    I seguenti moduli sono direttamente richiesti da RTK:
-                    \begin{itemize}
-                        \item Module\textunderscore ITKReview
-                        \item ITK\textunderscore USE\textunderscore FFTWD
-                        \item ITK\textunderscore USE\textunderscore FFTWF
-                    \end{itemize}
+                    La terza componente di ElementSpacing, $1.8$ millimetri, sta ad indicare che in questo caso sono state eseguite 200 proiezioni in un angolo di $360\degree$. Questo non è obbligatorio, infatti lo Spacing sta semplicemente ad indicare la distanza fisica tra le proiezioni bidimensionali inserite nello Stack. Le informazioni relative ad Origin saranno aggiornate in fase di normalizzazione in Sezione \ref{sec:norm} <TODO>, le informazioni relative a Direction rimarranno invariate in quanto la matrice di default è adatta allo scopo.
                     
-                    Questi sono stati disabilitati al fine di permettere una più rapida compilazione:
-                    
-                    \begin{itemize}
-                        \item BUILD\textunderscore DOCUMENTATION
-                        \item BUILD\textunderscore EXAMPLES
-                        \item BUILD\textunderscore TESTING
-                    \end{itemize}
-                    
-                    Infine i seguenti flag, attivati sia per il compilatore C che per il compilatore CXX, riguardano la produzione di codice position-indipendent-code (PIC). Questo permette ad altre librerie, come SimpleITK, si poter sfruttare ITK come libreria condivisa. Per maggiori informazioni è possibile consultare \texttt{man gcc}. 
-                    
-                    \begin{itemize}
-                        \item CMAKE\textunderscore CXX\textunderscore FLAGS = -fPIC
-                        \item MAKE\textunderscore C\textunderscore FLAGS = -fPIC
-                    \end{itemize}
-                    
-                    \bigskip
-                    A questo punto è possibile compilare ITK, utilizzando il seguente comando:
-                    \begin{lstlisting}[language=bash, frame=bt]
-$ make -j
-                    \end{lstlisting}
-                    
-                    L'opzione "-j", permette di specificare il numero di job eseguibili in parallelo durante la compilazione. Nel caso in cui non venga specificato il numero (come in questo caso), il sistema eseguirà quanti più job possibili in parallelo. Nel caso in cui questo comando venga eseguito su MS-DOS, questa opzione non avrà alcun effetto, in quanto il multi-processing non è supportato.\cite{-j-gnu-docs}. Questa particolare opzione non è inserita nel wiki di OpenRTK, se omessa può comportare diverse ore di computazione.
-                    
-                    Ora che ITK è compilato con successo, ci si riposiziona alla root del progetto:
-                    \begin{lstlisting}[language=bash, frame=bt]
-$ cd ..
-                    \end{lstlisting}
-            
-            \subsection{Complilazione RTK}
+                \bigskip
                 \par
-                    È ora possibile procedere con la compilazione di RTK.
-                    Per prima cosa si salva su variabile \texttt{path\textunderscore of\textunderscore ITK} il full path di ITK-bin che occorrerà successivamente. Il comando \texttt{pwd} è adatto allo scopo, in quanto recupera il path del direttorio corrente:
-                    \begin{lstlisting}[language=bash, frame=bt]
-$ cd ITK-bin
-$ path_of_ITK=$(pwd)
-$ cd ..
-                    \end{lstlisting}
-                    
-                    A questo punto si recuperano i sorgenti di RTK, mediante lo stesso procedimento visto per ITK:
-                    
-                    \begin{lstlisting}[language=bash, frame=bt]
-$ git clone http://github.com/SimonRit/RTK.git
-                    \end{lstlisting}
-                    
-                    \bigskip
-                    Si crea il direttorio RTK-bin e vi si entra:
-                    \begin{lstlisting}[language=bash, frame=bt]
-$ mkdir RTK-bin
-$ cd RTK-bin
-                    \end{lstlisting}
-                    
-                    Ora, attraverso cmake, si abilitano i moduli necessari e si effettua il link con ITK-bin:
-                    \begin{lstlisting}[language=bash, frame=bt]
-$ cmake -DITK_DIR=$path_of_ITK 
--DCMAKE_BUILD_TYPE=Release -DBUILD_EXAMPLES=ON 
--DCMAKE_CXX_FLAGS=-fPIC  -DCMAKE_C_FLAGS=-fPIC 
-../RTK
-                    \end{lstlisting}
+                    Il file RAW può essere letto mediante SimpleITK, sfruttando il file MHD appena generato, \textit{proj\textunderscore stack.mhd}.
                    
-                    Come si può vedere il full path del direttorio ITK-bin è stato inserito nella variabile \texttt{ITK\textunderscore DIR}, è stata scelta la versione \texttt{Release} e sono state attivate, come per ITK, le direttive PIC.
-    
-                    A questo punto è possibile procedere con la compilazione:
-                    \begin{lstlisting}[language=bash, frame=bt]
-$ make -j
-                    \end{lstlisting}
-                   
-                    Si ritorna nella root del progetto ed il processo di complizazione è terminato.
-                    \begin{lstlisting}[language=bash, frame=bt]
-$ cd ..
+                    \begin{lstlisting}[language=python, frame=bt]
+>>> import SimpleITK as sitk
+>>> image = sitk.ReadImage('proj_stack.mhd')
+>>> sitk.WriteImage(image, 'proj_stack.mha')
+>>> exit()
                     \end{lstlisting}
                     
-                    Per poter controllare se il procedimento è andato a buon fine, è possibile lanciare l'eseguibile \texttt{HelloWorld} all'interno di RTK-bin/bin, il quale stamperà a video la stringa \texttt{"RTK Hello World!"}
-                    \begin{lstlisting}[language=bash, frame=bt]
-$ ./RTK-bin/bin/HelloWorld
-                    \end{lstlisting}
-                    
-            \subsection{Configurazione Wrapping SimpleRTK}
-                \par
-                    Questa procedura non è stata fornita di script bash. Dalla root directory del progetto ci si posiziona in \texttt{RTK-bin} e si abilita l'opzione BUILD\textunderscore SIMPLERTK in questo modo:
-                    \begin{lstlisting}[language=bash, frame=bt]
-$ cd RTK-bin
-$ cmake -DBUILD_SIMPLERTK=ON ../RTK
-                    \end{lstlisting}
-                    
-                    A questo punto è necessario ricompilare il sistema:
-                    \begin{lstlisting}[language=bash, frame=bt]
-$ make -j
-                    \end{lstlisting}
-                    
-                    Se la compilazione ha avuto successo, è possibile aggiungere SimpleRTK all'environment locale di Python.
-                    \begin{lstlisting}[language=bash, frame=bt]
-$ cd SimpleRTK -build/Wrapping/PythonPackage
-$ sudo python setup.py install
-                    \end{lstlisting}
-                    Come si nota dall'ultimo comando, è stato necessario concedere i privilegi di \texttt{root}. Per poter evitare questo, come indicato nell'installation tutorial di SimpleRTK è possibile creare un virtual environment\cite{simplertk-wiki}
-               
-                \subsection{Installazione SimpleITK}
-                    E' possibile reperire SimpleITK ed aggiungerlo al local environment Python mediante pip:
-                \begin{lstlisting}[language=bash, frame=bt]
-$ [sudo] pip install SimpleITK
-                    \end{lstlisting}
-                        
-        \section{Lettura informazioni da file .csv}
+                    Il metodo \textit{ReadImage()} legge il file 'proj\textunderscore stack.mhd' e restituisce un oggetto Image \cite{itk-image-object}. Il metodo \textit{WriteImage()} scrive su file l'oggetto Image in formato MHA, nominandolo 'proj\textunderscore stack.mha'. 
+        
+        \section{Lettura informazioni da file CSV}
             \label{sec:lettura-csv}
-            Al fine di poter leggere le informazioni relative ad uno Stack di proiezione inserite nel file .csv descritto nella sottosezione \ref{sub:csv} si è inizialmente creata una classe Python che potesse ospitare i file estratti:
             
-            \begin{lstlisting}[language=python, frame=bt]
+            \par
+                Al fine di poter manipolare le informazioni relative a ciascuna Proiezione appartenente ad uno Stack, si è inizialmente creata una Classe Python in grado di ospitare i dati che verranno letti da file:
+            
+                \begin{lstlisting}[language=python, frame=bt]
 class Projection( object ):
-    def __init__(self, name, angle, iso_u, iso_v, io):
-        self.name = name
+    def __init__(self, name, angle, io):
+        self.name = str(name)
         self.angle = float(angle)
-        self.iso_u = float(iso_u)
-        self.iso_v = float(iso_v)
         self.io = float(io)
-            \end{lstlisting}
+                \end{lstlisting}
             
-            Grazie all'utilizzo del package \texttt{pyexcel}, la lettura del file risulta particolamente semplice.
-            La lettura viene gestita attraverso la funzione \texttt{get\textunderscore sheet()}:
+               \textit{\textunderscore \textunderscore init\textunderscore \textunderscore}, costruttore della Classe, riceverà come parametri i contenuti di una riga del file CSV. Per poter gestire l'intero file CSV verranno successivamente creati $n$ Oggetti Projection, con $n$ corrispondente al numero di righe del file.
             
-            \begin{lstlisting}[language=python, frame=bt]
-csv = pyexcel.get_sheet(file_name = 'file.csv')
-            \end{lstlisting}
-            
-            Questa funzione restituisce un'istanza della classe \texttt{Sheet} descritta all'interno di pyexcel.
-            Un oggetto della classe \texttt{Sheet} contiene tutti i dati del file .csv sotto forma di lista bidimensionale.\cite{pyexcel-docs} La prima dimensione consente di accedere ad una singola riga:
-            
-            \begin{lstlisting}[language=python, frame=bt]
->>>csv[0]
-['00000.tiff', 181.79, 128.5, 96.5, 39162]
-            \end{lstlisting}
-            
-            Anche la singola riga è rappresentata come lista, l'accesso ad un singolo elemento diventa quindi:
-            \begin{lstlisting}[language=python, frame=bt]
->>> csv[0][0]
-'00000.tiff'
-            \end{lstlisting}
-            
-            
-            Sfruttando le proprietà sopra descritte e sfruttando l'iterabilità delle liste fornita da Python\cite{python-list}, si è potuto iterare su tutte le colonne sfruttando un ciclo for:
-            
-            \begin{lstlisting}[language=python, frame=bt]
-proj_obj_list = []
-for row in csv:
-    proj = Projection(row[0],row[1],row[2],row[3],row[4])
-    proj_obj_list.append(proj)
-            \end{lstlisting}
-            
-            Si è creata una lista vuota (\texttt{proj\textunderscore obj\textunderscore list}). Ogni elemento di questa lista, ordinatamente, contiene un'istanza della classe Projection. La dimensione della lista coincide con il numero di righe presenti all'interno del file .csv. Il file può essere chiuso, ed è possibile operare esclusivamente attraverso la lista \texttt{proj\textunderscore obj\textunderscore list}.
             \bigskip
             \par
-            Questa configurazione, permette un accesso all'informazione facilmente comprensibile. Nel caso in cui si voglia accedere, ad esempio,  all'informazione \texttt{Io} della 1\degree proiezione, è sufficiente accedere all'omonimo attributo dell'oggetto creato, nella posizione desiderata: 
+                Si è sfruttato il Python Package \texttt{pyexcel} \cite{pyexcel}, il quale fornisce un'interfaccia API per la lettura e manipolazione di file CSV. La lettura viene gestita attraverso la funzione \texttt{get\textunderscore sheet()} che restituisce un'istanza della classe \texttt{Sheet} descritta all'interno del core \textit{pyexcel}:
+                
+                \begin{lstlisting}[language=python, frame=bt]
+csv = pyexcel.get_sheet(file_name = 'file.csv')
+                \end{lstlisting}
             
-            \begin{lstlisting}[language=python, frame=bt]
+            \bigskip
+            \par
+                Un oggetto della classe \texttt{Sheet} contiene tutti i dati del file .csv sotto forma di lista bidimensionale \cite{pyexcel-docs}. La prima dimensione consente di accedere ad una singola riga:
+                
+                \begin{lstlisting}[language=python, frame=bt]
+>>>csv[0]
+['00000.tiff', 0, 39162]
+                \end{lstlisting}
+            
+                Anche la singola riga è rappresentata come lista, l'accesso ad una singola cella diventa:
+                \begin{lstlisting}[language=python, frame=bt]
+>>> csv[0][0]
+'00000.tiff'
+                \end{lstlisting}
+            
+            \bigskip
+            \par
+                Sfruttando le proprietà sopra descritte e sfruttando l'iterabilità delle liste fornita da Python \cite{python-list}, si è potuto iterare su tutte le righe del file sfruttando un ciclo FOR:
+            
+                \begin{lstlisting}[language=python, frame=bt]
+proj_obj_list = []
+for row in csv:
+    proj = Projection(row[0],row[1],row[2])
+    proj_obj_list.append(proj)
+                \end{lstlisting}
+            
+                Si è creata una lista vuota, \textit{proj\textunderscore obj\textunderscore list}. Ogni elemento di questa lista, ordinatamente, contiene un'istanza della classe Projection. La dimensione della lista coincide con il numero di righe presenti all'interno del file CSV.
+            
+            \bigskip
+            \par
+                Questa configurazione, permette un accesso all'informazione facilmente comprensibile. Nel caso in cui si voglia accedere, ad esempio, all'informazione \texttt{Io} della 1\degree proiezione, è sufficiente accedere all'omonimo attributo dell'oggetto creato, nella posizione desiderata: 
+            
+                \begin{lstlisting}[language=python, frame=bt]
 >>> proj_obj_list[0].io
 39162.0
-            \end{lstlisting}
+                \end{lstlisting}
             
-            E' opportuno ricordare che in Python l'indicizzazione delle liste comincia dal numero 0, dunque la 1\degree proiezione è identificata dall'indice 0 e così via.
+               In Python l'indicizzazione delle liste incomincia dall'indice $0$, dunque la $1\degree$ Proiezione è identificata dall'indice $0$ e così via.
+        
+        \section{Normalizzazione Stack MHA}
+            \label{sec:norm-disp}
             
-        \section{Generazione Geometria .xml di RTK}
             \par
-                Come specificato in sezione XXXX <TODO> RTK necessita di una descrizione geometrica relativa all'apparato di acquisizione. Questa configurazione è generabile mendiante il wrapper SimpleRTK ed è esportabile in un file .xml, che verrà successivamente letto dagli eseguibili di ricostruzione forniti da RTK.
+                Gli Stack a disposizione, convertiti da formato RAW a formato MHA, devono essere normalizzate secondo la procedura descritta in Sezione \ref{sec:normalizzazione} per poter essere correttamente utilizzate dagli algoritmi di ricostruzione forniti da RTK. Ciò richiede l'ottenimento dei valori $Io$, che possono essere recuperati dalla lista \textit{proj\textunderscore obj\textunderscore list} generata a partire dal file CSV associato allo Stack, come descritto in Sezione \ref{sec:lettura-csv}. La lettura dello Stack MHA è invece affidata al metodo ReadImage di SimpleITK, il quale crea in memoria un'oggetto Image \cite{sitk-image}:
                 
-            \subsection{ThreeDCircularProjectionGeometry()}
-                \par
-                    SimpleRTK fornisce una classe chiamata \texttt{ThreeDCircularProjectionGeometry()} la quale permette la descrizione della geometria. SimpleRTK inoltre fornisce un'altra classe chiamata \texttt{hreeDCircularProjectionGeometryXMLFileWriter()} che fornisce un'interfaccia per la scrittura di un'istanza di della prima classe su file .xml.
+                \begin{lstlisting}[language=python, frame=bt]
+stack = sitk.ReadImage(proj_stack.mha)
+                \end{lstlisting}
                 
-                    La classe \texttt{ThreeDCircularProjectionGeometry()} è fornita di un metodo chiamato \texttt{AddProjection()} il quale organizza le informazioni relative ad una singola proiezione.
-                    Questi parametri sono richiesti e fondamentali:
+                L'oggetto \textit{stack} possiede ora i metodi GetWidth(), GetHeight() e GetDepth(), utili al fine di reperire le informazioni dimensionali dello Stack, precedentemente inserite nella sua creazione (Sezione \ref{sec:conversione}):
+                \begin{lstlisting}[language=python, frame=bt]
+width = stack.GetWidth()
+height = stack.GetHeight()
+depth = stack.GetDepth()
+                \end{lstlisting} 
+                
+                E' stata poi creata una lista vuota, che conterrà le singole proiezioni estratte e normalizzate (oggetti Image):
+                \begin{lstlisting}[language=python, frame=bt]
+norm_proj_list = []
+                \end{lstlisting}
+                
+                Si è successivamente configurato un ciclo FOR, iterante sulla profondità \textit{depth}, che corrisponde al numero di proiezioni presenti nello Stack:
+                \begin{lstlisting}[language=python, frame=bt]
+for zslice in range(0, depth):
+                \end{lstlisting} 
+
+                La variabile \textit{zslice} assume i valori interi $0 \leq zslice < depth$ in quanto la funzione built-in \textit{range()} \cite{python-range} di Python genera una sequenza di interi iterabili appartenenti al dominio appena indicato. La procedura di normalizzazione avviene all'interno di questo ciclo, nel quale si susseguono ripetutamente le seguenti fasi, fino all'esaurimento dello Stack:
+                
+                \begin{enumerate}
+                    \item \textbf{Estrazione di una singola Proiezione}. Viene affidata alla Classe \textit{ExtractImageFilter} \cite{sitk-estractor} di SimpleITK. Questa permette il collasso delle dimensioni di uno Stack MHA 3D. Per poter specificare quale dimensione collassare, l'istanza di ExtractImageFilter, chiamata \texttt{extractor} (estrattore), dev'essere configurata mediante i metodi SetSize() e SetIndex(). Il metodo SetSize() specifica la dimensione dell'immagine da ottenere: questa conterrà $0$ nella coordinata dimensionale da collassare, mentre lascierà intatte le rimanenti dimensioni. Il metodo SetIndex() identifica la proiezione interna allo Stack da estrarre, impostando a zero le coordinate non-zero indicate da SetSize() ed impostando l'indice di estrazione nella coordinata rimanente:
                     
-                    \begin{itemize}
-                        \item SID
-                        \item SDD
-                        \item angle
-                        \item proj\textunderscore offset\textunderscore x
-                        \item proj\textunderscore offset\textunderscore y
-                    \end{itemize}
+                    \begin{lstlisting}[language=python, frame=bt]
+extractor = sitk.ExtractImageFilter()
+extractor.SetSize([width,height,0])
+extractor.SetIndex([0,0,zslice])
+
+proj = extractor.Execute(stack)
+                    \end{lstlisting} 
+                    
+                    Per poter applicare le operazioni, si ricorre al metodo Execute(stack), il quale restituisce un oggetto Image bidimensionale (proiezione estratta non normalizzata).
+                    
+                    \item \textbf{Normalizzazione della singola Proiezione}. Alla singola proiezione si applica la procedura di normalizzazione descritta nell' equazione (\ref{eq:normalization}), Sottosezione \ref{sub:norm-math}. L'intensità \texttt{I} è rappresentata da tutti i pixel componenti la proiezione appena estratta. L'intensità \texttt{Io} è disponibile all'interno della lista di oggetti Projection \texttt{proj\textunderscore obj\textunderscore list}. SimpleITK fornisce il metodo Log()\cite{sitk-log}, il quale permette il calcolo del Logaritmo in base $e$ per ciascun pixel componente l'immagine. Inoltre possono essere applicate moltiplicazioni per numeri floating point, applicate a ciascun pixel dell'immagine mediante l'operatore *:
+                    \begin{lstlisting}[language=python, frame=bt]
+proj = proj * float(1 / proj_obj_list[zslice].io)
+proj = sitk.Log(proj)
+proj = proj * float(-1)
+                    \end{lstlisting} 
+                    
+                    Come si può notare, si applica l'equazione (\ref{eq:normalization}) in 3 passaggi. L'informazione \texttt{Io} viene prelevata dalla lista sfruttando l'indice zslice, il quale identifica, in ordine, l'esatta attenuazione della proiezione indicata.
+                    
+                    \item \textbf{Inserimento della Proiezione normalizzata nel nuovo Stack MHA.}                    Per poter conservare le metainformazioni inserite nello stack iniziale si è deciso, prima dell'esecuzione del ciclo for, di crearne una copia in memoria mediante il metodo ReadImage() di SimpleITK:
+                    
+                    \begin{lstlisting}[language=python, frame=bt]
+normalized_mha = sitk.ReadImage(stack)
+                    \end{lstlisting} 
+                    
+                    normalized\textunderscore mha contiene tutte le proiezioni e le metainformazioni dello stack 
+                     
+                    All'interno del ciclo, si sono eseguite le seguenti operazioni:
+                    \begin{lstlisting}[language=python, frame=bt]
+norm_vol = sitk.JoinSeries(proj)
+normalized_mha = sitk.Paste(copy, norm_vol, 
+norm_vol.GetSize(), destinationIndex=[0,0,zslice])
+                    \end{lstlisting}
+                    
+                    Il metodo JoinSeries() \cite{sitk-joinseries} trasforma la proiezione da 2D a 3D. La funzione Paste() \cite{sitk-paste} permette di incollare o sostituire due differenti immagini. Il 1\degree parametro specifica l'immagine di destinazione, in questo caso <TODO finisci e revisiona!>
+                    
+                    Permette di prendere una sezione di una immagine e di stamparla in un altra immagine. Il parametro SetDestinationIndex() specifica dove incollare i dati nella immagine di output.
+                \end{enumerate}
+                
+        
+            \subsection{Aggiornamento Origin MHA Normalizzato}
+                <TODO>
+                \begin{equation}
+                    \begin{multlined}
+                        \ \ \ Niso_x = Niso_u\\
+                        Niso_y = Nv - Niso_v
+                    \end{multlined}
+                \end{equation}
+        
+        \section{Geometria XML mediante SimpleRTK}
+      
+            \par
+                Gli algoritmi di ricostruzione forniti da RTK necessitano di una descrizione geometrica dell'apparato di acquisizione. La Classe RTK \textit{ThreeDCircularProjectionGeometry()}, descritta in Sezione \ref{sub:geometry}, è disponibile anche per SimpleITK, con i medesimi parametri. SimpleRTK inoltre fornisce un'altra classe chiamata \texttt{ThreeDCircularProjectionGeometryXMLFileWriter()} la quale si occupa del trasferimento di un'istanza di \texttt{ThreeDCircularProjectionGeometry()} su file XML, che sarà successivamente utilizzato dagli algoritmi di ricostruzione. 
+                
+            \subsection{Generazione della Geometria}
                 \par
+                    
+                    Dopo aver istanziato un'istanza di \textit{ThreeDCircularProjectionGeometry()}, si procede alla descrizione della geometria. La classe \texttt{ThreeDCircularProjectionGeometry()} è fornita di un metodo chiamato \texttt{AddProjection()} il quale organizza le informazioni, utilizzando parametri a lunghezza variabile, relative ad una singola proiezione. I parametri SID ed SDD vengono richiesti all'utente sfruttando la funzione di libreria standard Python \textit{input()} \cite{input-python}:
+                         
+                    \begin{lstlisting}[language=python, frame=bt]
+SID = float(input("Insert SID  - Source to Isocenter Distance, in mm\n"))
+SDD = float(input("insert SDD  - Source to Detector Distance, in mm\n"))
+                    \end{lstlisting}
+                   
+                    
+                    
+                   
                     SID ed SDD sono forniti all'interno del file di descrizione associato ad ogni Stack di proiezione a disposizione. \texttt{angle} viene fornito all'interno del file .csv per ogni proiezione. 
                     proj\textunderscore offset\textunderscore x e proj\textunderscore offset\textunderscore y sono stati precedentemente descritti in sezione <TODO> ed il loro calcolo necessita delle informazioni Pixel Detector Size in entrambe le direzioni (reperibili all'interno del file di descrizione esterno) e delle informazioni iso\textunderscore u ed iso\textunderscore v all'interno del file csv.
                     
@@ -753,107 +738,7 @@ gw.Execute( geometry )
                     \end{lstlisting}
                     Il metodo Execute() si occupa interamente della generazione. Il file generato, geometry.xml, verrà successivamente utilizzato nei file binari di ricostruzione forniti da RTK.
         
-        \section{Normalizzazione degli Stack a disposizione}
-            \label{sec:norm-disp}
-            \par
-                RTK legge lo stack di proiezione meniante una classe chiamata ProjectionsReader() \cite{projections-reader}.
-            \par    
-                Gli Stack di proiezione a disposizione, essendo in formato .mha, devono necessariamente essere normalizzati manualmente (ottenendo l'informazione \texttt{Io} da file .csv) prima di poter essere letti da un qualunque applicativo di ricostruzione fornito da RTK.
-                La procedura richiesta è la medesima descritta in Sezione \ref{sec:normalizzation} e si compone in queste fasi:
-                \begin{enumerate}
-                    \item Lettura \texttt{Io} da file .csv
-                    \item Lettura Stack di proiezione
-                    \item Estrazione di una proiezione dallo Stack
-                    \item Normalizzazione della singola proiezione
-                    \item Composizione di uno Stack .mha normalizzato, mantenendo l'ordine dello Stack iniziale.
-                \end{enumerate}
-                
-                I punti 2-3-4-5 sfruttano il package SimpleITK, i punti 3-4-5 possono essere eseguiti all'interno di un unico cliclo, iterante sulla dimensione z dello Stack (depth).
-                
-            \subsection{Lettura \texttt{Io} da file .csv}
-                \par
-                    Mediante la medesima procedura descritta in Sezione \ref{sec:lettura-csv}, si compone una lista di oggetti Projection, i quali contengono l'informazione \texttt{Io} letta all'interno del file csv: \texttt{proj\textunderscore obj\textunderscore list}.
-                
-            \subsection{Lettura Stack di proiezione}
-                \par
-                    La lettura è affidata al metodo ReadImage\cite{sitk-readimage} di SimpleITK:
-                    
-                    \begin{lstlisting}[language=python, frame=bt]
-stack = sitk.ReadImage(proj_stack.mha)
-                    \end{lstlisting}
-                    
-                    Si noti che \texttt{sitk} è un alias. In fase di import è stato scritto:
-                    \begin{lstlisting}[language=python, frame=bt]
-import SimpleITK as sitk
-                    \end{lstlisting}
-                    
-                    L'oggetto \texttt{stack} possiede ora i metodi GetWidth(), GetHeight(), GetDepth(). Utili al fine di reperire le informazioni dimensionali dello Stack. La profondità, depth, sta ad indicare il numero di singole proiezioni componenti lo Stack.
-                    
-                    \begin{lstlisting}[language=python, frame=bt]
-width = stack.GetWidth()
-height = stack.GetHeight()
-depth = stack.GetDepth()
-                    \end{lstlisting} 
-             
-                    Queste informazioni saranno utili in seguito. L'informazione sulla profondità permetterà l'iterazione all'interno dello Stack. Larghezza ed altezza saranno forniti all'estrattore di SimpleITK.
-                    
-            \subsection{Estrazione di una proiezione dallo Stack}
-                    L'estrazione delle singole proiezioni è affidata alla classe ExtractImageFilter() \cite{sitk-estractor}. Questa classe permette il collasso delle dimensioni di uno Stack .mha. Per poter specificare quale dimensione collassare, l'istanza di ExtractImageFilter, chiamata \texttt{extractor} (estrattore), dev'essere configurata mediante i metodi SetSize() e 
-                    SetIndex(). Il metodo SetSize() specifica la dimensione dell'immagine da ottenere: questa conterrà uno zero nella coordinata dimensionale da collassare. Il metodo SetIndex() identifica la proiezione interna allo Stack da estrarre, impostando a zero le coordinate non-zero indicate da SetSize() ed impostando l'indice di estrazione nella coordinata rimanente. Per poter applicare le operazioni, si ricorre al metodo Execute(stack).
-                    Per poter meglio comprendere quanto descritto, si consideri il seguente esempio:
-                    Dato un ipotetico Stack 3D avente dimensione 4x4x4 dal quale si voglia ottenere un'immagine 2D di dimensione 4x4 individuata all'interno dello Stack mediante le coordinate [x,y,2] (la 3\degree proiezione interna allo Stack 3D): extractor.SetSize(4,4,0) ed extractor.SetIndex(0,0,2). Si procede infine all'esecuzione di extractor.Execute(stack\textunderscore 3D).
-                    
-                \par
-                    Per poter applicare quanto appena descritto ad uno Stack di proiezione a disposizione, si è iterato lungo la dimensione di profondità depth mediante un ciclo for:
-                    
-                    \begin{lstlisting}[language=python, frame=bt]
-for zslice in range(0, depth):
-    extractor = sitk.ExtractImageFilter()
-    extractor.SetSize([width,height,0])
-    extractor.SetIndex([0,0,zslice])
-
-    proj = extractor.Execute(stack)
-                    \end{lstlisting} 
-                    
-                    La dimensione della proiezione è stata specificata utilizzando le dimensioni width ed height ottenute in fase di lettura.
-                    zslice assume i valori interi 0 <= zslice < depth in quanto la funzione built-in range()\cite{python-range} fornita da Python genera una sequenza di interi iterabili appartenenti al dominio appena indicato.
-                    Ad ogni iterazione si estrae una singola proiezione, che sarà oggetto di normalizzazione.
-                
-            \subsection{Normalizzazione della singola proiezione}
-                \par
-                    Alla singola proiezione si applica la procedura di normalizzazione descritta nell' equazione (\ref{eq:normalization}), Sottosezione \ref{sub:norm-math}.
-                    L'intensità \texttt{I} è rappresentata da tutti i pixel componenti la proiezione appena estratta. L'intensità \texttt{Io} è disponibile all'interno della lista di oggetti Projection \texttt{proj\textunderscore obj\textunderscore list}. SimpleITK fornisce il metodo Log()\cite{sitk-log}, il quale permette il calcolo del Logaritmo in base $e$ per ciascun pixel componente l'immagine. Inoltre possono essere applicate moltiplicazioni per numeri floating point, applicate a ciascun pixel dell'immagine mediante l'operatore *:
-                    \begin{lstlisting}[language=python, frame=bt]
-proj = proj * float(1 / proj_obj_list[zslice].io)
-proj = sitk.Log(proj)
-proj = proj * float(-1)
-                    \end{lstlisting} 
-                    
-                    Come si può notare, si applica l'equazione (\ref{eq:normalization}) in 3 passaggi. L'informazione \texttt{Io} viene prelevata dalla lista sfruttando l'indice zslice, il quale identifica, in ordine, l'esatta attenuazione della proiezione indicata. Questo codice è inserito all'interno del ciclo, quindi la normalizzazione avviene per ogni proiezione inserita nello Stack.
-                             
-            \subsection{Composizione di uno Stack .mha normalizzato}
-                \par
-                    Per poter conservare le metainformazioni inserite nello stack iniziale si è deciso, prima dell'esecuzione del ciclo for, di crearne una copia in memoria mediante il metodo ReadImage() di SimpleITK:
-                    
-                    \begin{lstlisting}[language=python, frame=bt]
-normalized_mha = sitk.ReadImage(stack)
-                    \end{lstlisting} 
-                    
-                    normalized\textunderscore mha contiene tutte le proiezioni e le metainformazioni dello stack 
-                     
-                    All'interno del ciclo, si sono eseguite le seguenti operazioni:
-                    \begin{lstlisting}[language=python, frame=bt]
-norm_vol = sitk.JoinSeries(proj)
-normalized_mha = sitk.Paste(copy, norm_vol, 
-    norm_vol.GetSize(), destinationIndex=[0,0,zslice])
-                    \end{lstlisting}
-                    
-                    Il metodo JoinSeries() \cite{sitk-joinseries} trasforma la proiezione da 2D a 3D. La funzione Paste() \cite{sitk-paste} permette di incollare o sostituire due differenti immagini. Il 1\degree parametro specifica l'immagine di destinazione, in questo caso <TODO finisci e revisiona!>
-                    
-                    Permette di prendere una sezione di una immagine e di stamparla in un altra immagine. Il parametro SetDestinationIndex() specifica dove incollare i dati nella immagine di output. 
-                    
-                    
-                    
+            
         \section{Ricostruzione mediante eseguibili RTK}
             \subsection{rtkfdk}
                 \par
@@ -1004,23 +889,50 @@ Backprojection: 180.379 s
         
     \bibitem{delaunay}
         \url{https://en.wikipedia.org/wiki/Delaunay_triangulation}
-        
+    
+    \bibitem{raw}
+        \url{https://en.wikipedia.org/wiki/Raw_image_format}
+    
     \bibitem{mha-doc}
         \url{https://itk.org/Wiki/ITK/MetaIO/Documentation} 
+    
+    \bibitem{endianness}
+        \url{https://en.wikipedia.org/wiki/Endianness}
+    
+    
+    
+   
 
     
+    
+    
+    \bibitem{script-bash}
+        \url{https://github.com/dannylessio/auto-build-RTK}
 
+    \bibitem{parallel-j}
+        \url{https://www.gnu.org/software/make/manual/html_node/Parallel.html}
 
+    \bibitem{wiki-rtk}
+        \url{wiki.openrtk.org}
 
-
+    \bibitem{simplertk-install}
+        \url{http://wiki.openrtk.org/index.php/SimpleRTK}
+    
+    \bibitem{simpleitk-install}
+        \url{https://itk.org/Wiki/SimpleITK/GettingStarted}
+    
+    \bibitem{sitk-image}
+        \url{https://itk.org/SimpleITKDoxygen/html/classitk_1_1simple_1_1Image.html}
+    
+    
     \bibitem{openrtk-website}
         \url{http://www.openrtk.org/}
     
     \bibitem{itk-website}
         \url{https://itk.org/}
         
-    \bibitem{wiki-rtk}
-        \url{wiki.openrtk.org}
+    \bibitem{itk-image-object}
+        \url{https://itk.org/SimpleITKDoxygen/html/classitk_1_1simple_1_1Image.html}
 
     \bibitem{imagej-3dio-plugin}
         \url{http://ij-plugins.sourceforge.net/plugins/3d-io/index.html}
@@ -1058,8 +970,8 @@ Backprojection: 180.379 s
     \bibitem{sitk-paste}
         \url{https://itk.org/SimpleITKDoxygen/html/namespaceitk_1_1simple.html#a49f5bb557f802ce6acc94f4ad10e6838}
         
-    \bibitem{-j-gnu-docs}
-        \url{https://www.gnu.org/software/make/manual/html_node/Parallel.html}
+    \bibitem{pyexcel}
+        \url{https://github.com/pyexcel/pyexcel}
     
     \end{thebibliography}
 \end{document}
