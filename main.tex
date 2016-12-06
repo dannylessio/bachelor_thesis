@@ -133,7 +133,7 @@
                         
                     \bigskip
                     <TODO devi esserne sicuro, ma lo diceva il medico del video History of computed tomography!>
-                    Dalla radiografia in \texttt{Figura \ref{fig:skull}}, è possibile distinguere solamente cinque diversi livelli di densità. Partendo dal meno denso, si visualizza \textit{l'aria}, di colore nero; \textit{l'acqua o i tessuti molli\footnote{Sostanzialmente si vuole definire tutto ciò che non ha la stessa densità dell'osso.}}, che si visualizzano con un grigio chiaro; \textit{il grasso}, evidenziato con un colore grigio scuro; \textit{le ossa}, che presentano una colorazione tendente al bianco; \textit{il campione metallico} (L), di colore bianco. L’acqua ed i tessuti molli possiedono circa la medesima densità. E' impossibile analizzare il cervello ed evidenziarne un'eventuale patologia, poiché esso è rappresentato come una zona omogeneamente grigia. L'ottenimento di un'immagine del cervello mediante Radiografia Convenzionale divenne una sfida sin dal periodo immediatamente successivo al 1895, anno in cui vennero scoperti i raggi X. Anche il grande scienziato ed inventore Thomas Edison agli inizi del 1900 si cimentò senza successo nell'impresa, a causa delle grosse limitazioni imposte dalla tecnica \cite{thomas-edison-brain}. Il cervello è composto da tessuti molli, racchiusi all’interno di uno scheletro denso che impedisce alla maggior parte della radiazione di penetrarli. Fluttua a bagno in un liquido chiamato \textit{fluido cerebrospinale\footnote{Liquido che fornisce nutrienti ed agisce come cuscino al fine di proteggere la materia grigia stessa}} il che rende ancor più ardua l'impresa. Questo tipo di analisi, si scoprì, essere tecnologicamente inaccessibile alla Radiografia Convenzionale.
+                    Dalla radiografia in \textit{Figura \ref{fig:skull}}, è possibile distinguere solamente cinque diversi livelli di densità. Partendo dal meno denso, si visualizza \textit{l'aria}, di colore nero; \textit{l'acqua o i tessuti molli\footnote{Sostanzialmente si vuole definire tutto ciò che non ha la stessa densità dell'osso.}}, che si visualizzano con un grigio chiaro; \textit{il grasso}, evidenziato con un colore grigio scuro; \textit{le ossa}, che presentano una colorazione tendente al bianco; \textit{il campione metallico} (L), di colore bianco. L’acqua ed i tessuti molli possiedono circa la medesima densità. E' impossibile analizzare il cervello ed evidenziarne un'eventuale patologia, poiché esso è rappresentato come una zona omogeneamente grigia. L'ottenimento di un'immagine del cervello mediante Radiografia Convenzionale divenne una sfida sin dal periodo immediatamente successivo al 1895, anno in cui vennero scoperti i raggi X. Anche il grande scienziato ed inventore Thomas Edison agli inizi del 1900 si cimentò senza successo nell'impresa, a causa delle grosse limitazioni imposte dalla tecnica \cite{thomas-edison-brain}. Il cervello è composto da tessuti molli, racchiusi all’interno di uno scheletro denso che impedisce alla maggior parte della radiazione di penetrarli. Fluttua a bagno in un liquido chiamato \textit{fluido cerebrospinale\footnote{Liquido che fornisce nutrienti ed agisce come cuscino al fine di proteggere la materia grigia stessa}} il che rende ancor più ardua l'impresa. Questo tipo di analisi, si scoprì, essere tecnologicamente inaccessibile alla Radiografia Convenzionale.
                 
                 \bigskip 
                 \par
@@ -186,7 +186,7 @@
                         \label{fig:second-prototype}
                     \end{figure}
                             
-                    Il primo prototipo era composto da una scatola di piombo con un piccolo foro posto nella parte anteriore, all’interno della quale era presente un materiale radioattivo, l’Americium, capace di fornire una fonte costante, non particolarmente intensa, di raggi gamma. La radiazione fuoriusciva dal foro in un singolo fascio collimato a configurazione pencil-beam. Il piatto, sul quale venivano posizionati degli oggetti test (fantocci), veniva traslato orizzontalmente per permettere al singolo fascio di poter raggiungere tutti gli oggetti. Al termine della traslazione, il piatto veniva fatto roteare di $1\degree$, ed il procedimento veniva ripetuto fino all'ottenimento di 180 proiezioni. I livelli d'attenuazione erano letti dal singolo detector opposto alla sorgente. Il processo di scansione durava ben nove giorni, la ricostruzione computerizzata degli oggetti richiedeva più di due ore di processamento. Questo fu un risultato molto importante, poiché dimostrò che la Tomografia Computerizzata era tecnologicamente e fisicamente possibile. Il secondo prototipo di Hounsfield, di medesima geometria ma avente un generatore di Raggi X al posto dell'Americium, è visibile in \texttt{Figura \ref{fig:second-prototype}}.
+                    Il primo prototipo era composto da una scatola di piombo con un piccolo foro posto nella parte anteriore, all’interno della quale era presente un materiale radioattivo, l’Americium, capace di fornire una fonte costante, non particolarmente intensa, di raggi gamma. La radiazione fuoriusciva dal foro in un singolo fascio collimato a configurazione pencil-beam. Il piatto, sul quale venivano posizionati degli oggetti test (fantocci), veniva traslato orizzontalmente per permettere al singolo fascio di poter raggiungere tutti gli oggetti. Al termine della traslazione, il piatto veniva fatto roteare di $1\degree$, ed il procedimento veniva ripetuto fino all'ottenimento di 180 proiezioni. I livelli d'attenuazione erano letti dal singolo detector opposto alla sorgente. Il processo di scansione durava ben nove giorni, la ricostruzione computerizzata degli oggetti richiedeva più di due ore di processamento. Questo fu un risultato molto importante, poiché dimostrò che la Tomografia Computerizzata era tecnologicamente e fisicamente possibile. Il secondo prototipo di Hounsfield, di medesima geometria ma avente un generatore di Raggi X al posto dell'Americium, è visibile in \textit{Figura \ref{fig:second-prototype}}.
                 
                 \bigskip
                 \par
@@ -387,11 +387,11 @@
             \subsection{Geometria}
                 \label{sec:rtk-geometry}
                 \par
-                    RTK necessita di informazioni relative alla geometria di acquisizione per poter correttamente ricostruire un set di proiezioni. La classe che gestisce queste informazioni è\texttt{ ThreeDCircularProjectionGeometry}, basata nello standard internazionale IEC 61217 che è stato progettato per dispositivi cone-beam su sistemi isocentrici. Il sistema a coordinate fisse di RTK ed il sistema di coordinate fisse dell'IEC 61217 sono esattamente uguali. Il sistema consente anche il salvataggio e la lettura della geometria su file XML.
+                    RTK necessita di informazioni relative alla geometria di acquisizione per poter correttamente ricostruire un set di proiezioni. La classe che gestisce queste informazioni è\textit{ ThreeDCircularProjectionGeometry}, basata nello standard internazionale IEC 61217 che è stato progettato per dispositivi cone-beam su sistemi isocentrici. Il sistema a coordinate fisse di RTK ed il sistema di coordinate fisse dell'IEC 61217 sono esattamente uguali. Il sistema consente anche il salvataggio e la lettura della geometria su file XML.
                 
                 \bigskip
                 \par
-                    E' possibile impostare fino a 9 parametri in doppia precisione per ciascuna proiezione, sfruttando il metodo \texttt{AddProjection}. Viene impostato il valore di default $0$ per tutti quei parametri non esplicitamente espressi. Di seguito vengono analizzati i 5 parametri fondamentali:
+                    E' possibile impostare fino a 9 parametri in doppia precisione per ciascuna proiezione, sfruttando il metodo \textit{AddProjection}. Viene impostato il valore di default $0$ per tutti quei parametri non esplicitamente espressi. Di seguito vengono analizzati i 5 parametri fondamentali:
                         
                     \begin{itemize}
                         \item \textbf{SID} - Source to Isocenter\footnote{L’asse centrale del fascio interseca l’asse di rotazione dell'apparato di acquisizione in un punto dello spazio chiamato Isocentro} Distance, espressa in millimetri.
@@ -484,7 +484,7 @@ Rotation = 1 0 0 0 1 0 0 0 1
                         \item \textit{Dimensione dello Stack} nelle direzioni X, Y, Z. La direzione Z indica il numero di proiezioni bidimensionali appartenenti allo Stack, X ed Y indicano la dimensione delle singole proiezioni in pixel ed equivalgono ad $N_u$ ed $N_v$, rispettivamente.
                     \end{itemize}
                     
-                    Il sistema di riferimento $(u,v)$ differisce rispetto al sistema $(x,y)$ di ITK in quanto $v$ ha direzione opposta rispetto ad $y$ e l'origine del sistema di riferimento è situata nel centro del pixel in alto a sinistra dell'immagine (Si confronti Figura \ref{fig:itk} con Figura \ref{fig:uv}).
+                    Il sistema di riferimento $(u,v)$ differisce dal sistema $(x,y)$ di ITK in quanto l'asse $v$ ha direzione opposta rispetto all'asse $y$ e l'origine del sistema di riferimento è situata nel centro del pixel in alto a sinistra dell'immagine (Si confronti Figura \ref{fig:itk} con Figura \ref{fig:uv}).
                     
                     \begin{figure}[h]
                         \centering
@@ -509,9 +509,9 @@ Rotation = 1 0 0 0 1 0 0 0 1
                     \end{lstlisting}
                     
                     \begin{itemize}
-                        \item \textbf{Projection Name} - E' un dato puramente indicativo. Può essere utilizzato come nomenclatura nel caso in cui lo Stack tridimensionale RAW venga sezionato in $n$ file di proiezione bidimensionali.
+                        \item \textit{Projection Name} - E' un dato puramente indicativo. Può essere utilizzato come nomenclatura nel caso in cui lo Stack tridimensionale RAW venga sezionato in $n$ file di proiezione bidimensionali.
                         
-                        \item \textbf{Angle} - E' l'angolo nel quale la proiezione è stata acquisita. Corrisponde a \textit{gantryAngle}, descritto in Sezione \ref{sec:rtk-geometry}.
+                        \item \textit{Angle} - E' l'angolo nel quale la proiezione è stata acquisita. Corrisponde a \textit{gantryAngle}, descritto in Sezione \ref{sec:rtk-geometry}.
                         
                         \item \textbf{($N_{iso\textunderscore u},N_{iso\textunderscore v}$)} - Posizione dell'origine del detector (proiezione ortogonale dell'isocentro sul detector) nel sistema di riferimento $(u,v)$, in numero di pixel.
                         
@@ -523,7 +523,7 @@ Rotation = 1 0 0 0 1 0 0 0 1
             \subsection{Generazione immagine MHA da Stack RAW}
                 \label{sec:conversione}
                 \par
-                    La gestione di un'immagine MHA risulta più semplice, in quanto tutta l'informazione (Meta-informazioni e dati grezzi) è descritta in un singolo file. Si è inizialmente generato un file MHD contenente i TAG obbligatori (Sezione \ref{sec:mha}) e contenente le informazioni relative allo Spacing, come in questo esempio:
+                    La gestione di un'immagine MHA risulta più semplice, in quanto tutta l'informazione (TAG e dati grezzi) è descritta in un singolo file. Si è inizialmente generato un file MHD contenente i TAG obbligatori (Sezione \ref{sec:mha}) e contenente le informazioni relative allo Spacing, come in questo esempio:
                     
                     \begin{lstlisting}[language=bash, frame=bt]
 NDims = 3
@@ -534,26 +534,25 @@ ElementByteOrderMSB = True
 ElementDataFile = Contra_40kV_Al_2mm_1024_512_200f.raw
                     \end{lstlisting}
                     
-                    La terza componente di ElementSpacing, $1.8$ millimetri, sta ad indicare che in questo caso sono state eseguite 200 proiezioni in un angolo di $360\degree$. Questo non è obbligatorio, infatti lo Spacing sta semplicemente ad indicare la distanza fisica tra le proiezioni bidimensionali inserite nello Stack. Le informazioni relative ad Origin e Direction non sono state impostate in quanto i valori di default sono adatti allo scopo (Sezione \ref{sec:descrizione-immagini}).
+                    La terza componente di ElementSpacing, $1.8$ millimetri, sta ad indicare che in questo caso sono state eseguite 200 proiezioni in un angolo di $360\degree$. Questo non è obbligatorio poichè Spacing sta semplicemente ad indicare la distanza fisica, nella direzione Z, tra i centri dei pixel nelle proiezioni bidimensionali all'interno dello Stack. Le informazioni relative ad Origin e Direction non sono state impostate in quanto i valori di default sono adatti allo scopo (Sezione \ref{sec:descrizione-immagini}).
                     
                 \bigskip
                 \par
-                    Il file RAW può essere letto mediante SimpleITK, sfruttando il file MHD appena generato, \textit{proj\textunderscore stack.mhd}.
+                    Il file RAW può essere letto mediante SimpleITK, sfruttando il file MHD appena generato: \textit{proj\textunderscore stack.mhd}.
                    
                     \begin{lstlisting}[language=python, frame=bt]
 >>> import SimpleITK as sitk
 >>> image = sitk.ReadImage('proj_stack.mhd')
 >>> sitk.WriteImage(image, 'proj_stack.mha')
->>> exit()
                     \end{lstlisting}
                     
-                    Il metodo \textit{ReadImage()} legge il file 'proj\textunderscore stack.mhd' e restituisce un oggetto Image \cite{itk-image-object}. Il metodo \textit{WriteImage()} \cite{sitk-write-image} scrive su file l'oggetto Image in formato MHA, nominandolo 'proj\textunderscore stack.mha'. 
+                    Il metodo \textit{ReadImage()} legge il file 'proj\textunderscore stack.mhd' e restituisce un oggetto Image \cite{itk-image-object}. Il metodo \textit{WriteImage()} \cite{sitk-write-image} scrive su file l'oggetto in formato MHA, nominandolo \textit{proj\textunderscore stack.mha}. 
         
         \section{Lettura informazioni da file CSV}
             \label{sec:lettura-csv}
             
             \par
-                Per poter manipolare le informazioni relative a ciascuna proiezione appartenente ad uno Stack, si è inizialmente creata una Classe Python in grado di ospitare i dati che verranno letti da file:
+                Per la gestione delle informazioni appartenenti a ciascuna riga del file CSV è stata creata una Classe Python così definita:
             
                 \begin{lstlisting}[language=python, frame=bt]
 class Projection(object):
@@ -565,11 +564,11 @@ class Projection(object):
         self.io = float(io)
                 \end{lstlisting}
             
-               \textit{\textunderscore \textunderscore init\textunderscore \textunderscore}, costruttore della Classe, riceverà come parametri i contenuti di una riga del file CSV. Per poter gestire l'intero file CSV verranno successivamente creati $n$ Oggetti Projection, con $n$ corrispondente al numero di righe del file.
+               Il costruttore della Classe, \textit{\textunderscore \textunderscore init\textunderscore \textunderscore}, riceverà come parametri i contenuti di una riga del file CSV. Per poter acquisire l'intera informazione contenuta nel file, verranno creati $n$ Oggetti Projection, con $n$ corrispondente al numero di righe del file.
             
             \bigskip
             \par
-                Si è sfruttato il Python Package \texttt{pyexcel} \cite{pyexcel}, il quale fornisce un'interfaccia API per la lettura e manipolazione di file CSV. La lettura viene gestita attraverso la funzione \texttt{get\textunderscore sheet()} che restituisce un'istanza della classe \texttt{Sheet} descritta all'interno del core \textit{pyexcel}:
+                Si è sfruttato il Python Package \textit{pyexcel} \cite{pyexcel}, che fornisce un'interfaccia API per la lettura e manipolazione di file CSV. La lettura viene gestita attraverso la funzione \textit{get\textunderscore sheet()} che restituisce un'istanza della classe \textit{Sheet} definita all'interno del core \textit{pyexcel}:
                 
                 \begin{lstlisting}[language=python, frame=bt]
 csv = pyexcel.get_sheet(file_name = 'file.csv')
@@ -577,7 +576,7 @@ csv = pyexcel.get_sheet(file_name = 'file.csv')
             
             \bigskip
             \par
-                Un oggetto della classe \texttt{Sheet} contiene tutti i dati del file .csv sotto forma di lista bidimensionale \cite{pyexcel-docs}. La prima dimensione consente di accedere ad una singola riga:
+                Un oggetto della classe \textit{Sheet} contiene tutti i dati del file CSV sotto forma di lista bidimensionale \cite{pyexcel-docs}. La prima dimensione consente di accedere ad una singola riga:
                 
                 \begin{lstlisting}[language=python, frame=bt]
 >>>csv[0]
@@ -601,24 +600,24 @@ for row in csv:
     proj_obj_list.append(proj)
                 \end{lstlisting}
             
-                Si è creata una lista vuota, \textit{proj\textunderscore obj\textunderscore list}. Ogni elemento di questa lista, ordinatamente, contiene un'istanza della classe Projection. La dimensione della lista coincide con il numero di righe presenti all'interno del file CSV.
+                Si è creata una lista vuota, \textit{proj\textunderscore obj\textunderscore list}. Grazie al metodo \textit{append} \cite{python-append}, appartenente all'oggetto \textit{list} di Python, è possibile concatenare un'istanza della classe Projection alla lista. Al termine del ciclo, la dimensione della lista coincide con il numero di righe presenti all'interno del file CSV.
             
             \bigskip
             \par
-                Questa configurazione, permette un accesso all'informazione facilmente comprensibile. Nel caso in cui si voglia accedere, ad esempio, all'informazione \texttt{Io} della $1\degree$ proiezione, è sufficiente accedere all'omonimo attributo dell'oggetto creato, nella posizione desiderata: 
+                Questa configurazione, permette un accesso all'informazione facilmente comprensibile. Nel caso in cui si voglia accedere, ad esempio, all'informazione $Io$ della $1\degree$ proiezione, è sufficiente accedere all'omonimo attributo dell'oggetto creato, nella posizione desiderata: 
             
                 \begin{lstlisting}[language=python, frame=bt]
 >>> proj_obj_list[0].io
 39162.0
                 \end{lstlisting}
             
-               In Python l'indicizzazione delle liste incomincia dall'indice $0$, dunque la $1\degree$ proiezione dello Stack è identificata dall'indice $0$ della lista, la $2\degree$ dall'indice $1$ e così via.
+               In Python l'indicizzazione delle liste parte dall'indice $0$, dunque la $1\degree$ proiezione dello Stack è identificata dall'indice $0$, la $2\degree$ dall'indice $1$ e così via.
         
         \section{Normalizzazione Stack MHA}
             \label{sec:norm-disp}
             
             \par
-                Gli Stack a disposizione, convertiti da formato RAW a formato MHA, devono essere normalizzate secondo la procedura descritta in Sezione \ref{sec:normalizzazione} per poter essere correttamente utilizzate dagli algoritmi di ricostruzione forniti da RTK. Ciò richiede l'ottenimento dei valori $Io$, che possono essere recuperati dalla lista \textit{proj\textunderscore obj\textunderscore list} generata a partire dal file CSV associato allo Stack, come descritto in Sezione \ref{sec:lettura-csv}. La lettura dello Stack MHA è invece affidata al metodo ReadImage di SimpleITK, il quale crea in memoria un'oggetto Image \cite{sitk-image}:
+                Uno Stack di proiezione, convertito da formato RAW a formato MHA, deve essere normalizzato secondo la procedura descritta in Sezione \ref{sec:normalizzazione} per poter essere correttamente utilizzato dagli algoritmi di ricostruzione forniti da RTK. Ciò richiede l'ottenimento dei valori $Io$, che possono essere recuperati dalla lista \textit{proj\textunderscore obj\textunderscore list} generata a partire dal file CSV associato allo Stack, come descritto in Sezione \ref{sec:lettura-csv}. La lettura dello Stack MHA è invece affidata al metodo \textit{ReadImage()} di SimpleITK, il quale genera un' oggetto Image \cite{sitk-image}:
                 
                 \begin{lstlisting}[language=python, frame=bt]
 stack = sitk.ReadImage(proj_stack.mha)
@@ -631,20 +630,20 @@ height = stack.GetHeight()
 depth = stack.GetDepth()
                 \end{lstlisting} 
                 
-                E' stata poi creata una lista vuota, che conterrà le singole proiezioni estratte e normalizzate (oggetti Image):
+                E' stata poi creata una lista vuota, che conterrà le singole proiezioni estratte e normalizzate (oggetti Image bidimensionali):
                 \begin{lstlisting}[language=python, frame=bt]
 norm_proj_list = []
                 \end{lstlisting}
                 
-                Si è successivamente configurato un ciclo FOR, iterante sulla profondità \textit{depth}, che corrisponde al numero di proiezioni presenti nello Stack:
+                Si è successivamente configurato un ciclo FOR, iterante sulla profondità \textit{depth}, corrispondente al numero di proiezioni presenti nello Stack:
                 \begin{lstlisting}[language=python, frame=bt]
 for zslice in range(0, depth):
                 \end{lstlisting} 
 
-                La variabile \textit{zslice} assume i valori interi $0 \leq zslice < depth$ in quanto la funzione built-in \textit{range()} \cite{python-range} di Python genera una sequenza di interi iterabili appartenenti al dominio appena indicato. La procedura di normalizzazione avviene all'interno di questo ciclo, nel quale si susseguono ripetutamente le seguenti fasi, fino all'esaurimento dello Stack:
+                La variabile \textit{zslice} assume i valori interi $0 \leq zslice < depth$ in quanto la funzione built-in \textit{range()} \cite{python-range} di Python genera una sequenza di interi iterabili appartenenti al dominio appena indicato. La procedura di normalizzazione avviene all'interno di questo ciclo, dove si susseguono ripetutamente le seguenti fasi, fino all'esaurimento dello Stack:
                 
                 \begin{enumerate}
-                    \item \textbf{Estrazione di una singola Proiezione}. Viene affidata alla Classe \textit{ExtractImageFilter} \cite{sitk-estractor} di SimpleITK. Questa permette il collasso delle dimensioni di uno Stack MHA 3D. Per poter specificare quale dimensione collassare, l'istanza di ExtractImageFilter, chiamata \textit{extractor} (estrattore), dev'essere configurata mediante i metodi \textit{SetSize()} e \textit{SetIndex()}. Il metodo \textit{SetSize()} specifica la dimensione dell'immagine da ottenere: questa conterrà $0$ nella coordinata dimensionale da collassare, mentre le rimanenti dimensioni rimarranno intatte. Il metodo \textit{SetIndex()} identifica la proiezione interna allo Stack da estrarre, impostando a zero le coordinate non-zero indicate da \textit{SetSize()} ed impostando l'indice di estrazione nella coordinata rimanente:
+                    \item \textbf{Estrazione di una singola Proiezione}. Viene affidata alla Classe \textit{ExtractImageFilter} \cite{sitk-estractor} di SimpleITK. Questa permette il collasso delle dimensioni di uno Stack MHA tridimensionale. Per poter specificare quale dimensione collassare, l'istanza di ExtractImageFilter, chiamata \textit{extractor} (estrattore), dev'essere configurata mediante i metodi \textit{SetSize()} e \textit{SetIndex()}. Il metodo \textit{SetSize()} specifica la dimensione dell'immagine da ottenere: questa conterrà $0$ nella coordinata dimensionale da collassare, mentre le rimanenti dimensioni rimarranno intatte. Il metodo \textit{SetIndex()} identifica la proiezione interna allo Stack da estrarre, impostando a zero le coordinate non-zero indicate da \textit{SetSize()} ed impostando l'indice di estrazione nella coordinata rimanente:
                     
                     \begin{lstlisting}[language=python, frame=bt]
 extractor = sitk.ExtractImageFilter()
@@ -656,8 +655,8 @@ proj = extractor.Execute(stack)
                     
                     Per poter applicare le operazioni, si ricorre al metodo \textit{Execute()}, il quale restituisce, in questo caso, un oggetto Image bidimensionale (proiezione estratta non normalizzata).
                     
-                    \item \textbf{Normalizzazione della singola Proiezione}. Alla singola proiezione si applica la procedura di normalizzazione descritta nell'Equazione (\ref{eq:normalization}). L'intensità $I$ è rappresentata da tutti i pixel componenti la proiezione appena estratta. L'intensità $Io$ è disponibile all'interno della lista di oggetti Projection \textit{proj\textunderscore obj\textunderscore list}. SimpleITK fornisce il metodo \textit{Log()} \cite{sitk-log}, il quale applica il Logaritmo in base $e$ a ciascun pixel componente l'immagine. 
-                    Le moltiplicazioni per numeri floating point \cite{python-floating-point}, possono essere applicate a ciascun pixel dell'immagine semplicemente utilizzando l'operatore $*$ \cite{sitk-star-operator} sull'oggetto Image \textit{proj} :
+                    \item \textbf{Normalizzazione della singola Proiezione}. Alla singola proiezione si applica la procedura di normalizzazione descritta nell'Equazione (\ref{eq:normalization}). L'intensità $I$ è rappresentata da tutti i pixel componenti la proiezione appena estratta. L'intensità $Io$ è disponibile all'interno della lista di oggetti Projection: \textit{proj\textunderscore obj\textunderscore list}. SimpleITK fornisce il metodo \textit{Log()} \cite{sitk-log}, il quale applica il Logaritmo in base $e$ a ciascun pixel componente l'immagine. 
+                    Le moltiplicazioni per numeri floating point \cite{python-floating-point}, possono essere applicate a ciascun pixel dell'immagine semplicemente utilizzando l'operatore $*$ \cite{sitk-star-operator} sull'oggetto Image:
                     \begin{lstlisting}[language=python, frame=bt]
 proj = proj * float(1 / proj_obj_list[zslice].io)
 proj = sitk.Log(proj)
@@ -666,7 +665,7 @@ proj = proj * float(-1)
                     
                     Se è essenzialmente applicata l'equazione (\ref{eq:normalization}) in 3 operazioni separate. L'informazione $Io$ è stata prelevata lista sfruttando l'indice zslice, il quale identifica, in ordine, l'esatta attenuazione della proiezione indicata.
                     
-                    \item \textbf{Inserimento della proiezione normalizzata in lista} L'oggetto Image normalizzato \textit{proj} viene inserito alla fine dell'oggetto list \textit{norm\textunderscore proj\textunderscore list}, precedentemente istanziata, sfruttando il metodo \textit{append()} \cite{python-append} appartenente all'oggetto \textit{list} di Python:
+                    \item \textbf{Inserimento della proiezione normalizzata in lista.} L'oggetto Image normalizzato \textit{proj} viene concatenato alla lista \textit{norm\textunderscore proj\textunderscore list}, precedentemente istanziata, sfruttando il metodo \textit{append()}:
                     
                     \begin{lstlisting}[language=python, frame=bt]
 norm_proj_list.append(proj)
@@ -681,19 +680,19 @@ norm_proj_list.append(proj)
 norm_stack = sitk.JoinSeries(norm_proj_list)
                 \end{lstlisting}
                     
-                Il metodo accetta come parametro la lista precedentemente creata. L'oggetto Image \textit{norm\textunderscore stack} contiene, in ordine, tutte le proiezioni normalizzate. Per poter recuperare le meta-informazioni (Origin, Spacing e Direction) dallo Stack MHA originale \textit{stack}, si ricorre al metodo \textit{CopyInformation()} \cite{sitk-copy-information} appartenente all'oggetto Image \textit{norm\textunderscore stack}:
+                Il metodo accetta come parametro la lista precedentemente creata. L'oggetto Image \textit{norm\textunderscore stack} contiene, in ordine, tutte le proiezioni normalizzate. Per assegnare all'oggetto \textit{norm\textunderscore stack} le meta-informazioni (Origin, Spacing e Direction) dello Stack originale (\textit{stack}), si ricorre al metodo \textit{CopyInformation()} \cite{sitk-copy-information} appartenente all'oggetto Image:
                 
                 \begin{lstlisting}[language=python, frame=bt]
 norm_stack.CopyInformation(stack)
                 \end{lstlisting}
                 
-                Per poter assicurare una corretta lettura dello Stack normalizzato da parte degli algoritmi di ricostruzioni forniti da RTK (Si veda Sezione <TODO spiegazione nella geometria), è opportuno accertarsi che il TAG Origin sia esattamente impostato come di default. Per applicare le modifiche è possibile sfruttare il metodo \textit{SetOrigin()} fornito dall'oggetto Image \textit{norm\textunderscore stack}:
+                Per poter assicurare una corretta lettura dello Stack normalizzato da parte degli algoritmi di ricostruzione forniti da RTK ci si assicura che il TAG Origin sia esattamente impostato come da impostazione di default. Per applicare quanto descritto è possibile sfruttare il metodo \textit{SetOrigin()}:
                 
                 \begin{lstlisting}[language=python, frame=bt]
 norm_stack.SetOrigin([0,0,0])
                 \end{lstlisting}
                 
-                Il nuovo Stack normalizzato può essere esportato come file MHA sfruttando il metodo \textit{WriteImage()} di SimpleITK:
+                Il nuovo Stack normalizzato può essere esportato come file MHA utilizzando il metodo \textit{WriteImage()} di SimpleITK:
                 
                 \begin{lstlisting}[language=python, frame=bt]
 sitk.WriteImage(norm_stack, normalized.mha)
@@ -711,7 +710,7 @@ import SimpleRTK as srtk
 geometry = srtk.ThreeDCircularProjectionGeometry()
                     \end{lstlisting}
                     
-                    L'oggetto \textit{geometry} è fornito del metodo \textit{AddProjection()} i cui principali parametri sono descritti in Sezione \ref{sec:rtk-geometry}. L'elaborazione dei parametri richiesti da \textit{AddProjection()} necessita di una serie di dati, inseriti dall'utente sfruttando la funzione di libreria standard Python \textit{input()} \cite{input-python}:
+                    L'oggetto \textit{geometry} è fornito del metodo \textit{AddProjection()} i cui principali parametri sono descritti in Sezione \ref{sec:rtk-geometry}. La loro elaborazione necessita di una serie di dati, inseriti dall'utente sfruttando la funzione di libreria standard Python \textit{input()} \cite{input-python}:
                     
                     \begin{lstlisting}[language=python, frame=bt]
 SID = float(input("insert SID, in mm\n"))
@@ -721,21 +720,17 @@ dv = float(input("insert dv, in mm\n"))
 Nv = float(input("insert Nv Image Height\n"))
                     \end{lstlisting}
                     
-                    I valori \textit{SID} ed \textit{SDD}, possono essere direttamente passati come parametro, senza elaborazione. I rimanenti valori letti $d_u$, $d_v$ ed $N_v$ sono necessari al calcolo di \textit{ProjOffsetX} e \textit{ProjOffsetY}. Questi ultimi indicano l'offset (in millimetri) nelle direzioni $x$ ed $y$, dall'origine del detector ($iso\textunderscore x$, $iso\textunderscore y$) all'origine dell'immagine (proiezione normalizzata bidimensionale). Il TAG Origin dello Stack di proiezione normalizzato, è stato forzatamente impostato al valore di default ($0$ in ciascuna componente) in Sezione \ref{sec:norm-disp}. Ciò significa che la singola proiezione bidimensionale, se considerata singolarmente, ha origine $(0,0)$ nel sistema di riferimento $(x,y)$. L'origine del detector nel sistema di riferimento $(x,y)$, espressa in millimetri, può essere ricavata sfruttando l'equazione (\ref{eq:uv-conversion}) per componenti:
+                    I valori \textit{SID} ed \textit{SDD} non necessitano di elaborazione. I rimanenti valori letti $d_u$, $d_v$ ed $N_v$ sono necessari al calcolo di \textit{ProjOffsetX} e \textit{ProjOffsetY}. Questi ultimi indicano l'offset (in millimetri) nelle direzioni $x$ ed $y$, dall'origine del detector nel sistema di riferimento $(x,y)$, all'origine dell'immagine (proiezione normalizzata bidimensionale). Il TAG Origin dello Stack di proiezione normalizzato, è stato forzatamente impostato al valore di default ($0$ in ciascuna componente) in Sezione \ref{sec:norm-disp}. Ciò significa che la singola proiezione bidimensionale, se considerata singolarmente, ha origine $(0,0)$ nel sistema di riferimento $(x,y)$. L'origine del detector nel sistema di riferimento $(x,y)$ può essere ricavata a partire dal riferimento $(u,v)$, sfruttando l'equazione (\ref{eq:uv-conversion}):
                     \begin{equation}
-                        \begin{multlined}
-                        \ \ \ iso\textunderscore x = N_{iso\textunderscore u} \\
-                        iso\textunderscore y = N_v - 1 - N_{iso\textunderscore v}
-                        \end{multlined}
+                        (N_{iso\textunderscore x}, N_{iso\textunderscore y}) = (N_{iso\textunderscore u} , N_v - 1 - N_{iso\textunderscore v})
                     \end{equation}
                     
                     A questo punto i parametri \textit{ProjOffsetX} e \textit{ProjOffsetY} possono essere espressi in millimetri, per ciascuna proiezione, come segue:
-                    \begin{lstlisting}[language=python, frame=bt]
-projOffsetX = - iso_x * du
-projOffsetY = - iso_y * dv
-                    \end{lstlisting}
+                    \begin{equation}
+                        (projOffsetX, projOffsetY) = (- N_{iso\textunderscore x} du, - N_{iso\textunderscore y} dv)
+                    \end{equation}
                     
-                    Le informazioni mancanti, $N_{iso\textunderscore u}$, $N_{iso\textunderscore v}$ e \textit{gantryAngle} (angle) sono recuperate da file CSV generando la lista \textit{proj\textunderscore obj\textunderscore list} mediante la procedura descritta in Sezione \ref{sec:lettura-csv}. Iterando su questa lista mediante un ciclo FOR è possibile chiamare $n$ volte il metodo \textit{AddProjection()}, con $n$ pari al numero di proiezioni inserite nello Stack normalizzato, generando correttamente la geometria di RTK:
+                    Le informazioni mancanti, $N_{iso\textunderscore u}$, $N_{iso\textunderscore v}$ e \textit{gantryAngle} (Angle) sono recuperate da file CSV generando la lista \textit{proj\textunderscore obj\textunderscore list} mediante la procedura descritta in Sezione \ref{sec:lettura-csv}. Iterando su questa lista mediante un ciclo FOR è possibile chiamare $n$ volte il metodo \textit{AddProjection()}, con $n$ pari al numero di proiezioni inserite nello Stack normalizzato, generando correttamente la geometria:
                     
                     \begin{lstlisting}[language=python, frame=bt]
 for p in proj_obj_list: 
@@ -754,12 +749,12 @@ for p in proj_obj_list:
                     E' ora possibile esportare l'istanza \textit{geometry} su file XML sfruttando la classe \textit{ThreeDCircularProjectionGeometryXMLFileWriter()} di SimpleRTK:
                     
                     \begin{lstlisting}[language=python, frame=bt]
-gw = sirtk.ThreeDCircularProjectionGeometryXMLFileWriter()
+gw = srtk.ThreeDCircularProjectionGeometryXMLFileWriter()
 gw.SetFileName(geometry.xml)
 gw.Execute(geometry)
                     \end{lstlisting}
        
-                    Il metodo \textit{Execute()} si occupa interamente della generazione e del salvataggio su file.
+                    Il metodo \textit{Execute()} si occupa interamente della generazione e del salvataggio su file della geometria.
                     
             
         \section{Ricostruzione mediante eseguibili RTK}
@@ -777,7 +772,7 @@ gw.Execute(geometry)
 -v
                     \end{lstlisting}
             
-                    Lo stack \texttt{stack\textunderscore name.mha} si riferisce allo Stack di proiezione normalizzato secondo la procedura descritta in sezione \ref{sec:norm-disp}. Il file reconstruction.mha è il file che conterrà la ricostruzione. L'opzione -v sta per "verbose", produce una stampa a video delle informazioni relative alla ricostruzione.
+                    Lo stack \textit{stack\textunderscore name.mha} si riferisce allo Stack di proiezione normalizzato secondo la procedura descritta in sezione \ref{sec:norm-disp}. Il file reconstruction.mha è il file che conterrà la ricostruzione. L'opzione -v sta per "verbose", produce una stampa a video delle informazioni relative alla ricostruzione.
                     Ecco un'esempio di output su stdout (opzione -v):
                     \begin{lstlisting}[language=bash, frame=bt]
 Regular expression matches 1 file(s)...
@@ -800,7 +795,7 @@ Backprojection: 180.379 s
                         
                         \centering
                         \includegraphics[width=0.8\textwidth]{reconstruction}
-                        \caption{Ricostruzione del fantoccio presentato in \texttt{Figura \ref{fig:skull-phantom}}
+                        \caption{Ricostruzione del fantoccio presentato in \textit{Figura \ref{fig:skull-phantom}}
                         utilizzando la procedura rtkfdk. Immagine a sinistra, una sezione del piano sagittale; immagine centrale, una sezione del piano coronale; immagine destra, una sezione del piano trasverso. }
                         \label{fig:reconstruction}
                         
