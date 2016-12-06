@@ -1,6 +1,7 @@
 \documentclass[a4paper,12pt, doubleside]{report}
 \usepackage[top=1in, bottom=1in, left=1.30in, right=1.30in]{geometry}
 \usepackage[T1]{fontenc}
+\usepackage{textcomp}
 \usepackage[utf8]{inputenc}
 \usepackage{lmodern}
 \usepackage[italian]{babel}
@@ -17,7 +18,8 @@
 \usepackage{mathtools}
 
 \lstset{
-            basicstyle=\ttfamily
+            basicstyle=\ttfamily,
+            showstringspaces=false
         }
 
 \pretitle{%
@@ -406,6 +408,7 @@
                 SimpleITK, rilasciato sotto licenza Apache 2.0, fornisce un'interfaccia semplificata del software Insight Toolkit - ITK. Può essere utilizzato per poter eseguire un processing generico su varie tipologie di immagini, ma lo scopo principale del Toolkit è quello di processare immagini a scopo medico. Un errato settaggio delle componenti fondamentali, può produrre risultati inconsistenti. Le immagini a scopo medico, senza alcun tipo di informazione spaziale, non dovrebbero assolutamente essere utilizzate per la diagnosi. In altre parole, le immagini a scopo medico che presentano un'inefficienza riguardo le informazioni spaziali, non sono solamente inutili, ma anche pericolose \cite{itk-doc}. Come per SimpleRTK, SimpleITK permette l'utilizzo di ITK su linguaggi quali Python e Java, sfruttando SWIG. Questa descrizione è relativa alla versione di SimpleITK numero 0.9.0, rilasciata il 14/05/2015.
                 
             \subsection{Descrizione delle immagini}
+            \label{sec:descrizione-immagini}
                 Le componenti fondamentali nella descrizione di un'immagine mediante ITK sono \textit{Spacing}, \textit{Origin}, e \textit{Direction}. Se questi parametri vengono settati correttamente, l'immagine avrà ciascun pixel mappato sullo spazio di coordinate fisiche. Un \textit{pixel} è considerato essere la regione quadrata o rettangolare che ne circonda il suo centro, contenitore di informazione. I pixel possono essere visti come la regione di Voronoi \cite{voronoi} della griglia dell’immagine. L’interpolazione lineare dei valori dell’immagine viene eseguita all’interno della regione di Delaunay \cite{delaunay}, i cui angoli sono il centro del pixel. 
                 
                 \begin{figure}[h]
@@ -465,12 +468,6 @@ Rotation = 1 0 0 0 1 0 0 0 1
                                      
                                               
     \chapter{Sviluppo del Progetto}
-        \par
-            <TODO>
-            Lo scopo principale del progetto riguarda la comprensione di OpenRTK come poter ottenere da questo una ricostruzione delle proiezioni a disposizione.
-            Nonostante RTK sia originariamente scritto in C++, presenta un interfaccia wrapping nominata SimpleRTK. Nella descrizione della geometria, verrà trattata l'interfaccia OpenRTK. <TODO>
-        
-        \bigskip
         \par
             La procedura di compilazione di \textit{RTK}, che coinvolge anche la compilazione di ITK, è stata riscritta in uno script Bash \cite{script-bash} che automatizza completamente le operazioni descritte nel tutorial ufficiale. Sfruttando l'adozione di uno speciale parametro per la compilazione \cite{parallel-j}, è stato possibile ottenere un consistente risparmio in termini di tempo. La community OpenRTK, dopo esserne entrata a conoscenza grazie alla mailing list Rtk-users, ha inserito lo script nel tutorial di installazione ufficiale \cite{wiki-rtk}. La procedura di configurazione ed installazione di \textit{SimpleRTK}, non inserita nello script, è stata eseguita seguendo esattamente le indicazioni fornite dal sito ufficiale \cite{simplertk-install}. SimpleITK è stato aggiunto all'environment locale Python semplicemente utilizzando il package manager PIP, come descritto nella rispettiva documentazione \cite{simpleitk-install}.
 
@@ -537,7 +534,7 @@ ElementByteOrderMSB = True
 ElementDataFile = Contra_40kV_Al_2mm_1024_512_200f.raw
                     \end{lstlisting}
                     
-                    La terza componente di ElementSpacing, $1.8$ millimetri, sta ad indicare che in questo caso sono state eseguite 200 proiezioni in un angolo di $360\degree$. Questo non è obbligatorio, infatti lo Spacing sta semplicemente ad indicare la distanza fisica tra le proiezioni bidimensionali inserite nello Stack. Le informazioni relative ad Origin saranno aggiornate in fase di normalizzazione in Sezione \ref{sec:norm} <TODO>, le informazioni relative a Direction rimarranno invariate in quanto la matrice di default è adatta allo scopo.
+                    La terza componente di ElementSpacing, $1.8$ millimetri, sta ad indicare che in questo caso sono state eseguite 200 proiezioni in un angolo di $360\degree$. Questo non è obbligatorio, infatti lo Spacing sta semplicemente ad indicare la distanza fisica tra le proiezioni bidimensionali inserite nello Stack. Le informazioni relative ad Origin e Direction non sono state impostate in quanto i valori di default sono adatti allo scopo (Sezione \ref{sec:descrizione-immagini}).
                     
                 \bigskip
                 \par
@@ -704,89 +701,66 @@ sitk.WriteImage(norm_stack, normalized.mha)
                 
         \section{Geometria XML mediante SimpleRTK}
             \par
-                Gli algoritmi di ricostruzione forniti da RTK necessitano di una descrizione geometrica dell'apparato di acquisizione. La Classe RTK \textit{ThreeDCircularProjectionGeometry()}, descritta in Sezione \ref{sub:geometry}, è disponibile anche per SimpleITK, con i medesimi parametri. SimpleRTK inoltre fornisce un'altra classe chiamata \texttt{ThreeDCircularProjectionGeometryXMLFileWriter()} la quale si occupa del trasferimento di un'istanza di \texttt{ThreeDCircularProjectionGeometry()} su file XML, che sarà successivamente utilizzato dagli algoritmi di ricostruzione. 
+                Come descritto in Sezione \ref{sec:rtk-geometry}, RTK necessita di informazioni relative alla geometria di acquisizione per poter correttamente ricostruire un set di proiezioni. SimpleRTK, essendo il wrapper Python di RTK, fornisce le medesima classe necessaria alla descrizione: \textit{ThreeDCircularProjectionGeometry()}. SimpleRTK inoltre fornisce un'altra classe chiamata \textit{ThreeDCircularProjectionGeometryXMLFileWriter()} la quale si occupa del trasferimento di un'istanza di \textit{ThreeDCircularProjectionGeometry()} su file XML. Il file generato, potrà essere utilizzato dagli algoritmi di ricostruzione forniti da RTK.
                 
             \subsection{Generazione della Geometria}
                 \par
-                    
-                    Dopo aver istanziato un'istanza di \textit{ThreeDCircularProjectionGeometry()}, si procede alla descrizione della geometria. La classe \texttt{ThreeDCircularProjectionGeometry()} è fornita di un metodo chiamato \texttt{AddProjection()} il quale organizza le informazioni, utilizzando parametri a lunghezza variabile, relative ad una singola proiezione. I parametri SID ed SDD vengono richiesti all'utente sfruttando la funzione di libreria standard Python \textit{input()} \cite{input-python}:
-                         
+                    Inizialmente, si genera un'istanza di \textit{ThreeDCircularProjectionGeometry()} mediante SimpleRTK:
                     \begin{lstlisting}[language=python, frame=bt]
-SID = float(input("Insert SID  - Source to Isocenter Distance, in mm\n"))
-SDD = float(input("insert SDD  - Source to Detector Distance, in mm\n"))
+import SimpleRTK as srtk
+geometry = srtk.ThreeDCircularProjectionGeometry()
                     \end{lstlisting}
-                   
-                   
-                    SID ed SDD sono forniti all'interno del file di descrizione associato ad ogni Stack di proiezione a disposizione. \texttt{angle} viene fornito all'interno del file .csv per ogni proiezione. 
-                    proj\textunderscore offset\textunderscore x e proj\textunderscore offset\textunderscore y sono stati precedentemente descritti in sezione <TODO> ed il loro calcolo necessita delle informazioni Pixel Detector Size in entrambe le direzioni (reperibili all'interno del file di descrizione esterno) e delle informazioni iso\textunderscore u ed iso\textunderscore v all'interno del file csv.
                     
-                    La prima operazione consiste nel popolare una lista \texttt{proj\textunderscore obj\textunderscore list} di oggetti Projection mediante la procedura indicata in sezione \ref{sec:lettura-csv}.
-                    Iterando su questa lista si procede, mediante un ciclo for, al calcolo dei valori proj\textunderscore offset\textunderscore x, proj\textunderscore offset\textunderscore y e si popola l'istanza della classe ThreeDCircularProjectionGeometry() mediante il metodo \texttt{AddProjection()}:
-                
+                    L'oggetto \textit{geometry} è fornito del metodo \textit{AddProjection()} i cui principali parametri sono descritti in Sezione \ref{sec:rtk-geometry}. L'elaborazione dei parametri richiesti da \textit{AddProjection()} necessita di una serie di dati, inseriti dall'utente sfruttando la funzione di libreria standard Python \textit{input()} \cite{input-python}:
+                    
                     \begin{lstlisting}[language=python, frame=bt]
-geometry = sirtk.ThreeDCircularProjectionGeometry()
+SID = float(input("insert SID, in mm\n"))
+SID = float(input("insert SDD, in mm\n"))
+du = float(input("insert du, in mm\n"))
+dv = float(input("insert dv, in mm\n"))
+Nv = float(input("insert Nv Image Height\n"))
+                    \end{lstlisting}
+                    
+                    I valori \textit{SID} ed \textit{SDD}, possono essere direttamente passati come parametro, senza elaborazione. I rimanenti valori letti $d_u$, $d_v$ ed $N_v$ sono necessari al calcolo di \textit{ProjOffsetX} e \textit{ProjOffsetY}. Questi ultimi indicano l'offset (in millimetri) nelle direzioni $x$ ed $y$, dall'origine del detector ($iso\textunderscore x$, $iso\textunderscore y$) all'origine dell'immagine (proiezione normalizzata bidimensionale). Il TAG Origin dello Stack di proiezione normalizzato, è stato forzatamente impostato al valore di default ($0$ in ciascuna componente) in Sezione \ref{sec:norm-disp}. Ciò significa che la singola proiezione bidimensionale, se considerata singolarmente, ha origine $(0,0)$ nel sistema di riferimento $(x,y)$. L'origine del detector nel sistema di riferimento $(x,y)$, espressa in millimetri, può essere ricavata sfruttando l'equazione (\ref{eq:uv-conversion}) per componenti:
+                    \begin{equation}
+                        \begin{multlined}
+                        \ \ \ iso\textunderscore x = N_{iso\textunderscore u} \\
+                        iso\textunderscore y = N_v - 1 - N_{iso\textunderscore v}
+                        \end{multlined}
+                    \end{equation}
+                    
+                    A questo punto i parametri \textit{ProjOffsetX} e \textit{ProjOffsetY} possono essere espressi in millimetri, per ciascuna proiezione, come segue:
+                    \begin{lstlisting}[language=python, frame=bt]
+projOffsetX = - iso_x * du
+projOffsetY = - iso_y * dv
+                    \end{lstlisting}
+                    
+                    Le informazioni mancanti, $N_{iso\textunderscore u}$, $N_{iso\textunderscore v}$ e \textit{gantryAngle} (angle) sono recuperate da file CSV generando la lista \textit{proj\textunderscore obj\textunderscore list} mediante la procedura descritta in Sezione \ref{sec:lettura-csv}. Iterando su questa lista mediante un ciclo FOR è possibile chiamare $n$ volte il metodo \textit{AddProjection()}, con $n$ pari al numero di proiezioni inserite nello Stack normalizzato, generando correttamente la geometria di RTK:
+                    
+                    \begin{lstlisting}[language=python, frame=bt]
+for p in proj_obj_list: 
 
-for p in proj_obj_list:
-    proj_offset_x = - p.iso_u * pix_size_u
-    proj_offset_y = - p.iso_v * pix_size_v
+    projOffsetX = - (p.Niso_u * du)
+    projOffsetY = - (Nv - 1 - p.Niso_v) * dv
 
     geometry.AddProjection(
-        source_to_isocenter_distance,
-        source_to_detector_distance,
+        SID,
+        SDD,
         p.angle,
-        proj_offset_x,
-        proj_offset_y,
-    )
+        projOffsetX,
+        projOffsetY)
                     \end{lstlisting}
-                sirtk è un'alias per SimpleRTK, in fase di import è stato eseguito:
-                \begin{lstlisting}[language=python, frame=bt]
-import SimpleRTK as sirtk
-                \end{lstlisting}
-                
-        
-            \subsection{Calcolo proj\textunderscore offset \textunderscore x/y}
-                <TODO
-                Come descritto in Sezione \ref{sec:rtk-geometry}, i parametri \textit{projOffsetX} e \textit{projOffsetY}, indicano l'offset nelle direzioni $x$ ed $y$ dall'origine del detector ($iso\textunderscore x$, $iso\textunderscore y$) all'origine dell'immagine della singola proiezione Origin. L'origine del detector nel sistema di riferimento $(x,y)$, espressa in millimetri, può essere ricavata dalle informazioni inserite nel file di descrizione, sfruttando l'Equazione (\ref{eq:uv-conversion}) per componenti:
-                
-                \begin{equation}
-                    \begin{multlined}
-                        \ \ \ iso\textunderscore x = N_{iso\textunderscore u}du \\
-                        iso\textunderscore y = (N_v - 1 - N_{iso\textunderscore v})dv
-                    \end{multlined}
-                \end{equation}
-                
-                L'origine del detector \textit{(iso\textunderscore x, iso\textunderscore y)}, negli Stack offerti dalla Facoltà, è la medesima per ciascuna proiezione componente lo Stack. Il settaggio del TAG Origin all'interno dello Stack normalizzato MHA può essere applicato in due modi differenti, che impatteranno sul settaggio dei parametri \textit{projOffsetX} e \textit{projOffsetY}, utilizzati dal metodo \textit{AddProjection()}:
-                
-                \begin{itemize}
-                    \item Settaggio Origin a $(0,0,0)$, come di default, ed impostazione dei parametri \textit{projOffsetX} e \textit{projOffsetY}, come segue:
+                    
+                    E' ora possibile esportare l'istanza \textit{geometry} su file XML sfruttando la classe \textit{ThreeDCircularProjectionGeometryXMLFileWriter()} di SimpleRTK:
                     
                     \begin{lstlisting}[language=python, frame=bt]
-projOffsetX = - iso_x
-projOffsetY = - iso_y
-                    \end{lstlisting}
-                
-                    \item Impostazione dei parametri \textit{projOffsetX}$=0$, \textit{projOffsetY}$=0$ e settaggio Origin come segue: mediante il metodo \textit{SetOrigin} fornito dall'oggetto Image:
-                    \begin{lstlisting}[language=python, frame=bt]
-origin_x = - (Niso_u * du)
-origin_y = - (Nv - 1 - Niso_v) * dv
-
-norm_stack.SetOrigin([origin_x, origin_y, 0])
-                    \end{lstlisting}
-                    Origin, nella terza componente, può assumere un valore arbitrario poichè i parametri \textit{projOffsetX} e \textit{projOffsetY} si riferiscono esclusivamente alle direzioni X ed Y.
-                \end{itemize}
-                
-                Si è adottata la seconda soluzione,
-                
-            \subsection{Scrittura su file .xml}
-                \par 
-                    Una volta terminata la popolazione dell'istanza ThreeDCircularProjectionGeometry() è possibile generare il file .xml grazie alla classe ThreeDCircularProjectionGeometryXMLFileWriter() come segue:
-                    \begin{lstlisting}[language=python, frame=bt]
 gw = sirtk.ThreeDCircularProjectionGeometryXMLFileWriter()
-gw.SetFileName( geometry.xml )
-gw.Execute( geometry )
+gw.SetFileName(geometry.xml)
+gw.Execute(geometry)
                     \end{lstlisting}
-                    Il metodo Execute() si occupa interamente della generazione. Il file generato, geometry.xml, verrà successivamente utilizzato nei file binari di ricostruzione forniti da RTK.
-        
+       
+                    Il metodo \textit{Execute()} si occupa interamente della generazione e del salvataggio su file.
+                    
             
         \section{Ricostruzione mediante eseguibili RTK}
             \subsection{rtkfdk}
