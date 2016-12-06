@@ -116,12 +116,11 @@
     \chapter{Presentazione}
         \section{Breve Storia CT}
             \par
-                CT sta per Computed Tomography, la parola greca \textit{tomos} significa sezione, strato. La Tomografia è il processo che si occupa dell'ottenimento dell'imaging di una sezione o di uno strato del corpo. Se questa attività include calcolo computazionale, si parla di Tomografia Computerizzata (CT), altrimenti di Tomografia Convenzionale.
-                Gli scanner CT moderni forniscono dettagli anatomici del corpo umano assolutamente inimmaginabili circa 20 o 30 anni fa, permettendo di massimizzare la diagnosi del paziente ed eliminando completamente forme di diagnosi invasive quali la chirurgia esplorativa. L'ingegnere inglese Sir Godfrey Hounsfield, figura che più di tutte contribuì al reale avvento della CT, ricevette un consistente numero di premi e riconoscimenti per il suo lavoro. La Tomografia Computerizzata, un contributo incommensurabile all’intera Umanità, ha richiesto più di 80 anni di ricerca, ed ancora oggi continua a svilupparsi. Questa breve introduzione storica ne sottolinea le tappe fondamentali.
+                Il termine CT è un'abbreviazione per Computed Tomography, la parola greca \textit{tomos} significa sezione, strato. La Tomografia è una tecnica di imaging che può utilizzare diverse sorgenti radioattive: tubi a raggi-X, ultrasuoni, campi magnetici statici e microonde ed opportuni rivelatori, per acquisire dati che permettono di ricostruire una proprietà di una sezione del corpo del paziente. Se questa attività include calcolo computazionale, si parla di Tomografia Computerizzata (CT), altrimenti di Tomografia Convenzionale. Gli scanner CT moderni forniscono dettagli anatomici del corpo umano assolutamente inimmaginabili circa 20 o 30 anni fa, permettendo di massimizzare la diagnosi del paziente ed eliminando completamente forme di diagnosi invasive come la chirurgia esplorativa. L'ingegnere inglese Sir Godfrey Hounsfield, figura che più di tutte contribuì al reale avvento della CT, ricevette un consistente numero di premi e riconoscimenti per il suo lavoro. <TODO metti che ha ricevuto il premio nobel assieme a Cormack> La Tomografia Computerizzata, un contributo importante per l'intera Umanità, ha richiesto più di 80 anni di ricerca, ed ancora oggi continua a svilupparsi. Questa breve introduzione storica ne sottolinea le tappe fondamentali.
             
             \subsection{Limiti della Radiografia Convenzionale}
                 \par
-                    La Radiografia Convenzionale è sostanzialmente composta da una sorgente a Raggi X, i quali vengono proiettati attraverso il corpo ed impressi su lastra radiografica bidimensionale. E' il risultato dell’attenuazione media \cite{hounsfield-nobel-lecture} dei raggi dovuta alla composizione del materiale incontrato dalla sorgente alla pellicola. Nel caso in cui l’oggetto in esame sia il corpo umano, la quantità di attenuazione è direttamente proporzionale alla densità dei vari tessuti incontrati: i polmoni, contenendo aria, assorbono poca radiazione; le ossa, essendo molto dense, ne assorbono maggiormente.
+                    Un sistema di imaging per la Radiografia Convenzionale è sostanzialmente composto da una sorgente a raggi-X e da un rivelatore per imaging opportuno. I raggi-X vengono inviati sul corpo del paziente e quelli che riescono ad attraversarlo "impressionano" il rivelatore, in modo simile alla luce che impressiona una pellicola fotografica. L'intensità dell'immagine prodotta dipende dall'attenuazione subita dal fascio di raggi-X nell'attraversare i tessuti del paziente e questa attenuazione dipende dalla composizione del materiale incontrato. Nel caso in cui l’oggetto in esame sia il corpo umano, la quantità di attenuazione è direttamente proporzionale alla densità dei vari tessuti incontrati: i polmoni, contenendo aria, assorbono poca radiazione; le ossa, essendo molto dense, ne assorbono di più.
                             
                     \begin{figure}[h]
                         \centering
@@ -131,11 +130,12 @@
                     \end{figure}
                         
                     \bigskip
-                    Dalla radiografia in \texttt{Figura \ref{fig:skull}}, è possibile distinguere solamente cinque vari livelli di densità. Partendo dal meno denso, si visualizza \textit{l'aria}, di colore nero; \textit{l'acqua o i tessuti molli\footnote{Sostanzialmente si vuole definire tutto ciò che non ha la stessa densità dell'osso.}}, che si visualizzano con un grigio chiaro; \textit{il grasso}, evidenziato con un colore grigio scuro; \textit{le ossa}, che presentano una colorazione tendente al bianco; \textit{il campione metallico} (L), di colore bianco. L’acqua ed i tessuti molli possiedono circa la medesima densità. E' impossibile analizzare il cervello ed evidenziarne un'eventuale patologia, poiché esso è rappresentato come una zona omogeneamente grigia. L'ottenimento di un'immagine del cervello mediante Radiografia Convenzionale divenne una sfida sin dal periodo immediatamente successivo al 1985, anno in cui vennero scoperti i raggi X. Anche il grande scienziato ed inventore Thomas Edison agli inizi del 1900 si cimentò senza successo nell'impresa, a causa delle grosse limitazioni che l'analisi imponeva.\cite{thomas-edison-brain} Il cervello è composto da tessuti molli, racchiusi all’interno di uno scheletro denso che impedisce alla maggior parte della radiazione di penetrarli. Fluttua a bagno in un liquido chiamato \textit{fluido celebro spinale\footnote{Liquido che fornisce nutrienti ed agisce come cuscino al fine di proteggere la materia grigia stessa}} il che rende ancor più ardua l'impresa. Questo tipo di analisi, si scoprì, essere tecnologicamente inaccessibile alla Radiografia Convenzionale.
+                    <TODO devi esserne sicuro, ma lo diceva il medico del video History of computed tomography!>
+                    Dalla radiografia in \texttt{Figura \ref{fig:skull}}, è possibile distinguere solamente cinque diversi livelli di densità. Partendo dal meno denso, si visualizza \textit{l'aria}, di colore nero; \textit{l'acqua o i tessuti molli\footnote{Sostanzialmente si vuole definire tutto ciò che non ha la stessa densità dell'osso.}}, che si visualizzano con un grigio chiaro; \textit{il grasso}, evidenziato con un colore grigio scuro; \textit{le ossa}, che presentano una colorazione tendente al bianco; \textit{il campione metallico} (L), di colore bianco. L’acqua ed i tessuti molli possiedono circa la medesima densità. E' impossibile analizzare il cervello ed evidenziarne un'eventuale patologia, poiché esso è rappresentato come una zona omogeneamente grigia. L'ottenimento di un'immagine del cervello mediante Radiografia Convenzionale divenne una sfida sin dal periodo immediatamente successivo al 1895, anno in cui vennero scoperti i raggi X. Anche il grande scienziato ed inventore Thomas Edison agli inizi del 1900 si cimentò senza successo nell'impresa, a causa delle grosse limitazioni imposte dalla tecnica \cite{thomas-edison-brain}. Il cervello è composto da tessuti molli, racchiusi all’interno di uno scheletro denso che impedisce alla maggior parte della radiazione di penetrarli. Fluttua a bagno in un liquido chiamato \textit{fluido cerebrospinale\footnote{Liquido che fornisce nutrienti ed agisce come cuscino al fine di proteggere la materia grigia stessa}} il che rende ancor più ardua l'impresa. Questo tipo di analisi, si scoprì, essere tecnologicamente inaccessibile alla Radiografia Convenzionale.
                 
                 \bigskip 
                 \par
-                    Un radiogramma\footnote{Immagine ottenuta mediante radiografia.} impone diversi limiti diagnostici. Il \textit{problema delle ombre} è una diretta conseguenza del fatto che le complesse strutture tridimensionali del corpo umano, nella radiografia, vengono impresse su lastra bidimensionale. Un tumore, ad esempio, se celato da una struttura ad alta densità come le costole, può passare completamente inosservato alla diagnosi. La lastra radiografica inoltre risulta un mezzo intrinsecamente inadeguato al fine di registrare le differenze di intensità dovute all'attenuazione dei raggi X durante il passaggio attraverso il corpo, non consentendo la distinzione tra i tessuti molli.
+                    Un radiogramma\footnote{Immagine ottenuta mediante radiografia.} impone diversi limiti diagnostici. Il \textit{problema delle ombre} è una diretta conseguenza del fatto che le complesse strutture tridimensionali del corpo umano, nella radiografia, vengono impresse su lastra bidimensionale. Un tumore, ad esempio, se celato da una struttura ad alta densità come le costole, può passare completamente inosservato alla diagnosi. La lastra radiografica inoltre risulta un mezzo intrinsecamente inadeguato per registrare le differenze di intensità dovute all'attenuazione dei raggi X durante il passaggio attraverso il corpo, non consentendo la distinzione tra i diversi tessuti molli.
                 
                 \bigskip            
                 \par
@@ -157,7 +157,7 @@
                 
                 \bigskip
                 \par
-                    I primi pionieri furono André Edmund Marie Bocage, Alessandro Vallebona, Ziedses des Plantes, Gustav Grossmann e Jean Kieffer. Bocage nel 1922 ottenne il primo brevetto; Vallebona realizzò diversi prototipi e contribuì alla letteratura con ben 370 pubblicazioni nelle scienze radiologiche\cite{vallebona-ricordo}; des Plantes è ritenuto il pioniere della sperimentazione; Grossmann contribuì all’analisi matematica del metodo e rese più snelli i progetti preesistenti; Kieffer fu il primo pioniere Americano, diede una descrizione esaustiva del suo dispositivo e alla matematica del sistema. I prototipi creati vennero per lo più utilizzati a scopi di ricerca, l'utilizzo, se a fine clinico, non era affatto confortevole.
+                    I primi pionieri di questa tecnica furono André Edmund Marie Bocage, Alessandro Vallebona, Ziedses des Plantes, Gustav Grossmann e Jean Kieffer. Bocage nel 1922 ottenne il primo brevetto; Vallebona realizzò diversi prototipi e contribuì alla letteratura con ben 370 pubblicazioni nelle scienze radiologiche\cite{vallebona-ricordo}; des Plantes è ritenuto il pioniere della sperimentazione; Grossmann contribuì all’analisi matematica del metodo e rese più snelli i progetti preesistenti; Kieffer fu il primo pioniere Americano, diede una descrizione esaustiva del suo dispositivo e della matematica del sistema. I prototipi creati vennero per lo più utilizzati a scopi di ricerca, l'utilizzo, se a fine clinico, non era affatto confortevole.
                 
                 \bigskip
                 \par
@@ -184,7 +184,7 @@
                         \label{fig:second-prototype}
                     \end{figure}
                             
-                    Il primo prototipo era composto da una scatola di piombo con un piccolo foro posto nella parte anteriore, all’interno della quale era presente un materiale radioattivo, l’Americium, capace di fornire una fonte costante, non particolarmente intensa, di raggi gamma. La radiazione fuoriusciva dal foro in un singolo fascio collimato a configurazione pencil-beam. Il piatto, sul quale venivano posizionati degli oggetti test (fantocci), veniva traslato orizzontalmente per permettere al singolo fascio di poter raggiungere tutti gli oggetti. Al termine della traslazione, il piatto veniva fatto roteare di 1\degree, ed il procedimento veniva ripetuto fino all'ottenimento di 180 proiezioni. I livelli d'attenuazione erano letti dal singolo detector opposto alla sorgente. Il processo di scansione durava ben nove giorni, la ricostruzione computerizzata degli oggetti richiedeva più di due ore di processamento. Questo fu un risultato molto importante, poiché dimostrò che la Tomografia Computerizzata era tecnologicamente e fisicamente possibile. Il secondo prototipo di Hounsfield, di medesima geometria ma avente un generatore di Raggi X al posto dell'Americium, è visibile in \texttt{Figura \ref{fig:second-prototype}}.
+                    Il primo prototipo era composto da una scatola di piombo con un piccolo foro posto nella parte anteriore, all’interno della quale era presente un materiale radioattivo, l’Americium, capace di fornire una fonte costante, non particolarmente intensa, di raggi gamma. La radiazione fuoriusciva dal foro in un singolo fascio collimato a configurazione pencil-beam. Il piatto, sul quale venivano posizionati degli oggetti test (fantocci), veniva traslato orizzontalmente per permettere al singolo fascio di poter raggiungere tutti gli oggetti. Al termine della traslazione, il piatto veniva fatto roteare di $1\degree$, ed il procedimento veniva ripetuto fino all'ottenimento di 180 proiezioni. I livelli d'attenuazione erano letti dal singolo detector opposto alla sorgente. Il processo di scansione durava ben nove giorni, la ricostruzione computerizzata degli oggetti richiedeva più di due ore di processamento. Questo fu un risultato molto importante, poiché dimostrò che la Tomografia Computerizzata era tecnologicamente e fisicamente possibile. Il secondo prototipo di Hounsfield, di medesima geometria ma avente un generatore di Raggi X al posto dell'Americium, è visibile in \texttt{Figura \ref{fig:second-prototype}}.
                 
                 \bigskip
                 \par
@@ -200,11 +200,11 @@
                         
                 \bigskip
                 \par
-                    \textbf{Scanner di prima generazione.} La sorgente veniva collimata in un raggio pencil-beam direzionato ad un singolo detector allineato alla sorgente e posizionato all’altro lato dell'oggetto in analisi. Una singola proiezione veniva ottenuta muovendo il tubo sorgente ed il detector in una traslazione sincrona. Per poter ottenere la successiva proiezione, l'apparato di acquisizione ruotava di 1\degree e veniva traslata nella direzione opposta. Questo processo doveva essere ripetuto fino all’ottenimento di 180 proiezioni. Le prime versioni richiedevano circa 4 o 5 minuti per poter portare a termine la scansione, ed erano limitate a quelle parti del corpo dove il movimento del paziente poteva essere controllato (cranio). Questa particolare configurazione viene anche detta "\textit{parallel-beam}".
+                    \textbf{Scanner di prima generazione.} La sorgente veniva collimata in un raggio pencil-beam direzionato ad un singolo detector allineato alla sorgente e posizionato all’altro lato dell'oggetto in analisi. Una singola proiezione veniva ottenuta muovendo il tubo sorgente ed il detector in una traslazione sincrona. Per poter ottenere la successiva proiezione, l'apparato di acquisizione ruotava di $1\degree$ e veniva traslata nella direzione opposta. Questo processo doveva essere ripetuto fino all’ottenimento di 180 proiezioni. Le prime versioni richiedevano circa 4 o 5 minuti per poter portare a termine la scansione, ed erano limitate a quelle parti del corpo dove il movimento del paziente poteva essere controllato (cranio). Questa particolare configurazione viene anche detta "\textit{parallel-beam}".
                             
                 \bigskip
                 \par
-                    \textbf{Scanner di seconda generazione.} Aggiungendo multipli detector disposti circolarmente, diverse proiezioni potevano essere ottenute in una singola traslazione. Uno dei primi prototipi, che presentava 3 detector con displacement di 1\degree, poteva effettuare 60 traslazioni anziché 180. Questo era possibile poiché ciascun detector vedeva la sorgente ad un angolo differente, ottenendo in una singola traslazione ben 3 proiezioni. Il sistema, una volta terminata la traslazione, poteva roteare di 3\degree  ed ottenere la nuova proiezione. I tempi di scansione venivano quindi ridotti di un terzo. 
+                    \textbf{Scanner di seconda generazione.} Aggiungendo multipli detector disposti circolarmente, diverse proiezioni potevano essere ottenute in una singola traslazione. Uno dei primi prototipi, che presentava 3 detector con displacement di $1\degree$, poteva effettuare 60 traslazioni anziché 180. Questo era possibile poiché ciascun detector vedeva la sorgente ad un angolo differente, ottenendo in una singola traslazione ben 3 proiezioni. Il sistema, una volta terminata la traslazione, poteva roteare di $3\degree$  ed ottenere la nuova proiezione. I tempi di scansione venivano quindi ridotti di un terzo. 
                         
                 \bigskip
                 \par
@@ -217,7 +217,7 @@
         \section{Moderne Architetture X-Ray CT}
             \subsection{A Spirale}
                 \par
-                    Nel 1990, lo sviluppo di questa architettura, (evolutasi dalla geometria Fan-Beam, 3\degree Generazione) fu una vera rivoluzione nell'acquisizione CT. Per la prima volta nella storia fu possibile ottenere una scansione tridimensionale dell'intero corpo del paziente con un unica trattenuta di respiro.
+                    Nel 1990, lo sviluppo di questa architettura, (evolutasi dalla geometria Fan-Beam, $3\degree$ Generazione) fu una vera rivoluzione nell'acquisizione CT. Per la prima volta nella storia fu possibile ottenere una scansione tridimensionale dell'intero corpo del paziente con un unica trattenuta di respiro.
                     La tecnica consiste in un'acquisizione continua: mentre sorgente e detector ruotano continuamente, il lettino del paziente viene fatto traslare orizzontalmente all'interno dell'apparato di acquisizione. Questa tecnologia richiese tre avanzamenti tecnologici: la Slip Ring Technology, sorgenti a Raggi X ad elevata intensità ed algoritmi di interpolazione che gestiscano le proiezioni non complanari.
                     
                     \begin{figure}[h]
@@ -242,7 +242,7 @@
                 
                 \bigskip
                 \par
-                    L'apparato di acquisizione compie un giro di 360\degree intorno all'oggetto in esame. L'utilizzo di un fascio di tale geometria permette ad ogni esposizione (continua o pulsata) di coprire l'intero campo di vista in un unico giro, anziché effettuare più giri a spirale. Questo consente un abbassamento dei tempi di acquisizione, paragonabili a quelli di una radiografia panoramica.
+                    L'apparato di acquisizione compie un giro di $360\degree$ intorno all'oggetto in esame. L'utilizzo di un fascio di tale geometria permette ad ogni esposizione (continua o pulsata) di coprire l'intero campo di vista in un unico giro, anziché effettuare più giri a spirale. Questo consente un abbassamento dei tempi di acquisizione, paragonabili a quelli di una radiografia panoramica.
                                    
                     \begin{figure}[h]
                         \centering
@@ -258,12 +258,12 @@
                                             
         \section{Principi di Funzionamento CT}
             \par
-                Lo scopo della Tomografia Computerizzata è quello di determinare le strutture interne di un oggetto non trasparente inviando verso questo dei segnali sotto forma di onde/particelle. Possono essere utilizzate onde elettromagnetiche di diversa frequenza ed onde acustiche. La ricostruzione CT è intrinsecamente un problema inverso.
+                Lo scopo della Tomografia è quello di determinare le strutture interne di un oggetto non trasparente inviando verso questo dei segnali sotto forma di onde/particelle. Possono essere utilizzate onde elettromagnetiche di diversa frequenza ed onde acustiche. La ricostruzione CT è intrinsecamente un problema inverso.
                 Il matematico Mark Kac espose chiaramente il concetto di problema inverso nella nota pubblicazione "\textit{Can one hear the shape of the drum?}" \cite{mark-kac}, nel quale essenzialmente si cercò una risposta alla domanda: "E' possibile determinare la forma di una membrana oscillante ascoltando esclusivamente le tonalità prodotte da questa?" Il problema affrontato nella CT è analogo.
             
             \bigskip
             \par
-                Johann Radon, matematico Austriaco, pubblicò nel 1917 il suo lavoro relativo alla "Trasformata di Radon". Questo dimostra matematicamente che se gli integrali di linea di una particolare proprietà dell'oggetto in esame, come la densità, possono essere conosciuti per tutte le linee che intersecano una slice di un corpo, complanari alla slice stessa, allora la densità può essere ricostruita esattamente \cite{history-radiology}. Nella pratica l'Antitrasformata di Radon, la procedura che permetterebbe la ricostruzione dei livelli di densità, risulta particolarmente instabile. Per questo, negli algoritmi, si utilizzano versioni discretizzate e stabilizzate.
+                Johann Radon, matematico Austriaco, pubblicò nel 1917 il suo lavoro relativo alla "Trasformata di Radon". Questo dimostra matematicamente che se gli integrali di linea di una particolare proprietà dell'oggetto in esame, come la densità, possono essere conosciuti per tutte le linee che intersecano una slice di un corpo, complanari alla slice stessa, allora la densità può essere ricostruita esattamente \cite{history-radiology}. Nella pratica l'antitrasformata di Radon, la procedura che permetterebbe la ricostruzione dei livelli di densità, risulta particolarmente instabile. Per questo, negli algoritmi, si utilizzano versioni discretizzate e stabilizzate.
                 
             \subsection{Proiezione}
                 \par
@@ -307,7 +307,7 @@
                     \end{figure}
                     
                     Le proiezioni, $p(s,\theta)$ (acquisite dal detector) registrano l'intensità attenuata I, la quale è governata dalla legge di Lambert-Beer \cite{lambert-beer} nella forma:
-    
+                    <TODO va riscritta in forma più generale>
                     \begin{equation} \label{eq:lambert-beer}
                         I = Io \cdot e^{- (\mu1 + \mu2 + ...  + \mu n)}
                     \end{equation}
@@ -341,27 +341,28 @@
                                
             \subsection{Trasformata di Fourier}
                 \par
-                    Il concetto della trasformata di Fourier è basato sul fatto che è possibile costruire una funzione $p(s)$ come somma pesata di una serie di termini seno e coseno a differenti frequenze, $w$, utilizzando una funzione peso $P(w)$.
+                    Il concetto della trasformata di Fourier è basato sul fatto che è possibile costruire una funzione $p(s)$ come somma pesata di una serie di termini seno e coseno a differenti frequenze, $\nu$, utilizzando una funzione peso $P(\nu)$.
                 
                 \bigskip
                 \par
-                    $P(w)$ per ciascuna frequenza $w$ viene chiamata Trasformata di Fourier di $p(s)$. Uno può facilmente utilizzare formule matematiche per poter ricavare $P(w)$ partendo da $p(s)$ e recuperare $p(s)$ da $P(w)$. Questo significa che nel caso si conosca una delle due funzioni, si conosce anche l'altra. Utilizzare la Trasformata di Fourier permette di poter comprendere alcune relazioni matematiche nascoste, non facili da osservare senza applicare la Trasformata. E' anche possibile applicare la Trasformata di Fourier ad una funzione con due o più variabili. La Trasformata della funzione $f(x,y)$, viene indicata come $F(w_x,w_y)$, dove $w_x$ rappresenta la frequenza nella direzione $x$ e $w_y$ rappresenta la frequenza nella direzione $y$.
+                    $P(w)$ per ciascuna frequenza $w$ viene chiamata Trasformata di Fourier di $p(s)$. Uno può facilmente utilizzare formule matematiche per poter ricavare $P(\nu)$ partendo da $p(s)$ e recuperare $p(s)$ da $P(\nu)$. Questo significa che nel caso si conosca una delle due funzioni, si conosce anche l'altra. Utilizzare la Trasformata di Fourier permette di poter comprendere alcune relazioni matematiche nascoste, non facili da osservare senza applicare la Trasformata. E' anche possibile applicare la Trasformata di Fourier ad una funzione con due o più variabili. La Trasformata della funzione $f(x,y)$, viene indicata come $F(\nu_x,\nu_y)$, dove $\nu_x$ rappresenta la frequenza nella direzione $x$ e $\nu_y$ rappresenta la frequenza nella direzione $y$.
                     
             \subsection{Teorema della Proiezione}
+                <TODO sarebbe utile inserire un'immagine>
                 \par
                     Il \textit{Teorema della Proiezione}, cuore della Tomografia Computerizzata, afferma che le seguenti procedure sono equivalenti:
         
                     \begin{enumerate}
-                        \item Eseguire la Trasformata di Fourier monodimensionale $P(w,\theta_i)$ sulla i-esima proiezione $p(s,\theta_i)$
-                        \item Selezionare una slice avente la stessa angolazione $\theta_i$ passante per l'origine della Trasformata di Fourier bidimensionale $F(w_x,w_y)$ eseguita sulla funzione densità $f(x,y)$.  
+                        \item Eseguire la Trasformata di Fourier monodimensionale $P(\nu,\theta_i)$ sulla i-esima proiezione $p(s,\theta_i)$
+                        \item Selezionare una slice avente la stessa angolazione $\theta_i$ passante per l'origine della Trasformata di Fourier bidimensionale $F(\nu_x,\nu_y)$ eseguita sulla funzione densità $f(x,y)$.  
                     \end{enumerate}
                 \par
-                    L'angolazione del detector è rappresentata da $\theta_i$, roteando il detector di almeno 180\degree è possibile ottenere l'intera trasformata di Fourier bidimensionale $F(w_x,w_y)$ senza che questa venga direttamente eseguita sulla funzione densità $f(x,y)$.
-                    Una volta ottenuta $F(w_x,w_y)$, la funzione di densità originale $f(x,y)$ può essere facilmente ottenuta mediante una procedura matematica chiamata Antitrasformata di Fourier. Nonostante questa procedura possa teoricamente rimpiazzare la fase di retroproiezione, all'atto pratico ciò non avviene, a causa degli elevati errori di interpolazione che vengono generati dagli algoritmi.
+                    L'angolazione del detector è rappresentata da $\theta_i$, roteando il detector di almeno $180\degree$ è possibile ottenere l'intera trasformata di Fourier bidimensionale $F(\nu_x,\nu_y)$ senza che questa venga direttamente eseguita sulla funzione densità $f(x,y)$.
+                    Una volta ottenuta $F(\nu_x,\nu_y)$, la funzione di densità originale $f(x,y)$ può essere facilmente ottenuta mediante una procedura matematica chiamata antitrasformata di Fourier. Nonostante questa procedura possa teoricamente rimpiazzare la fase di retroproiezione, all'atto pratico ciò non avviene, a causa degli elevati errori di interpolazione che vengono generati dagli algoritmi.
             
             \subsection{Ricostruzione}
                 \par
-                    In molti algoritmi di ricostruzione si sfrutta la Trasformata di Fourier per poter applicare dei filtri in grado di rendere minimo il rumore che differenzia le due immagini $x$ e $\bar{x}$. Ad esempio, L'algoritmo FBP - Filtered Back Projection, uno tra i più conosciuti ed utilizzati, prevede come filtro la moltiplicazione della Trasformata di Fourier monodimensionale $P(w,\theta)$ per un filtro detto "a rampa" $|w|$. Successivamente, applica l'Antitrasformata di Fourier al prodotto $|w|P(w, \theta)$ e procede alla retroproiezione. In questo caso, avendo applicato il filtro, l'immagine $\bar{x}$ contiene meno rumore ed è comparabile all'originale $x$. Esistono molti algoritmi di ricostruzione e diverse soluzioni riguardo l'applicazione dei filtri. Alcuni algoritmi applicano i filtri senza calcolare la trasformata di Fourier, altri utilizzano altri tipi di trasformazione come quella di Hilbert. 
+                    In molti algoritmi di ricostruzione si sfrutta la trasformata di Fourier per poter applicare dei filtri in grado di rendere minimo il rumore che differenzia le due immagini $x$ e $\bar{x}$. Ad esempio, l'algoritmo FBP - Filtered Back Projection, uno tra i più conosciuti ed utilizzati, prevede come filtro la moltiplicazione della Trasformata di Fourier monodimensionale $P(\nu,\theta)$ per un filtro detto "a rampa" $|\nu|$. Successivamente, applica l'antitrasformata di Fourier al prodotto $|\nu|P(\nu, \theta)$ e procede alla retroproiezione. In questo caso, avendo applicato il filtro, l'immagine $\bar{x}$ contiene meno rumore ed è comparabile all'originale $x$. Esistono molti algoritmi di ricostruzione e diverse soluzioni riguardo l'applicazione dei filtri. Alcuni algoritmi applicano i filtri senza calcolare la trasformata di Fourier, altri utilizzano altri tipi di trasformazione come quella di Hilbert. 
                 \bigskip
                 \par
                     Esistono algoritmi di ricostruzione che effettuano procedimenti iterativi, combinando procedure di Simulated Forward e Back Projection. Un algoritmo iterativo FBP, può essere matematicamente espresso come segue \cite{fessler}:
@@ -378,11 +379,11 @@
             
             \bigskip
             \par
-                RTK è una libreria scritta in linguaggio C++ ma presenta un'interfaccia di utilizzo per altri linguaggi. SimpleRTK \cite{simplertk-wiki} permette l'utilizzo RTK per i linguaggi C\# e Python, ma sono possibili estensioni anche ad altri linguaggi quali Lua e Java, sfruttando SWIG \cite{swig-website}.  RTK fornisce algoritmi di ricostruzione sia sequenziali (FDK) che iterativi (ADMM, SART, Conjugate Gradient, Iterative FDK, ...), presentando delle varianti degli stessi a seconda delle tipologie di filtering applicate. Sono inoltre presenti delle classi ottimizzate per il calcolo parallelo su architetture CUDA \cite{cuda}. E' possibile consultare l'intera lista delle classi che implementano documentazione ufficiale \cite{rtk-classi}. 
+                RTK è una libreria scritta in linguaggio C++ ma presenta un'interfaccia di utilizzo per altri linguaggi. SimpleRTK \cite{simplertk-wiki} permette l'utilizzo RTK per i linguaggi C\# e Python, ma sono possibili estensioni anche ad altri linguaggi quali Lua e Java, sfruttando SWIG \cite{swig-website}.  RTK fornisce algoritmi di ricostruzione sia sequenziali (FDK) che iterativi (ADMM, SART, Conjugate Gradient, Iterative FDK, ...), presentando delle varianti degli stessi a seconda delle tipologie di filtering applicate. Sono inoltre presenti delle classi ottimizzate per il calcolo parallelo su architetture CUDA \cite{cuda}. E' possibile consultare l'intera lista delle classi che implementano gli algoritmi di ricostruzione nella documentazione ufficiale \cite{rtk-classi}. 
                 Questa descrizione è relativa alla versione di RTK numero 1.3.0, rilasciata il 22/09/2016.
                     
             \subsection{Geometria}
-                \label{sub:geometry}
+                \label{sec:rtk-geometry}
                 \par
                     RTK necessita di informazioni relative alla geometria di acquisizione per poter correttamente ricostruire un set di proiezioni. La classe che gestisce queste informazioni è\texttt{ ThreeDCircularProjectionGeometry}, basata nello standard internazionale IEC 61217 che è stato progettato per dispositivi cone-beam su sistemi isocentrici. Il sistema a coordinate fisse di RTK ed il sistema di coordinate fisse dell'IEC 61217 sono esattamente uguali. Il sistema consente anche il salvataggio e la lettura della geometria su file XML.
                 
@@ -471,20 +472,19 @@ Rotation = 1 0 0 0 1 0 0 0 1
         
         \bigskip
         \par
-            La procedura di compilazione di \textit{RTK}, che coinvolge anche la compilazione di ITK, è stata riscritta in uno script Bash \cite{script-bash} che automatizza completamente le operazioni descritte nel tutorial ufficiale. Sfruttando l'adozione di uno speciale parametro per la compilazione \cite{parallel-j}, è stato possibile ottenere un consistente risparmio in termini di tempo. La community OpenRTK, dopo averne discusso sulla mailing list Rtk-users, ha accettato lo script e lo ha inserito nel tutorial di installazione ufficiale \cite{wiki-rtk}. La procedura di configurazione ed installazione di \textit{SimpleRTK}, non inserita nello script, è stata eseguita seguendo esattamente le indicazioni fornite dal sito ufficiale \cite{simplertk-install}. SimpleITK è stato aggiunto all'environment locale Python semplicemente utilizzando il package manager PIP, come descritto nella rispettiva documentazione \cite{simpleitk-install}.    
+            La procedura di compilazione di \textit{RTK}, che coinvolge anche la compilazione di ITK, è stata riscritta in uno script Bash \cite{script-bash} che automatizza completamente le operazioni descritte nel tutorial ufficiale. Sfruttando l'adozione di uno speciale parametro per la compilazione \cite{parallel-j}, è stato possibile ottenere un consistente risparmio in termini di tempo. La community OpenRTK, dopo esserne entrata a conoscenza grazie alla mailing list Rtk-users, ha inserito lo script nel tutorial di installazione ufficiale \cite{wiki-rtk}. La procedura di configurazione ed installazione di \textit{SimpleRTK}, non inserita nello script, è stata eseguita seguendo esattamente le indicazioni fornite dal sito ufficiale \cite{simplertk-install}. SimpleITK è stato aggiunto all'environment locale Python semplicemente utilizzando il package manager PIP, come descritto nella rispettiva documentazione \cite{simpleitk-install}.
 
 
         \section{Gestione degli Stack di Proiezione}
             \subsection{Stack RAW}
                 \par
-                    La Facoltà ha messo a disposizione una decina di Stack di Proiezione in formato RAW (grezzo), acquisiti mediante architettura CBCT. Ogni Stack (non normalizzato) era accompagnato da un file CSV e da un file di testo descrittivo. Le informazioni contenute nel file di testo descrittivo, valide per ciascuna proiezione appartenente allo Stack, erano le seguenti:
+                    La Facoltà ha messo a disposizione una decina di Stack di Proiezione in formato RAW (grezzo), acquisiti mediante architettura CBCT. Ciascuno Stack, non normalizzato, era accompagnato da un file CSV e da un file di testo descrittivo. Le informazioni contenute nel file di testo descrittivo, valide per ciascuna proiezione appartenente allo Stack, erano le seguenti:
                     
                     \begin{itemize}
-                        \item \textit{Dimensione dello Stack} nelle direzioni X, Y, Z. La direzione Z indica il numero di proiezioni, X ed Y indicano la dimensione della singola proiezione in pixel.
-                        \item $SID$ - $SDD$ Distanza Sorgente Isocentro e Distanza Sorgente Detector, in millimetri.
-                        \item $du$ - $dv$ Larghezza ed altezza di un singolo pixel nelle direzioni $u$ e $v$, in millimetri.
-                        \item $Nu$ - $Nv$ Numero di pixel componenti l'immagine nelle due direzioni;
-                        \item $Niso_u$ - $Niso_v$ Posizione dell'isocentro nel sistema di riferimento $(u,v)$, in numero di pixel.
+                        \item $SID$, $SDD$. Distanza Sorgente Isocentro e Distanza Sorgente Detector, in millimetri.
+                        \item $du$, $dv$. Larghezza ed altezza di un singolo pixel di una proiezione bidimensionale nel sistema di riferimento $(u,v)$, in millimetri.
+                        \item $N_u$, $N_v$. Numero di pixel componenti una proiezione bidimensionale nel riferimento $(u,v)$.
+                        \item \textit{Dimensione dello Stack} nelle direzioni X, Y, Z. La direzione Z indica il numero di proiezioni bidimensionali appartenenti allo Stack, X ed Y indicano la dimensione delle singole proiezioni in pixel ed equivalgono ad $N_u$ ed $N_v$, rispettivamente.
                     \end{itemize}
                     
                     Il sistema di riferimento $(u,v)$ differisce rispetto al sistema $(x,y)$ di ITK in quanto $v$ ha direzione opposta rispetto ad $y$ e l'origine del sistema di riferimento è situata nel centro del pixel in alto a sinistra dell'immagine (Si confronti Figura \ref{fig:itk} con Figura \ref{fig:uv}).
@@ -495,17 +495,34 @@ Rotation = 1 0 0 0 1 0 0 0 1
                         \caption{Il sistema di riferimento $(u,v)$.}
                         \label{fig:uv}
                     \end{figure}
-            
-                    Il file CSV conteneva, per ciascun angolo di proiezione $\theta_i$, l'informazione $Io$. Ogni riga era così composta:
+                
+                    La conversione da coordinate $(u,v)$ a coordinate $(x,y)$ può essere vettorialmente espressa in questo modo:
+                    \begin{equation} \label{eq:uv-conversion}
+                        (x,y) = ( u, N_v - 1 - v )
+                    \end{equation}
+                    
+                \bigskip    
+                \par
+                    Il file CSV, conteneva per ciascuna riga informazioni relative alle proiezioni componenti lo Stack. Il numero di righe del file corrispondevano alla dimensione Z dello Stack, quindi, al numero di proiezioni. Ciascuna proiezione veniva associata ad una riga del file: La $1\degree$ proiezione dello Stack era associata alla riga $1$, la $2\degree$ proiezione alla riga $2$ e così via. Ciascuna riga era così composta: 
                     
                     \begin{lstlisting}[language=bash, frame=bt] 
-+-----------------+-------+----+
-| Projection Name | Angle | Io |
-+-----------------+-------+----+
++-----------------+-------+--------+--------+----+
+| Projection Name | Angle | Niso_u | Niso_v | Io |
++-----------------+-------+--------+--------+----+
                     \end{lstlisting}
                     
-                    Il nome della proiezione è un dato puramente indicativo. Può essere utilizzato come nomenclatura nel caso in cui lo Stack tridimensionale RAW venga sezionato in $n$ file di proiezione bidimensionali. Angle ed $Io$, informazioni relative a ciascuna singola proiezione, saranno utilizzati nella generazione della geometria di RTK e nella normalizzazione dello Sack.
+                    \begin{itemize}
+                        \item \textbf{Projection Name} - E' un dato puramente indicativo. Può essere utilizzato come nomenclatura nel caso in cui lo Stack tridimensionale RAW venga sezionato in $n$ file di proiezione bidimensionali.
+                        
+                        \item \textbf{Angle} - E' l'angolo nel quale la proiezione è stata acquisita. Corrisponde a \textit{gantryAngle}, descritto in Sezione \ref{sec:rtk-geometry}.
+                        
+                        \item \textbf{($N_{iso\textunderscore u},N_{iso\textunderscore v}$)} - Posizione dell'origine del detector (proiezione ortogonale dell'isocentro sul detector) nel sistema di riferimento $(u,v)$, in numero di pixel.
+                        
+                        \item \textbf{$Io$} - Intensità della sorgente durante l'acquisizione della proiezione, descritta in Sezione \ref{sec:normalizzazione}.
+                    \end{itemize}
                     
+                    
+                         
             \subsection{Generazione immagine MHA da Stack RAW}
                 \label{sec:conversione}
                 \par
@@ -533,19 +550,21 @@ ElementDataFile = Contra_40kV_Al_2mm_1024_512_200f.raw
 >>> exit()
                     \end{lstlisting}
                     
-                    Il metodo \textit{ReadImage()} legge il file 'proj\textunderscore stack.mhd' e restituisce un oggetto Image \cite{itk-image-object}. Il metodo \textit{WriteImage()} scrive su file l'oggetto Image in formato MHA, nominandolo 'proj\textunderscore stack.mha'. 
+                    Il metodo \textit{ReadImage()} legge il file 'proj\textunderscore stack.mhd' e restituisce un oggetto Image \cite{itk-image-object}. Il metodo \textit{WriteImage()} \cite{sitk-write-image} scrive su file l'oggetto Image in formato MHA, nominandolo 'proj\textunderscore stack.mha'. 
         
         \section{Lettura informazioni da file CSV}
             \label{sec:lettura-csv}
             
             \par
-                Al fine di poter manipolare le informazioni relative a ciascuna Proiezione appartenente ad uno Stack, si è inizialmente creata una Classe Python in grado di ospitare i dati che verranno letti da file:
+                Per poter manipolare le informazioni relative a ciascuna proiezione appartenente ad uno Stack, si è inizialmente creata una Classe Python in grado di ospitare i dati che verranno letti da file:
             
                 \begin{lstlisting}[language=python, frame=bt]
-class Projection( object ):
-    def __init__(self, name, angle, io):
+class Projection(object):
+    def __init__(self, name, angle, Niso_u, Niso_v, io):
         self.name = str(name)
         self.angle = float(angle)
+        self.Niso_u = float(Niso_u)
+        self.Niso_v = float(Niso_v)
         self.io = float(io)
                 \end{lstlisting}
             
@@ -565,7 +584,7 @@ csv = pyexcel.get_sheet(file_name = 'file.csv')
                 
                 \begin{lstlisting}[language=python, frame=bt]
 >>>csv[0]
-['00000.tiff', 0, 39162]
+['00000.tiff', 181.79, 128.5, 96.5, 39162]
                 \end{lstlisting}
             
                 Anche la singola riga è rappresentata come lista, l'accesso ad una singola cella diventa:
@@ -581,7 +600,7 @@ csv = pyexcel.get_sheet(file_name = 'file.csv')
                 \begin{lstlisting}[language=python, frame=bt]
 proj_obj_list = []
 for row in csv:
-    proj = Projection(row[0],row[1],row[2])
+    proj = Projection(row[0],row[1],row[2],row[3],row[4])
     proj_obj_list.append(proj)
                 \end{lstlisting}
             
@@ -589,14 +608,14 @@ for row in csv:
             
             \bigskip
             \par
-                Questa configurazione, permette un accesso all'informazione facilmente comprensibile. Nel caso in cui si voglia accedere, ad esempio, all'informazione \texttt{Io} della 1\degree proiezione, è sufficiente accedere all'omonimo attributo dell'oggetto creato, nella posizione desiderata: 
+                Questa configurazione, permette un accesso all'informazione facilmente comprensibile. Nel caso in cui si voglia accedere, ad esempio, all'informazione \texttt{Io} della $1\degree$ proiezione, è sufficiente accedere all'omonimo attributo dell'oggetto creato, nella posizione desiderata: 
             
                 \begin{lstlisting}[language=python, frame=bt]
 >>> proj_obj_list[0].io
 39162.0
                 \end{lstlisting}
             
-               In Python l'indicizzazione delle liste incomincia dall'indice $0$, dunque la $1\degree$ Proiezione è identificata dall'indice $0$ e così via.
+               In Python l'indicizzazione delle liste incomincia dall'indice $0$, dunque la $1\degree$ proiezione dello Stack è identificata dall'indice $0$ della lista, la $2\degree$ dall'indice $1$ e così via.
         
         \section{Normalizzazione Stack MHA}
             \label{sec:norm-disp}
@@ -608,7 +627,7 @@ for row in csv:
 stack = sitk.ReadImage(proj_stack.mha)
                 \end{lstlisting}
                 
-                L'oggetto \textit{stack} possiede ora i metodi GetWidth(), GetHeight() e GetDepth(), utili al fine di reperire le informazioni dimensionali dello Stack, precedentemente inserite nella sua creazione (Sezione \ref{sec:conversione}):
+                L'oggetto \textit{stack} possiede ora i metodi GetWidth(), GetHeight() e GetDepth(), utili per reperire le informazioni dimensionali dello Stack, precedentemente inserite nella sua creazione (Sezione \ref{sec:conversione}):
                 \begin{lstlisting}[language=python, frame=bt]
 width = stack.GetWidth()
 height = stack.GetHeight()
@@ -628,7 +647,7 @@ for zslice in range(0, depth):
                 La variabile \textit{zslice} assume i valori interi $0 \leq zslice < depth$ in quanto la funzione built-in \textit{range()} \cite{python-range} di Python genera una sequenza di interi iterabili appartenenti al dominio appena indicato. La procedura di normalizzazione avviene all'interno di questo ciclo, nel quale si susseguono ripetutamente le seguenti fasi, fino all'esaurimento dello Stack:
                 
                 \begin{enumerate}
-                    \item \textbf{Estrazione di una singola Proiezione}. Viene affidata alla Classe \textit{ExtractImageFilter} \cite{sitk-estractor} di SimpleITK. Questa permette il collasso delle dimensioni di uno Stack MHA 3D. Per poter specificare quale dimensione collassare, l'istanza di ExtractImageFilter, chiamata \texttt{extractor} (estrattore), dev'essere configurata mediante i metodi SetSize() e SetIndex(). Il metodo SetSize() specifica la dimensione dell'immagine da ottenere: questa conterrà $0$ nella coordinata dimensionale da collassare, mentre lascierà intatte le rimanenti dimensioni. Il metodo SetIndex() identifica la proiezione interna allo Stack da estrarre, impostando a zero le coordinate non-zero indicate da SetSize() ed impostando l'indice di estrazione nella coordinata rimanente:
+                    \item \textbf{Estrazione di una singola Proiezione}. Viene affidata alla Classe \textit{ExtractImageFilter} \cite{sitk-estractor} di SimpleITK. Questa permette il collasso delle dimensioni di uno Stack MHA 3D. Per poter specificare quale dimensione collassare, l'istanza di ExtractImageFilter, chiamata \textit{extractor} (estrattore), dev'essere configurata mediante i metodi \textit{SetSize()} e \textit{SetIndex()}. Il metodo \textit{SetSize()} specifica la dimensione dell'immagine da ottenere: questa conterrà $0$ nella coordinata dimensionale da collassare, mentre le rimanenti dimensioni rimarranno intatte. Il metodo \textit{SetIndex()} identifica la proiezione interna allo Stack da estrarre, impostando a zero le coordinate non-zero indicate da \textit{SetSize()} ed impostando l'indice di estrazione nella coordinata rimanente:
                     
                     \begin{lstlisting}[language=python, frame=bt]
 extractor = sitk.ExtractImageFilter()
@@ -638,49 +657,52 @@ extractor.SetIndex([0,0,zslice])
 proj = extractor.Execute(stack)
                     \end{lstlisting} 
                     
-                    Per poter applicare le operazioni, si ricorre al metodo Execute(stack), il quale restituisce un oggetto Image bidimensionale (proiezione estratta non normalizzata).
+                    Per poter applicare le operazioni, si ricorre al metodo \textit{Execute()}, il quale restituisce, in questo caso, un oggetto Image bidimensionale (proiezione estratta non normalizzata).
                     
-                    \item \textbf{Normalizzazione della singola Proiezione}. Alla singola proiezione si applica la procedura di normalizzazione descritta nell' equazione (\ref{eq:normalization}), Sottosezione \ref{sub:norm-math}. L'intensità \texttt{I} è rappresentata da tutti i pixel componenti la proiezione appena estratta. L'intensità \texttt{Io} è disponibile all'interno della lista di oggetti Projection \texttt{proj\textunderscore obj\textunderscore list}. SimpleITK fornisce il metodo Log()\cite{sitk-log}, il quale permette il calcolo del Logaritmo in base $e$ per ciascun pixel componente l'immagine. Inoltre possono essere applicate moltiplicazioni per numeri floating point, applicate a ciascun pixel dell'immagine mediante l'operatore *:
+                    \item \textbf{Normalizzazione della singola Proiezione}. Alla singola proiezione si applica la procedura di normalizzazione descritta nell'Equazione (\ref{eq:normalization}). L'intensità $I$ è rappresentata da tutti i pixel componenti la proiezione appena estratta. L'intensità $Io$ è disponibile all'interno della lista di oggetti Projection \textit{proj\textunderscore obj\textunderscore list}. SimpleITK fornisce il metodo \textit{Log()} \cite{sitk-log}, il quale applica il Logaritmo in base $e$ a ciascun pixel componente l'immagine. 
+                    Le moltiplicazioni per numeri floating point \cite{python-floating-point}, possono essere applicate a ciascun pixel dell'immagine semplicemente utilizzando l'operatore $*$ \cite{sitk-star-operator} sull'oggetto Image \textit{proj} :
                     \begin{lstlisting}[language=python, frame=bt]
 proj = proj * float(1 / proj_obj_list[zslice].io)
 proj = sitk.Log(proj)
 proj = proj * float(-1)
-                    \end{lstlisting} 
-                    
-                    Come si può notare, si applica l'equazione (\ref{eq:normalization}) in 3 passaggi. L'informazione \texttt{Io} viene prelevata dalla lista sfruttando l'indice zslice, il quale identifica, in ordine, l'esatta attenuazione della proiezione indicata.
-                    
-                    \item \textbf{Inserimento della Proiezione normalizzata nel nuovo Stack MHA.}                    Per poter conservare le metainformazioni inserite nello stack iniziale si è deciso, prima dell'esecuzione del ciclo for, di crearne una copia in memoria mediante il metodo ReadImage() di SimpleITK:
-                    
-                    \begin{lstlisting}[language=python, frame=bt]
-normalized_mha = sitk.ReadImage(stack)
-                    \end{lstlisting} 
-                    
-                    normalized\textunderscore mha contiene tutte le proiezioni e le metainformazioni dello stack 
-                     
-                    All'interno del ciclo, si sono eseguite le seguenti operazioni:
-                    \begin{lstlisting}[language=python, frame=bt]
-norm_vol = sitk.JoinSeries(proj)
-normalized_mha = sitk.Paste(copy, norm_vol, 
-norm_vol.GetSize(), destinationIndex=[0,0,zslice])
                     \end{lstlisting}
                     
-                    Il metodo JoinSeries() \cite{sitk-joinseries} trasforma la proiezione da 2D a 3D. La funzione Paste() \cite{sitk-paste} permette di incollare o sostituire due differenti immagini. Il 1\degree parametro specifica l'immagine di destinazione, in questo caso <TODO finisci e revisiona!>
+                    Se è essenzialmente applicata l'equazione (\ref{eq:normalization}) in 3 operazioni separate. L'informazione $Io$ è stata prelevata lista sfruttando l'indice zslice, il quale identifica, in ordine, l'esatta attenuazione della proiezione indicata.
                     
-                    Permette di prendere una sezione di una immagine e di stamparla in un altra immagine. Il parametro SetDestinationIndex() specifica dove incollare i dati nella immagine di output.
+                    \item \textbf{Inserimento della proiezione normalizzata in lista} L'oggetto Image normalizzato \textit{proj} viene inserito alla fine dell'oggetto list \textit{norm\textunderscore proj\textunderscore list}, precedentemente istanziata, sfruttando il metodo \textit{append()} \cite{python-append} appartenente all'oggetto \textit{list} di Python:
+                    
+                    \begin{lstlisting}[language=python, frame=bt]
+norm_proj_list.append(proj)
+                    \end{lstlisting}
+                    
+                    In questo modo l'ordine delle proiezioni normalizzate inserite nella lista rispecchia l'ordine dello Stack MHA originale nella direzione Z.
                 \end{enumerate}
                 
-        
-            \subsection{Aggiornamento Origin MHA Normalizzato}
-                <TODO>
-                \begin{equation}
-                    \begin{multlined}
-                        \ \ \ Niso_x = Niso_u\\
-                        Niso_y = Nv - Niso_v
-                    \end{multlined}
-                \end{equation}
-        
+                Al termine del ciclo FOR, tutte le proiezioni bidimensionali normalizzate risiedono in lista. Il metodo JoinSeries() \cite{sitk-joinseries}, messo a disposizione da SimpleITK, unisce serie di oggetti Image $N$ dimensionali, in un'unico oggetto Image a dimensione $N+1$:
+                
+                \begin{lstlisting}[language=python, frame=bt]
+norm_stack = sitk.JoinSeries(norm_proj_list)
+                \end{lstlisting}
+                    
+                Il metodo accetta come parametro la lista precedentemente creata. L'oggetto Image \textit{norm\textunderscore stack} contiene, in ordine, tutte le proiezioni normalizzate. Per poter recuperare le meta-informazioni (Origin, Spacing e Direction) dallo Stack MHA originale \textit{stack}, si ricorre al metodo \textit{CopyInformation()} \cite{sitk-copy-information} appartenente all'oggetto Image \textit{norm\textunderscore stack}:
+                
+                \begin{lstlisting}[language=python, frame=bt]
+norm_stack.CopyInformation(stack)
+                \end{lstlisting}
+                
+                Per poter assicurare una corretta lettura dello Stack normalizzato da parte degli algoritmi di ricostruzioni forniti da RTK (Si veda Sezione <TODO spiegazione nella geometria), è opportuno accertarsi che il TAG Origin sia esattamente impostato come di default. Per applicare le modifiche è possibile sfruttare il metodo \textit{SetOrigin()} fornito dall'oggetto Image \textit{norm\textunderscore stack}:
+                
+                \begin{lstlisting}[language=python, frame=bt]
+norm_stack.SetOrigin([0,0,0])
+                \end{lstlisting}
+                
+                Il nuovo Stack normalizzato può essere esportato come file MHA sfruttando il metodo \textit{WriteImage()} di SimpleITK:
+                
+                \begin{lstlisting}[language=python, frame=bt]
+sitk.WriteImage(norm_stack, normalized.mha)
+                \end{lstlisting}
+                
         \section{Geometria XML mediante SimpleRTK}
-      
             \par
                 Gli algoritmi di ricostruzione forniti da RTK necessitano di una descrizione geometrica dell'apparato di acquisizione. La Classe RTK \textit{ThreeDCircularProjectionGeometry()}, descritta in Sezione \ref{sub:geometry}, è disponibile anche per SimpleITK, con i medesimi parametri. SimpleRTK inoltre fornisce un'altra classe chiamata \texttt{ThreeDCircularProjectionGeometryXMLFileWriter()} la quale si occupa del trasferimento di un'istanza di \texttt{ThreeDCircularProjectionGeometry()} su file XML, che sarà successivamente utilizzato dagli algoritmi di ricostruzione. 
                 
@@ -694,8 +716,6 @@ SID = float(input("Insert SID  - Source to Isocenter Distance, in mm\n"))
 SDD = float(input("insert SDD  - Source to Detector Distance, in mm\n"))
                     \end{lstlisting}
                    
-                    
-                    
                    
                     SID ed SDD sono forniti all'interno del file di descrizione associato ad ogni Stack di proiezione a disposizione. \texttt{angle} viene fornito all'interno del file .csv per ogni proiezione. 
                     proj\textunderscore offset\textunderscore x e proj\textunderscore offset\textunderscore y sono stati precedentemente descritti in sezione <TODO> ed il loro calcolo necessita delle informazioni Pixel Detector Size in entrambe le direzioni (reperibili all'interno del file di descrizione esterno) e delle informazioni iso\textunderscore u ed iso\textunderscore v all'interno del file csv.
@@ -725,8 +745,37 @@ import SimpleRTK as sirtk
                 
         
             \subsection{Calcolo proj\textunderscore offset \textunderscore x/y}
-                <ASK accertati proj offset x y>
-                <TODO descrivi qui il calcolo proj offset x y? magari nella Presentazione puoi solo spiegare a cosa si riferiscono, mentre questo calcolo riguarda il fatto che stiamo trattando con immagini .mha aventi origine in basso a sinistra>
+                <TODO
+                Come descritto in Sezione \ref{sec:rtk-geometry}, i parametri \textit{projOffsetX} e \textit{projOffsetY}, indicano l'offset nelle direzioni $x$ ed $y$ dall'origine del detector ($iso\textunderscore x$, $iso\textunderscore y$) all'origine dell'immagine della singola proiezione Origin. L'origine del detector nel sistema di riferimento $(x,y)$, espressa in millimetri, può essere ricavata dalle informazioni inserite nel file di descrizione, sfruttando l'Equazione (\ref{eq:uv-conversion}) per componenti:
+                
+                \begin{equation}
+                    \begin{multlined}
+                        \ \ \ iso\textunderscore x = N_{iso\textunderscore u}du \\
+                        iso\textunderscore y = (N_v - 1 - N_{iso\textunderscore v})dv
+                    \end{multlined}
+                \end{equation}
+                
+                L'origine del detector \textit{(iso\textunderscore x, iso\textunderscore y)}, negli Stack offerti dalla Facoltà, è la medesima per ciascuna proiezione componente lo Stack. Il settaggio del TAG Origin all'interno dello Stack normalizzato MHA può essere applicato in due modi differenti, che impatteranno sul settaggio dei parametri \textit{projOffsetX} e \textit{projOffsetY}, utilizzati dal metodo \textit{AddProjection()}:
+                
+                \begin{itemize}
+                    \item Settaggio Origin a $(0,0,0)$, come di default, ed impostazione dei parametri \textit{projOffsetX} e \textit{projOffsetY}, come segue:
+                    
+                    \begin{lstlisting}[language=python, frame=bt]
+projOffsetX = - iso_x
+projOffsetY = - iso_y
+                    \end{lstlisting}
+                
+                    \item Impostazione dei parametri \textit{projOffsetX}$=0$, \textit{projOffsetY}$=0$ e settaggio Origin come segue: mediante il metodo \textit{SetOrigin} fornito dall'oggetto Image:
+                    \begin{lstlisting}[language=python, frame=bt]
+origin_x = - (Niso_u * du)
+origin_y = - (Nv - 1 - Niso_v) * dv
+
+norm_stack.SetOrigin([origin_x, origin_y, 0])
+                    \end{lstlisting}
+                    Origin, nella terza componente, può assumere un valore arbitrario poichè i parametri \textit{projOffsetX} e \textit{projOffsetY} si riferiscono esclusivamente alle direzioni X ed Y.
+                \end{itemize}
+                
+                Si è adottata la seconda soluzione,
                 
             \subsection{Scrittura su file .xml}
                 \par 
@@ -898,13 +947,21 @@ Backprojection: 180.379 s
     
     \bibitem{endianness}
         \url{https://en.wikipedia.org/wiki/Endianness}
+        
+    \bibitem{sitk-star-operator}
+        \url{https://itk.org/SimpleITKDoxygen/html/sitkImageOperators_8h_source.html#l00050}
     
+    \bibitem{python-floating-point}
+        \url{https://docs.python.org/3/library/functions.html#float}
     
-    
+    \bibitem{python-append}
+        \url{https://docs.python.org/3/tutorial/datastructures.html#more-on-lists}
    
-
+    \bibitem{sitk-copy-information}
+        \url{https://itk.org/SimpleITKDoxygen/html/classitk_1_1simple_1_1Image.html#afa8a4757400c414e809d1767ee616bd0}
     
-    
+    \bibitem{sitk-write-image}
+        \url{https://itk.org/SimpleITKDoxygen/html/classitk_1_1simple_1_1ImageFileWriter.html}
     
     \bibitem{script-bash}
         \url{https://github.com/dannylessio/auto-build-RTK}
