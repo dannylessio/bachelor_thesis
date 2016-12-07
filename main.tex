@@ -133,7 +133,7 @@
                         
                 \bigskip
                 \par
-                    Dalla radiografia in \textit{Figura \ref{fig:skull}}, è possibile distinguere solamente cinque diversi livelli di densità. Partendo dal meno denso, si visualizza \textit{l'aria}, di colore nero; \textit{l'acqua o i tessuti molli\footnote{Sostanzialmente si vuole definire tutto ciò che non ha la stessa densità dell'osso.}}, che si visualizzano con un grigio chiaro; \textit{il grasso}, evidenziato con un colore grigio scuro; \textit{le ossa}, che presentano una colorazione tendente al bianco; \textit{il campione metallico} (L), di colore bianco. L’acqua ed i tessuti molli possiedono circa la medesima densità. E' impossibile analizzare il cervello ed evidenziarne un'eventuale patologia, poiché esso è rappresentato come una zona omogeneamente grigia. L'ottenimento di un'immagine del cervello mediante Radiografia Convenzionale divenne una sfida sin dal periodo immediatamente successivo al 1895, anno in cui vennero scoperti i raggi X. Anche il grande scienziato ed inventore Thomas Edison agli inizi del 1900 si cimentò senza successo nell'impresa, a causa delle grosse limitazioni imposte dalla tecnica \cite{thomas-edison-brain}. Il cervello è composto da tessuti molli, racchiusi all’interno di uno scheletro denso che impedisce alla maggior parte della radiazione di penetrarli. Fluttua a bagno in un liquido chiamato \textit{fluido cerebrospinale\footnote{Liquido che fornisce nutrienti ed agisce come cuscino al fine di proteggere la materia grigia stessa}} il che rende ancor più ardua l'impresa. Questo tipo di analisi, si scoprì, essere tecnologicamente inaccessibile alla Radiografia Convenzionale.
+                    Dalla radiografia in \textit{Figura \ref{fig:skull}}, è possibile distinguere $5$ zone di grigio: Si visualizzano \textit{l'aria} o \textit{tessuti a bassa densità}, di colore grigio molto scuro (tendente al nero); \textit{l'acqua o i tessuti molli}\footnote{Sostanzialmente si vuole definire tutto ciò che non ha la stessa densità dell'osso.}, che si visualizzano con un grigio medio; \textit{il grasso}, evidenziato con un colore grigio scuro; \textit{le ossa}, che presentano una colorazione grigio chiaro; \textit{il campione metallico} (L), di colore praticamente bianco. L’acqua ed i tessuti molli possiedono circa la medesima densità. E' impossibile analizzare il cervello ed evidenziarne un'eventuale patologia, poiché esso è rappresentato come una zona omogeneamente grigia. L'ottenimento di un'immagine del cervello mediante Radiografia Convenzionale divenne una sfida sin dal periodo immediatamente successivo al 1895, anno in cui vennero scoperti i raggi X. Anche il grande scienziato ed inventore Thomas Edison agli inizi del 1900 si cimentò senza successo nell'impresa, a causa delle grosse limitazioni imposte dalla tecnica \cite{thomas-edison-brain}. Il cervello è composto da tessuti molli, racchiusi all’interno di uno scheletro denso che impedisce alla maggior parte della radiazione di penetrarli. Fluttua a bagno in un liquido chiamato \textit{fluido cerebrospinale\footnote{Liquido che fornisce nutrienti ed agisce come cuscino al fine di proteggere la materia grigia stessa}} il che rende ancor più ardua l'impresa. Questo tipo di analisi, si scoprì, essere tecnologicamente inaccessibile alla Radiografia Convenzionale.
                 
                 \bigskip 
                 \par
@@ -345,7 +345,7 @@
             \subsection{Trasformata di Fourier}
                 \par
                     Il concetto della trasformata di Fourier è basato sul fatto che è possibile costruire una funzione $p(s)$ come somma pesata di una serie di termini seno e coseno a differenti frequenze, $\nu$, utilizzando una funzione peso $P(\nu)$.
-                
+                    
                 \bigskip
                 \par
                     $P(w)$ per ciascuna frequenza $w$ viene chiamata Trasformata di Fourier di $p(s)$. Uno può facilmente utilizzare formule matematiche per poter ricavare $P(\nu)$ partendo da $p(s)$ e recuperare $p(s)$ da $P(\nu)$. Questo significa che nel caso si conosca una delle due funzioni, si conosce anche l'altra. Utilizzare la Trasformata di Fourier permette di poter comprendere alcune relazioni matematiche nascoste, non facili da osservare senza applicare la Trasformata. E' anche possibile applicare la Trasformata di Fourier ad una funzione con due o più variabili. La Trasformata della funzione $f(x,y)$, viene indicata come $F(\nu_x,\nu_y)$, dove $\nu_x$ rappresenta la frequenza nella direzione $x$ e $\nu_y$ rappresenta la frequenza nella direzione $y$.
@@ -359,6 +359,14 @@
                         \item Eseguire la Trasformata di Fourier monodimensionale $P(\nu,\theta_i)$ sulla i-esima proiezione $p(s,\theta_i)$
                         \item Selezionare una slice avente la stessa angolazione $\theta_i$ passante per l'origine della Trasformata di Fourier bidimensionale $F(\nu_x,\nu_y)$ eseguita sulla funzione densità $f(x,y)$.  
                     \end{enumerate}
+                
+                    \begin{figure}[h]
+                        \centering
+                        \includegraphics[width=0.6\textwidth]{fourier}
+                        \caption{Rappresentazione grafica del Teorema della Proiezione.}
+                        \label{fig:itk}        
+                    \end{figure}    
+            
                 \par
                     L'angolazione del detector è rappresentata da $\theta_i$, roteando il detector di almeno $180\degree$ è possibile ottenere l'intera trasformata di Fourier bidimensionale $F(\nu_x,\nu_y)$ senza che questa venga direttamente eseguita sulla funzione densità $f(x,y)$.
                     Una volta ottenuta $F(\nu_x,\nu_y)$, la funzione di densità originale $f(x,y)$ può essere facilmente ottenuta mediante una procedura matematica chiamata antitrasformata di Fourier. Nonostante questa procedura possa teoricamente rimpiazzare la fase di retroproiezione, all'atto pratico ciò non avviene, a causa degli elevati errori di interpolazione che vengono generati dagli algoritmi.
@@ -766,6 +774,7 @@ gw.Execute(geometry)
                     
             
         \section{Ricostruzione}
+        \label{sec:ricostruzione}
             \par
                 Come descritto in Sezione \ref{sec:openrtk}, RTK fornisce una serie di algoritmi di ricostruzione sia sequenziali che iterativi. Questi sono disponibili come file eseguibili, all'interno della directory \textit{RTK-bin/bin} e l'intera lista è consultabile nella documentazione ufficiale \cite{rtk-recon-list}. Ciascun algoritmo possiede una serie di opzioni:
                 
@@ -826,9 +835,15 @@ Backprojection: 180.379 s
             
             
     \chapter{Creazione Package Python}
-        \section{Scopo}
+        \par
+            Le procedure descritte da Sezione \ref{sec:lettura-csv} a Sezione \ref{sec:ricostruzione}, inizialmente implementate come script Python indipendenti, sono state riassemblate in moduli e collezionate in un unico Package. Il software è stato successivamente esteso presentando un'interfaccia utente testuale ed implementando un'architettura a directory per la lettura automatica delle informazioni. Infine, si è provveduto alla registrazione del Package all'interno del repository PyPI permettendo l'installazione del Package mediante il package manager PIP, disponibile di default a partire dalla versione 3.4 di Python.
+            
         \section{Architettura}
-        \section{Utilizzo}
+            
+        \section{Creazione Package}
+        \section{Gestione Directory}
+        \section{Interfaccia utente}
+        \section{Registrazione su PyPI}
         \section{Estensione}
             
     \chapter{Risultati e Conclusioni}
