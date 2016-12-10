@@ -17,6 +17,11 @@
 \usepackage{gensymb}
 \usepackage{mathtools}
 
+\usepackage{etoolbox}
+\makeatletter
+\patchcmd{\chapter}{\if@openright\cleardoublepage\else\clearpage\fi}{}{}{}
+\makeatother
+
 \lstset{
             basicstyle=\ttfamily,
             showstringspaces=false
@@ -99,9 +104,7 @@
         \par
             <TODO>
             <
-        		L'introduzione va ad esplicitare quanto indicato brevemente nel sommario.
-        
-        		Occorrerà quindi descrivere il problema studiato o il progetto elaborato, il perché lo si è affrontato, l'ambito di applicazione del progetto realizzato.
+        		Occorrerà descrivere il problema studiato o il progetto elaborato, il perché lo si è affrontato, l'ambito di applicazione del progetto realizzato.
         
         		Dall'introduzione il lettore deve comprendere l'argomento della tesi e come il tesista ha affrontato lo studio della risoluzione del problema eventualmente evidenziando eventuali contributi originali soprattutto nella realizzazione di un progetto (si pensi ad esempio a librerie sw realizzate ad hoc per lo sviluppo di un software...).
         
@@ -300,7 +303,7 @@
             \subsection{Normalizzazione delle Proiezioni}
                 \label{sec:normalizzazione}
                 \par
-                    L'intensità dei pixel componenti una proiezione, diretto risultato d'acquisizione da parte del detector, è direttamente proporzionale all'intensità della sorgente. Gli algoritmi di ricostruzione richiedono, per ogni proiezione, l'informazione relativa alla somma dei coefficienti di attenuazione lineare degli $n$ voxel\footnote{Il voxel è un elemento di volume che rappresenta l'informazione in uno spazio tridimensionale, analogamente al pixel che rappresenta informazioni relative ad un'immagine bidimensionale.} dell'oggetto attraversati, informazione indipendente dall'intensità del fascio sorgente. La \textit{Normalizzazione dello Stack} non è altro che il processo di ottenimento della somma dei coefficienti di attenuazione a partire dalla rilevazione del detector.
+                    L'intensità dei pixel componenti una proiezione, diretto risultato d'acquisizione da parte del detector, è direttamente proporzionale all'intensità della sorgente. Gli algoritmi di ricostruzione richiedono, per ogni proiezione, l'informazione relativa alla somma dei coefficienti di attenuazione lineare degli $n$ voxel\footnote{Il voxel è un elemento di volume che rappresenta l'informazione in uno spazio tridimensionale, analogamente al pixel che rappresenta informazioni relative ad un'immagine bidimensionale.} dell'oggetto attraversati, informazione indipendente dall'intensità del fascio sorgente. La \textit{Normalizzazione dello stack} non è altro che il processo di ottenimento della somma dei coefficienti di attenuazione a partire dalla rilevazione del detector.
               
                     \begin{figure}[h]
                         \centering
@@ -364,7 +367,7 @@
                         \centering
                         \includegraphics[width=0.6\textwidth]{fourier}
                         \caption{Rappresentazione grafica del Teorema della Proiezione.}
-                        \label{fig:itk}        
+                        \label{fig:slice-theorem}        
                     \end{figure}    
             
                 \par
@@ -479,24 +482,25 @@ Rotation = 1 0 0 0 1 0 0 0 1
                                               
     \chapter{Sviluppo del Progetto}
         \par
-            Nelle seguenti sezioni verrà descritto come ottenere la ricostruzione tomografica di uno Stack di proiezione in formato RAW non normalizzato, avente opportune informazioni associate, sfruttando uno tra gli algoritmi forniti da RTK. Questo coinvolge la conversione dello Stack RAW in formato MHA, la normalizzazione dello Stack MHA e la corretta generazione della geometria di acquisizione in formato XML. 
+            Nelle seguenti sezioni verrà descritto come ottenere la ricostruzione tomografica di uno stack di proiezioni in formato RAW non normalizzato, avente opportune informazioni associate, sfruttando uno tra gli algoritmi forniti da RTK. Questo coinvolge la conversione dello stack RAW in formato MHA, la normalizzazione dello stack MHA e la corretta generazione della geometria di acquisizione in formato XML. 
             
         \bigskip
         \par
             La procedura di compilazione di \textit{RTK}, che coinvolge anche la compilazione di ITK, è stata riscritta in uno script Bash \cite{script-bash} che automatizza completamente le operazioni descritte nel tutorial ufficiale. Sfruttando l'adozione di uno speciale parametro per la compilazione \cite{parallel-j}, è stato possibile ottenere un consistente risparmio in termini di tempo. La community OpenRTK, dopo esserne entrata a conoscenza grazie alla mailing list Rtk-users, ha inserito lo script nel tutorial di installazione ufficiale \cite{wiki-rtk}. La procedura di configurazione ed installazione di \textit{SimpleRTK}, non inserita nello script, è stata eseguita seguendo esattamente le indicazioni fornite dal sito ufficiale \cite{simplertk-install}. SimpleITK è stato aggiunto all'environment locale Python utilizzando il package manager PIP \cite{python-pip}, come descritto nella rispettiva documentazione \cite{simpleitk-install}.
 
         \section{Stack di proiezione RAW}
+        \label{sec:stack-di-proiezione-raw}
             \par
-                La Facoltà ha messo a disposizione una decina di Stack di Proiezione in formato RAW (grezzo), acquisiti mediante architettura CBCT. Ciascuno Stack, non normalizzato, era accompagnato da un file CSV e da un file di testo descrittivo. Le informazioni contenute nel file di testo descrittivo, valide per ciascuna proiezione appartenente allo Stack, erano le seguenti:
+                Ciascuno stack RAW a disposizione, non normalizzato ed acquisto mediante architettura CBCT, era accompagnato da un file CSV e da un file di testo descrittivo della geometria di acquisizione. Le informazioni contenute nel file di testo descrittivo, valide per ciascuna proiezione appartenente allo stack, erano le seguenti:
                     
                 \begin{itemize}
                     \item $SID$, $SDD$ - Distanza Sorgente Isocentro e Distanza Sorgente Detector, in millimetri.
                     
-                    \item $du$, $dv$ - Larghezza ed altezza di un singolo pixel di una proiezione bidimensionale nel sistema di riferimento $(u,v)$, in millimetri.
+                    \item $du$, $dv$ - Larghezza ed altezza di un singolo pixel di una proiezione bidimensionale nel sistema di riferimento $(u,v)$ in millimetri.
                     
-                    \item $N_u$, $N_v$ - Numero di pixel componenti una proiezione bidimensionale nel riferimento $(u,v)$.
+                    \item $N_u$, $N_v$ - Numero di pixel componenti una proiezione bidimensionale nel riferimento $(u,v)$
                     
-                    \item \textit{Dimensione dello Stack (X,Y,Z)} - La direzione Z indica il numero di proiezioni bidimensionali appartenenti allo Stack. X ed Y indicano la dimensione proiezioni in pixel ed equivalgono ad $N_u$ ed $N_v$, rispettivamente.
+                    \item \textit{Dimensione dello stack (X,Y,Z)} - La direzione Z indica il numero di proiezioni bidimensionali appartenenti allo stack. X ed Y indicano la dimensione proiezioni in pixel ed equivalgono ad $N_u$ ed $N_v$, rispettivamente.
                 \end{itemize}
                     
                 Il sistema di riferimento $(u,v)$ differisce dal sistema $(x,y)$ di ITK in quanto l'asse $v$ ha direzione opposta rispetto all'asse $y$ e l'origine del sistema di riferimento è situata nel centro del pixel in alto a sinistra dell'immagine (Si confronti Figura \ref{fig:itk} con Figura \ref{fig:uv}).
@@ -515,7 +519,7 @@ Rotation = 1 0 0 0 1 0 0 0 1
                     
             \bigskip    
             \par
-                Il file CSV, conteneva per ciascuna riga informazioni relative alle proiezioni componenti lo Stack. Il numero di righe del file corrispondevano alla dimensione Z dello Stack, quindi, al numero di proiezioni. Ciascuna proiezione veniva associata ad una riga del file: La $1\degree$ proiezione dello Stack era associata alla riga $1$, la $2\degree$ proiezione alla riga $2$ e così via. Ciascuna riga era così composta: 
+                Il file CSV, conteneva per ciascuna riga informazioni relative alle proiezioni componenti lo stack. Il numero di righe del file corrispondevano alla dimensione Z dello stack, quindi, al numero di proiezioni. Ciascuna proiezione veniva associata ad una riga del file: La $1\degree$ proiezione dello stack era associata alla riga $1$, la $2\degree$ proiezione alla riga $2$ e così via. Ciascuna riga era così composta: 
                     
                 \begin{lstlisting}[language=bash, frame=bt] 
 +-----------------+-------+--------+--------+----+
@@ -524,17 +528,17 @@ Rotation = 1 0 0 0 1 0 0 0 1
                 \end{lstlisting}
                     
                 \begin{itemize}
-                    \item \textit{Projection Name} - E' un dato puramente indicativo. Può essere utilizzato come nomenclatura nel caso in cui lo Stack tridimensionale RAW venga esportato in $n$ file di proiezione bidimensionali.
+                    \item \textit{Projection Name} - E' un dato puramente indicativo. Può essere utilizzato come nomenclatura nel caso in cui lo stack tridimensionale RAW venga esportato in $n$ file di proiezione bidimensionali.
                         
                     \item \textit{Angle} - E' l'angolo nel quale la proiezione è stata acquisita. Corrisponde a \textit{gantryAngle}, descritto in Sezione \ref{sec:rtk-geometry}.
                         
-                    \item \textit{($N_{iso\textunderscore u},N_{iso\textunderscore v}$)} - Posizione dell'origine del detector (proiezione ortogonale dell'isocentro sul detector) nel sistema di riferimento $(u,v)$, in numero di pixel.
+                    \item \textit{($N_{iso\_u},N_{iso\_v}$)} - Posizione dell'origine del detector (proiezione ortogonale dell'isocentro sul detector) nel sistema di riferimento $(u,v)$, in numero di pixel.
                         
                     \item \textit{$Io$} - Intensità della sorgente durante l'acquisizione della proiezione, descritta in Sezione \ref{sec:normalizzazione}.
                 \end{itemize}
                 
             
-        \section{Generazione MHA da Stack RAW}
+        \section{Generazione MHA da stack RAW}
             \label{sec:conversione}
             \par
                 La gestione di un'immagine MHA risulta più semplice, in quanto l'intera informazione (TAG e dati grezzi) è descritta in un singolo file. Si è inizialmente generato un file MHD contenente i TAG obbligatori (Sezione \ref{sec:mha}) e le informazioni relative allo Spacing, come in questo esempio:
@@ -548,7 +552,7 @@ ElementByteOrderMSB = True
 ElementDataFile = Contra_40kV_Al_2mm_1024_512_200f.raw
                 \end{lstlisting}
                     
-                La terza componente di ElementSpacing, $1.8$ millimetri, indica che sono state eseguite 200 proiezioni in un angolo di $360\degree$. Questo non è obbligatorio poiché Spacing si riferisce alla distanza fisica, nella direzione Z, tra i centri dei pixel delle proiezioni bidimensionali all'interno dello Stack. Le informazioni relative ad Origin e Direction non sono state impostate in quanto i valori di default sono adatti allo scopo (Sezione \ref{sec:descrizione-immagini}).
+                La terza componente di ElementSpacing, $1.8$, indica che sono state eseguite 200 proiezioni in un angolo di $360\degree$. Questo non è obbligatorio poiché Spacing si riferisce alla distanza fisica, nella direzione Z, tra i centri dei pixel delle proiezioni bidimensionali all'interno dello stack. Le informazioni relative ad Origin e Direction non sono state impostate in quanto i valori di default sono adatti allo scopo (Sezione \ref{sec:descrizione-immagini}).
                     
                 \bigskip
                 \par
@@ -566,7 +570,7 @@ ElementDataFile = Contra_40kV_Al_2mm_1024_512_200f.raw
             \label{sec:lettura-csv}
             
             \par
-                Per la gestione delle informazioni appartenenti a ciascuna riga del file CSV è stata creata una Classe Python così definita:
+                Per la gestione delle informazioni appartenenti a ciascuna riga del file CSV è stata creata una classe Python così definita:
             
                 \begin{lstlisting}[language=python, frame=bt]
 class Projection(object):
@@ -578,7 +582,7 @@ class Projection(object):
         self.io = float(io)
                 \end{lstlisting}
             
-               Il costruttore della Classe, \textit{\textunderscore \textunderscore init\textunderscore \textunderscore}, riceverà come parametri i contenuti di una riga del file CSV. Per poter acquisire l'intera informazione contenuta nel file, verranno creati $n$ Oggetti Projection, con $n$ corrispondente al numero di righe del file.
+               Il costruttore della classe, \textit{\textunderscore \textunderscore init\textunderscore \textunderscore}, riceverà come parametri i contenuti di una riga del file CSV. Per poter acquisire l'intera informazione contenuta nel file, verranno creati $n$ Oggetti Projection, con $n$ corrispondente al numero di righe del file.
             
             \bigskip
             \par
@@ -625,19 +629,19 @@ for row in csv:
 39162.0
                 \end{lstlisting}
             
-               In Python l'indicizzazione delle liste parte dall'indice $0$, dunque la $1\degree$ proiezione dello Stack è identificata dall'indice $0$, la $2\degree$ dall'indice $1$ e così via.
+               In Python l'indicizzazione delle liste parte dall'indice $0$, dunque la $1\degree$ proiezione dello stack è identificata dall'indice $0$, la $2\degree$ dall'indice $1$ e così via.
         
-        \section{Normalizzazione Stack MHA}
+        \section{Normalizzazione stack MHA}
             \label{sec:norm-disp}
             
             \par
-                Uno Stack di proiezione, convertito da formato RAW a formato MHA, deve essere normalizzato secondo la procedura descritta in Sezione \ref{sec:normalizzazione} per poter essere correttamente utilizzato dagli algoritmi di ricostruzione forniti da RTK. Ciò richiede l'ottenimento dei valori $Io$, che possono essere recuperati dalla lista \textit{proj\textunderscore obj\textunderscore list} generata a partire dal file CSV associato allo Stack, come descritto in Sezione \ref{sec:lettura-csv}. La lettura dello Stack MHA è invece affidata al metodo \textit{ReadImage()} di SimpleITK, il quale genera un' oggetto Image \cite{sitk-image}:
+                Uno stack di proiezioni, convertito da formato RAW a formato MHA, deve essere normalizzato secondo la procedura descritta in Sezione \ref{sec:normalizzazione} per poter essere correttamente utilizzato dagli algoritmi di ricostruzione forniti da RTK. Ciò richiede l'ottenimento dei valori $Io$, che possono essere recuperati dalla lista \textit{proj\textunderscore obj\textunderscore list} generata a partire dal file CSV associato allo stack, come descritto in Sezione \ref{sec:lettura-csv}. La lettura dello stack MHA è invece affidata al metodo \textit{ReadImage()} di SimpleITK, il quale genera un' oggetto Image \cite{sitk-image}:
                 
                 \begin{lstlisting}[language=python, frame=bt]
 stack = sitk.ReadImage(proj_stack.mha)
                 \end{lstlisting}
                 
-                L'oggetto \textit{stack} possiede ora i metodi \textit{GetWidth()}, \textit{GetHeight()} e \textit{GetDepth()}, utili per reperire le informazioni dimensionali dello Stack, precedentemente inserite nella sua creazione (Sezione \ref{sec:conversione}):
+                L'oggetto \textit{stack} possiede ora i metodi \textit{GetWidth()}, \textit{GetHeight()} e \textit{GetDepth()}, utili per reperire le informazioni dimensionali dello stack, precedentemente inserite nella sua creazione (Sezione \ref{sec:conversione}):
                 \begin{lstlisting}[language=python, frame=bt]
 width = stack.GetWidth()
 height = stack.GetHeight()
@@ -649,15 +653,15 @@ depth = stack.GetDepth()
 norm_proj_list = []
                 \end{lstlisting}
                 
-                Si è successivamente configurato un ciclo FOR, iterante sulla profondità \textit{depth}, corrispondente al numero di proiezioni presenti nello Stack:
+                Si è successivamente configurato un ciclo FOR, iterante sulla profondità \textit{depth}, corrispondente al numero di proiezioni presenti nello stack:
                 \begin{lstlisting}[language=python, frame=bt]
 for zslice in range(0, depth):
                 \end{lstlisting} 
 
-                La variabile \textit{zslice} assume i valori interi $0 \leq zslice < depth$ in quanto la funzione built-in \textit{range()} \cite{python-range} di Python genera una sequenza di interi \textit{iterable} \cite{python-iterable} appartenenti al dominio appena indicato. La procedura di normalizzazione avviene all'interno di questo ciclo, dove si susseguono ripetutamente le seguenti fasi, fino all'esaurimento dello Stack:
+                La variabile \textit{zslice} assume i valori interi $0 \leq zslice < depth$ in quanto la funzione built-in \textit{range()} \cite{python-range} di Python genera una sequenza di interi \textit{iterable} \cite{python-iterable} appartenenti al dominio appena indicato. La procedura di normalizzazione avviene all'interno di questo ciclo, dove si susseguono ripetutamente le seguenti fasi, fino all'esaurimento dello stack:
                 
                 \begin{enumerate}
-                    \item \textbf{Estrazione di una singola Proiezione}. Viene affidata alla Classe \textit{ExtractImageFilter} \cite{sitk-estractor} di SimpleITK. Questa permette il collasso delle dimensioni di uno Stack MHA tridimensionale. Per poter specificare quale dimensione collassare, l'istanza di ExtractImageFilter, chiamata \textit{extractor} (estrattore), dev'essere configurata mediante i metodi \textit{SetSize()} e \textit{SetIndex()}. Il metodo \textit{SetSize()} specifica la dimensione dell'immagine da ottenere: questa conterrà $0$ nella coordinata dimensionale da collassare, mentre le rimanenti dimensioni rimarranno intatte. Il metodo \textit{SetIndex()} identifica la proiezione interna allo Stack da estrarre, impostando a zero le coordinate non-zero indicate da \textit{SetSize()} ed impostando l'indice di estrazione nella coordinata rimanente:
+                    \item \textbf{Estrazione di una singola Proiezione}. Viene affidata alla classe \textit{ExtractImageFilter} \cite{sitk-estractor} di SimpleITK. Questa permette il collasso delle dimensioni di uno stack MHA tridimensionale. Per poter specificare quale dimensione collassare, l'istanza di ExtractImageFilter, chiamata \textit{extractor} (estrattore), dev'essere configurata mediante i metodi \textit{SetSize()} e \textit{SetIndex()}. Il metodo \textit{SetSize()} specifica la dimensione dell'immagine da ottenere: questa conterrà $0$ nella coordinata dimensionale da collassare, mentre le rimanenti dimensioni rimarranno intatte. Il metodo \textit{SetIndex()} identifica la proiezione interna allo stack da estrarre, impostando a zero le coordinate non-zero indicate da \textit{SetSize()} ed impostando l'indice di estrazione nella coordinata rimanente:
                     
                     \begin{lstlisting}[language=python, frame=bt]
 extractor = sitk.ExtractImageFilter()
@@ -685,7 +689,7 @@ proj = proj * float(-1)
 norm_proj_list.append(proj)
                     \end{lstlisting}
                     
-                    In questo modo l'ordine delle proiezioni normalizzate inserite in lista rispecchia l'ordine dello Stack MHA originale nella direzione Z.
+                    In questo modo l'ordine delle proiezioni normalizzate inserite in lista rispecchia l'ordine dello stack MHA originale nella direzione Z.
                 \end{enumerate}
                 
                 Al termine del ciclo FOR, tutte le proiezioni bidimensionali normalizzate risiedono in lista. Il metodo JoinSeries() \cite{sitk-joinseries}, messo a disposizione da SimpleITK, unisce una serie di oggetti Image $N$ dimensionali, in un' unico oggetto Image a dimensione $N+1$:
@@ -694,19 +698,19 @@ norm_proj_list.append(proj)
 norm_stack = sitk.JoinSeries(norm_proj_list)
                 \end{lstlisting}
                     
-                Il metodo accetta come parametro la lista precedentemente creata. L'oggetto Image \textit{norm\textunderscore stack} contiene, in ordine, tutte le proiezioni normalizzate. Per assegnare all'oggetto \textit{norm\textunderscore stack} le meta-informazioni (Origin, Spacing e Direction) dello Stack originale (\textit{stack}), si ricorre al metodo \textit{CopyInformation()} \cite{sitk-copy-information} appartenente all'oggetto Image:
+                Il metodo accetta come parametro la lista precedentemente creata. L'oggetto Image \textit{norm\textunderscore stack} contiene, in ordine, tutte le proiezioni normalizzate. Per assegnare all'oggetto \textit{norm\textunderscore stack} le meta-informazioni (Origin, Spacing e Direction) dello stack originale (\textit{stack}), si ricorre al metodo \textit{CopyInformation()} \cite{sitk-copy-information} appartenente all'oggetto Image:
                 
                 \begin{lstlisting}[language=python, frame=bt]
 norm_stack.CopyInformation(stack)
                 \end{lstlisting}
                 
-                Per poter assicurare una corretta lettura dello Stack normalizzato da parte degli algoritmi di ricostruzione forniti da RTK ci si assicura che il TAG Origin sia esattamente impostato come da impostazione di default. Per applicare quanto descritto è possibile sfruttare il metodo \textit{SetOrigin()}:
+                Per poter assicurare una corretta lettura dello stack normalizzato da parte degli algoritmi di ricostruzione forniti da RTK ci si assicura che il TAG Origin sia esattamente impostato come da impostazione di default. Per applicare quanto descritto è possibile sfruttare il metodo \textit{SetOrigin()}:
                 
                 \begin{lstlisting}[language=python, frame=bt]
 norm_stack.SetOrigin([0,0,0])
                 \end{lstlisting}
                 
-                Il nuovo Stack normalizzato può essere infine esportato come file MHA utilizzando il metodo \textit{WriteImage()} di SimpleITK:
+                Il nuovo stack normalizzato può essere infine esportato come file MHA utilizzando il metodo \textit{WriteImage()} di SimpleITK:
                 
                 \begin{lstlisting}[language=python, frame=bt]
 sitk.WriteImage(norm_stack, normalized.mha)
@@ -715,7 +719,7 @@ sitk.WriteImage(norm_stack, normalized.mha)
         \section{Generazione geometria XML}
             \label{sec:rtk-build-geometry}
             \par
-                Come descritto in Sezione \ref{sec:rtk-geometry}, RTK necessita di informazioni relative alla geometria di acquisizione per poter correttamente ricostruire un set di proiezioni. SimpleRTK, essendo il wrapper Python di RTK, fornisce le medesima classe necessaria alla descrizione: \textit{ThreeDCircularProjectionGeometry()}. SimpleRTK fornisce inoltre un'altra Classe chiamata \textit{ThreeDCircularProjectionGeometryXMLFileWriter()} la quale si occupa del trasferimento di un'istanza di \textit{ThreeDCircularProjectionGeometry()} su file XML. Il file generato, potrà essere utilizzato dagli algoritmi di ricostruzione forniti da RTK.
+                Come descritto in Sezione \ref{sec:rtk-geometry}, RTK necessita di informazioni relative alla geometria di acquisizione per poter correttamente ricostruire un set di proiezioni. SimpleRTK, essendo il wrapper Python di RTK, fornisce le medesima classe necessaria alla descrizione: \textit{ThreeDCircularProjectionGeometry()}. SimpleRTK fornisce inoltre un'altra classe chiamata \textit{ThreeDCircularProjectionGeometryXMLFileWriter()} la quale si occupa del trasferimento di un'istanza di \textit{ThreeDCircularProjectionGeometry()} su file XML. Il file generato, potrà essere utilizzato dagli algoritmi di ricostruzione forniti da RTK.
                 
             \bigskip
             \par
@@ -735,19 +739,19 @@ dv = float(input("insert dv, in mm\n"))
 Nv = float(input("insert Nv Image Height\n"))
                 \end{lstlisting}
                     
-                I valori \textit{SID} ed \textit{SDD} non necessitano di elaborazione. I rimanenti valori letti $d_u$, $d_v$ ed $N_v$ sono necessari al calcolo di \textit{ProjOffsetX} e \textit{ProjOffsetY}. Questi ultimi indicano l'offset (in millimetri) nel sistema di riferimento $(x,y)$, dall'origine del detector all'origine dell'immagine (proiezione normalizzata bidimensionale). Il TAG Origin dello Stack di proiezione normalizzato, è stato forzatamente impostato al valore di default ($0$ in ciascuna componente) in Sezione \ref{sec:norm-disp}. Ciò significa che la singola proiezione bidimensionale, se considerata singolarmente, ha origine $(0,0)$ nel sistema di riferimento $(x,y)$. L'origine del detector nel sistema di riferimento $(x,y)$ può essere ricavata a partire dal riferimento $(u,v)$ utilizzando sia le informazioni inserite nel file di testo descrittivo che l'equazione (\ref{eq:uv-conversion}):
+                I valori \textit{SID} ed \textit{SDD} non necessitano di elaborazione. I rimanenti valori letti $d_u$, $d_v$ ed $N_v$ sono necessari al calcolo di \textit{ProjOffsetX} e \textit{ProjOffsetY}. Questi ultimi indicano l'offset (in millimetri) nel sistema di riferimento $(x,y)$, dall'origine del detector all'origine dell'immagine (proiezione normalizzata bidimensionale). Il TAG Origin dello stack di proiezioni normalizzato, è stato forzatamente impostato al valore di default ($0$ in ciascuna componente) in Sezione \ref{sec:norm-disp}. Ciò significa che la singola proiezione bidimensionale, se considerata singolarmente, ha origine $(0,0)$ nel sistema di riferimento $(x,y)$. L'origine del detector nel sistema di riferimento $(x,y)$ può essere ricavata a partire dal riferimento $(u,v)$ utilizzando sia le informazioni inserite nel file di testo descrittivo che l'equazione (\ref{eq:uv-conversion}):
                     
                 \begin{equation}
-                    (N_{iso\textunderscore x}, N_{iso\textunderscore y}) = (N_{iso\textunderscore u} , N_v - 1 - N_{iso\textunderscore v})
+                    (N_{iso\_x}, N_{iso\_y}) = (N_{iso\_u} , N_v - 1 - N_{iso\_v})
                 \end{equation}
                     
                 A questo punto i parametri \textit{ProjOffsetX} e \textit{ProjOffsetY} possono essere espressi in millimetri, per ciascuna proiezione, come segue:
                 
                 \begin{equation}
-                    (projOffsetX, projOffsetY) = (- N_{iso\textunderscore x} du, - N_{iso\textunderscore y} dv)
+                    (projOffsetX, projOffsetY) = (- N_{iso\_x} du, - N_{iso\_y} dv)
                 \end{equation}
                     
-                Le informazioni mancanti, $N_{iso\textunderscore u}$, $N_{iso\textunderscore v}$ e \textit{gantryAngle} (Angle) sono recuperate da file CSV generando la lista \textit{proj\textunderscore obj\textunderscore list} mediante la procedura descritta in Sezione \ref{sec:lettura-csv}. Iterando su questa lista mediante un ciclo FOR è possibile chiamare $n$ volte il metodo \textit{AddProjection()}, con $n$ pari al numero di proiezioni inserite nello Stack normalizzato, generando correttamente la geometria:
+                Le informazioni mancanti, $N_{iso\_u}$, $N_{iso\_v}$ e \textit{gantryAngle} (Angle) sono recuperate da file CSV generando la lista \textit{proj\textunderscore obj\textunderscore list} mediante la procedura descritta in Sezione \ref{sec:lettura-csv}. Iterando su questa lista mediante un ciclo FOR è possibile chiamare $n$ volte il metodo \textit{AddProjection()}, con $n$ pari al numero di proiezioni inserite nello stack normalizzato, generando correttamente la geometria:
                     
                 \begin{lstlisting}[language=python, frame=bt]
 for p in proj_obj_list: 
@@ -779,13 +783,13 @@ gw.Execute(geometry)
                 Come descritto in Sezione \ref{sec:openrtk}, RTK fornisce una serie di algoritmi di ricostruzione sia sequenziali che iterativi. Questi sono disponibili come file eseguibili, all'interno della directory \textit{RTK-bin/bin} e l'intera lista è consultabile nella documentazione ufficiale \cite{rtk-recon-list}. Ciascun algoritmo possiede una serie di opzioni:
                 
                 \begin{itemize}
-                    \item \texttt{-p} Percorso dello Stack MHA normalizzato, generato in Sezione \ref{sec:norm-disp};
-                    \item \texttt{-g} Percorso del file di geometria XML, generato in Sezione \ref{sec:rtk-build-geometry};
-                    \item \texttt{-o} Percorso del file di output;
-                    \item \texttt{-r} Nome dei file di output con estensione MHA;
-                    \item \texttt{--dimension} Dimensione in pixel nelle 3 direzioni, relativa al volume ricostruito;
-                    \item \texttt{--spacing} Spacing nelle 3 direzioni, relativo al volume ricostruito;
-                    \item \texttt{-v} Opzione VERBOSE, se impostata, l'algoritmo stamperà su \textit{STDOUT} informazioni relative al processo di ricostruzione.
+                    \item \textbf{-p} Directory nella quale è contenuto lo stack di proiezioni;
+                    \item \textbf{-r} Nome dello stack di proiezioni MHA generato in Sezione \ref{sec:norm-disp};
+                    \item \textbf{-g} File di geometria XML, generato in Sezione \ref{sec:rtk-build-geometry};
+                    \item \textbf{-o} File di output, con estensione MHA;
+                    \item \textbf{--dimension} Dimensione in pixel nelle 3 direzioni, relativa al volume ricostruito;
+                    \item \textbf{--spacing} Spacing nelle 3 direzioni, relativo al volume ricostruito;
+                    \item \textbf{-v} Opzione VERBOSE, se impostata, l'algoritmo stamperà su \textit{STDOUT} informazioni relative al processo di ricostruzione.
                 \end{itemize}
                 
                 Ad esempio, se il volume di ricostruzione ha Spacing (0.1, 0.1, 0.1) millimetri e Dimensione (256, 256, 256) pixel, il file \textit{rtkfdk} (FDK sequenziale, Sezione \ref{sec:cone-beam}) può essere eseguito in questo modo:
@@ -801,6 +805,8 @@ gw.Execute(geometry)
 -v
                 \end{lstlisting}
             
+            \par
+            \bigskip
                 L'output su STDOUT è il seguente:
             
                 \begin{lstlisting}[language=bash, frame=bt]
@@ -831,26 +837,277 @@ Backprojection: 180.379 s
                 
             \bigskip
             \par
-                E' possibile testare tutti gli altri algoritmi di ricostruzione all'interno della cartella \textit{RTK-bin/bin} senza dover rigenerare il file di geometria XML e lo Stack di proiezione MHA normalizzato. 
+                E' possibile testare tutti gli altri algoritmi di ricostruzione all'interno della cartella \textit{RTK-bin/bin} senza dover rigenerare il file di geometria XML e lo stack di proiezione MHA normalizzato. 
             
             
     \chapter{Creazione Package Python}
         \par
-            Le procedure descritte da Sezione \ref{sec:lettura-csv} a Sezione \ref{sec:ricostruzione}, inizialmente implementate come script Python indipendenti, sono state riassemblate in moduli e collezionate in un unico Package. Il software è stato successivamente esteso presentando un'interfaccia utente testuale ed implementando un'architettura a directory per la lettura automatica delle informazioni. Infine, si è provveduto alla registrazione del Package all'interno del repository PyPI permettendo l'installazione del Package mediante il package manager PIP, disponibile di default a partire dalla versione 3.4 di Python. Il progetto è stato sviluppato sotto licenza GNU GPL v3 \cite{gpl-v3} all'interno del CVS\footnote{Control Version System} GitHub ed il codice sorgente è reperibile all'interno del repository RTK-handler \cite{rtk-handler-source}. 
+            Le procedure descritte da Sezione \ref{sec:lettura-csv} a Sezione \ref{sec:ricostruzione}, inizialmente implementate come script Python indipendenti, sono state riassemblate in una serie di moduli, collezionati in un unico package. Il software è stato successivamente esteso implementando un'interfaccia testuale ed un'architettura a directory per la lettura automatica delle informazioni. Il progetto è stato sviluppato con licenza GNU GPL v3 \cite{gpl-v3} ed il codice sorgente è reperibile all'interno del repository GitHub RTK-handler \cite{rtk-handler-source}. Seguendo la guida ufficiale PyPUG \cite{python-packaging} è stato possibile registrare il package all'interno del Package Index \footnote{Un repository software avente un'interfaccia WEB} PyPI \cite{rtk-handler-pypi}, rendendone possibile l'installazione mediante PIP. Il software richiede che le dipendenze RTK, SimpleRTK, SimpleITK e pyexcel siano soddisfatte. Il suo funzionamento è testato su Python versione 3.5.2.
             
+        \section{Esecuzione di Processi Esterni}
+        \label{esecuzione-processi-esterni}
+            \par
+                Python permette l'esecuzione di processi esterni sfruttando il modulo di libreria standard \textit{subprocess} \cite{python-subprocess}. E' stata configurata una funzione chiamata \textit{execute(command)} definita all'interno del modulo \textit{tools.py} che esegue il comando \textit{command}, rappresentato come lista, aprendo un canale di comunicazione PIPE tra il processo eseguito ed il processo Python in ascolto:
+                        
+                \begin{lstlisting}[language=python, frame=bt]
+popen = subprocess.Popen(
+    command,
+    stdout=subprocess.PIPE,
+    universal_newlines=True)
+                \end{lstlisting}
+                        
+                L'opzione \textit{universal\_newlines} abilita l'Universal Newline Support \cite{python-UNS} che permette l'esecuzione di \textit{readline} su \textit{popen.stdout}:
+
+                \begin{lstlisting}[language=python, frame=bt]
+for line in iter(popen.stdout.readline, ""):
+    yield line
+                \end{lstlisting}
+                        
+                La keyword \textit{yield} \cite{python-yield} rende \textit{execute()} una \textit{generator-function}, un particolare tipo di funzione che restituisce un'oggetto generator \cite{python-generator} in fase di invocazione. L'esecuzione del corpo della funzione avviene quando un ciclo FOR esterno utilizza l'oggetto \textit{execute(command)}:
+                        
+                \begin{lstlisting}[language=python, frame=bt]
+for line in execute(command):
+    print(line, end="")
+                \end{lstlisting}
+                
+                L'esecuzione del ciclo interno ed esterno proseguono in modo sincrono e l'oggetto \textit{generator} risulta vuoto quando la \textit{generator-function} non incontra più la keyword \textit{yield}. Ciò consente la lettura in tempo reale dei valori restituiti su PIPE senza dover aspettare il termine del processo invocato. Quando il processo eseguito termina, viene chiusa la PIPE su STDOUT e viene controllato lo stato di uscita del processo, restituendo eventuali messaggi di errore \cite{subprocess-calledprocesserror}.
             
-        \section{Architettura}
+        \section{Configurazione Iniziale}
+        \label{sec:configurazione-iniziale}
+            \par
+                Il package, in fase di installazione (\texttt{pip install RTK-handler}), genera automaticamente un file eseguibile all'interno della cartella di sistema \textit{/bin} chiamato \textit{RTK-handler}. Ciò è possibile grazie ad un approccio chiamato EntryPoint \cite{python-entry-point} che permette ad una funzione appartenente al package di essere eseguita mediante linea di comando. La funzione invocata è \textit{main()} descritta all'interno del modulo \textit{command\textunderscore line.py}. La funzione invoca il parser \textit{argparse} \cite{python-argparse} per la gestione delle opzioni a linea di comando.
+                
+            \bigskip
+            \par
+                Durante il primo utilizzo è previsto l'inserimento del full-path della cartella \textit{RTK-bin} utilizzando l'opzione "\textit{-p}". L'attivazione dell'opzione esegue la funzione \textit{insert\_RTK\_path()} descritta all'interno di \textit{tools.py}:      
             
-        \section{Creazione Package}
-        \section{Gestione Directory}
-        \section{Interfaccia utente}
-        \section{Registrazione su PyPI}
-        \section{Estensione}
+                \begin{lstlisting}[frame=bt]
+[dlessio@vaio RTK-bin]$ RTK-handler -p
+Enter the full RTK-bin path
+/home/dlessio/OpenRTK/RTK-bin
+Testing if the path is correct...
+RTK Hello World!
+Configuration success!
+                \end{lstlisting}
+            
+                Si effettua un controllo sulla correttezza del path inserito eseguendo, mendiate la funzione \textit{execute(command)}, il file \textit{HelloWorld} all'interno di \textit{RTK-bin/bin}. Se il processo viene eseguito correttamente, si stampa su STDOUT un messaggio di successo, altrimenti, un messaggio di errore. Nel caso in cui la configurazione sia andata a buon fine questa viene esportata su file (all'interno della home utente) sfruttando \textit{pickle} \cite{python-pickle}, come nel seguente esempio:
+                
+                \begin{lstlisting}[language=python, frame=bt]
+import pickle
+
+rtk_path = input("Enter the full RTK-bin path\n")
+store_path = '/home/dlessio/.RTK_handler.pkl'
+to_store = {'rtk_path': rtk_path}
+
+f = open(store_path, "wb")
+pickle.dump(to_store, f)
+f.close()
+                \end{lstlisting}
+                
+                Le funzioni \textit{pickle.dump()} \cite{pkl-dump} e \textit{pickle.load()} \cite{pkl-load} sono responsabili della serializzazione e de-serializzazione di oggetti Python scritti su file. Il recupero dell'oggetto avviene in modo simmetrico:
+                
+                \begin{lstlisting}[language=python, frame=bt]  
+f = open(store_path, "rb")
+rtk_path = pickle.load(f)
+f.close()
+                \end{lstlisting}
+                
+        \section{Gerarchia delle Directory}
+        \label{sec:architettura-directory}
+            \par
+                Abilitando l'opzione "\textit{-s}" all'interno della cartella di progetto (ProjectFolder), RTK-handler genera una struttura a directory gerarchica, all'interno della quale l'utente può inserire i file descritti nelle Sezioni \ref{sec:stack-di-proiezione-raw} e \ref{sec:conversione} (stack MHA non normalizzato e file CSV).
+               
+            \bigskip
+                \dirtree{%
+                    .1 ProjectFolder.
+                    .2 csv.
+                    .3 file.csv.
+                    .2 geometry.
+                    .2 projections.
+                    .3 non\_normalized.
+                    .4 stack.mha.
+                    .3 normalized.
+                    .2 reconstructions.
+                    .3 rtkfdk.
+                }
+             
+            \bigskip
+            \par
+                Per la loro creazione si è inizialmente creato un dizionario Python \cite{python-dictionary}, avente le seguenti chiavi e valori:  
+                        
+                \begin{lstlisting}[language=python, frame=bt]
+path_of = {
+    'csv': os.path.join('csv'),
+    'geometry': os.path.join('geometry'),
+    'projections': os.path.join('projections'),
+    'projections_non_normalized': os.path.join(
+        'projections',
+        'non_normalized'),
+    'projections_normalized': os.path.join(
+        'projections',
+        'normalized'),
+    'reconstructions': os.path.join(
+        'reconstructions'),
+    'reconstructions_rtkfdk': os.path.join(
+        'reconstructions',
+        'rtkfdk'),
+}
+                \end{lstlisting}
+                        
+                Si è utilizzato il modulo di libreria standard \textit{os.path} \cite{os-path} per la generazione automatica di percorsi OS-indipendent\footnote{Windows utilizza il backslash "\textbackslash" per definire i path, i sistemi UNIX utilizzano lo slash "/".}. La funzione \textit{os.path.join()} \cite{os-path-join} ne consente la creazione ed un'eventuale concatenazione. 
+            
+            \bigskip
+            \par
+                In Python, le chiavi di un dizionario non mantengono l'ordine nel quale sono state inserite. Alfabeticamente però, le chiavi inserite rispecchiano l'ordine voluto. E' stato quindi possibile sfruttare la funzione \textit{sorted()} \cite{python-sorted} e la funzione \textit{os.mkdir()} \cite{os-mkdir} per la generazione delle cartelle:
+                        
+                \begin{lstlisting}[language=python, frame=bt]
+for directory in sorted(path_of):
+    os.mkdir(path_of[directory])
+                \end{lstlisting}
+                        
+                Questa struttura consente una gestione ordinata delle informazioni. Le procedure di ricostruzione, come visto in Sezione \ref{sec:ricostruzione}, richiedono una lunga serie di parametri e la loro configurazione può risultare dispendiosa in termini di tempo. RTK-handler gestisce la composizione del comando \textit{command}, in modo che la lettura ed il salvataggio delle informazioni avvenga all'interno di queste directories.         
+    
+        \section{Moduli Implementati}
+            \par
+                In Python più Classi e funzioni possono essere incluse in un unico file, chiamato Modulo \cite{python-modules}. Di seguito si presenta l'elenco e la descrizione dei moduli implementati:
+            
+            \bigskip
+            \par
+                \textbf{command\_line.py} - Invoca il parser \textit{argparse} per la gestione automatica delle opzioni a linea di comando. Un'opzione può essere aggiunta come segue:
+                
+                \begin{lstlisting}[language=python, frame=bt]
+parser = argparse.ArgumentParser()
+
+parser.add_argument(
+        '-s', 
+        action='store_true', 
+        default=False,
+        dest='make_structure',
+        help='create the folder structure')
+                \end{lstlisting}
+                
+                Se invocata l'opzione "-h", il parametro compare all'interno del menù di aiuto e la sua descrizione è definita dal parametro \textit{help}. Il parser, in fase di esecuzione, controlla se l'opzione è stata attivata, in questo caso l'attributo \textit{make\_structure} assume il valore \textit{True} (\textit{False} di default), rendendo possibile l'esecuzione di determinate funzioni:
+                
+                \begin{lstlisting}[language=python, frame=bt]
+options = parser.parse_args()
+                
+if options.make_structure is True:
+    make_structure()
+                \end{lstlisting}
+               
+            \bigskip
+            \par
+                \textbf{csv\_handler.py} - In questo modulo si è definita la classe Projection ed un'ulteriore classe chiamata \textit{CsvHandler} che si occupa della generazione e restituzione della lista \textit{proj\textunderscore obj\textunderscore list}, seguendo le procedure descritte in Sezione \ref{sec:lettura-csv}. Il recupero del file CSV viene gestito mediante un semplice meccanismo di ricerca all'interno della directory \textit{csv} sfruttando il modulo \textit{glob} \cite{python-glob}, in un modo analogo al seguente:
+                
+                \begin{lstlisting}[language=python, frame=bt]
+list_of_csv = glob.glob('ProjectFolder/csv/*.csv')
+                \end{lstlisting}
+                
+                La funzione \textit{glob()} restituisce una lista di file aventi estensione CSV all'interno della directory \textit{ProjectFolder/csv}. Vengono gestiti i vari casi: lista vuota, lista con più elementi, lista con un solo elemento. Nel caso in cui la lista contenga un solo elemento, il sistema provvede alla lettura dello stesso (mediante \textit{pyexcel}), altrimenti restituisce un messaggio di errore.
+                
+            \bigskip
+            \par
+                \textbf{projections\_handler.py} - All'interno è definita la classe \textit{ProjectionsHandler} che implementa la procedura di normalizzazione descritta in Sezione \ref{sec:norm-disp}. E' inoltre definita la funzione \textit{nornalize\_projections()} che si occupa della creazione di un'istanza di ProjectionsHandler e della sua esecuzione. Il recupero dello stack di proiezioni non normalizzate avviene mediante un semplice meccanismo di ricerca analogo al precedente, all'interno della directory \textit{projections/non\textunderscore normalized}. Le informazioni relative al file CSV vengono recuperate sfruttando la classe \textit{CsvHandler}. 
+                
+            \bigskip
+            \par
+               \textbf{geometry\_maker.py} - Contiene la classe \textit{GeometryMaker} che si occupa della generazione del file di geometria XML descritta in Sezione \ref{sec:rtk-build-geometry}. E' inoltre definita la funzione \textit{create\_geometry()} la quale si occupa della creazione di un'istanza di GeometryMaker e della sua esecuzione. Il recupero delle informazioni da file CSV avviene sfruttando la classe \textit{CsvHandler} e la lettura delle informazioni da STDIN è effettuata all'interno del costruttore \_\_init\_\_().
+            
+            \bigskip
+            \par
+                \textbf{tools.py} - Contiene una serie di funzioni:
+                
+                \begin{itemize}
+                        
+                    \item \textit{insert\textunderscore RTK\textunderscore path()} - Procedura invocata in fase di configurazione iniziale mediante l'opzione "\textit{-p}" (Sezione \ref{sec:configurazione-iniziale}).
+                        
+                    \item \textit{assert\_RTK\_path()} - Assicura che il full-path di \textit{RTK-bin} sia presente.
+                        
+                    \item \textit{make\_structure()} - Genera la struttura delle directory, descritta in Sezione \ref{sec:architettura-directory}.
+                        
+                    \item \textit{assert\textunderscore structure()} - Assicura che la struttura delle directory sia presente.
+                        
+                    \item \textit{clean\textunderscore structure()} - Rimuove la struttura delle directory preservando i file all'interno della directory di progetto (\textit{ProjectFolder}).
+                        
+                    \item \textit{execute(command)} - Permette l'esecuzione del comando \textit{command} come descritto in Sezione \ref{esecuzione-processi-esterni}.
+                        
+                    \item \textit{add\_RTK\_path\_to(command)} - Aggiunge al comando \textit{command} il full-path del direttorio \textit{RTK-bin/bin}, ricavato mediante \textit{pickle.load()} (Sezione \ref{sec:configurazione-iniziale}).
+                        
+                    \item \textit{rtkfdk\_reconstruction()} - Imposta il comando \textit{command} in modo che esegua il processo di ricostruzione esterno \textit{rtkfdk}, definendone le opzioni come descritto nella Sezione \ref{sec:ricostruzione}:
+                        
+                    \begin{lstlisting}[language=python, frame=bt]
+command = [
+    'rtkfdk',
+    '-p',
+    str(projections_folder),
+    '-r',
+    str(projections_name),
+    '-g',
+    str(geometry_path),
+    '-o',
+    str(output_path),
+    '--dimension',
+    str(dimension_x),
+    str(dimension_y),
+    str(dimension_z),
+    '--spacing',
+    str(spacing_x),
+    str(spacing_y),
+    str(spacing_z),
+    '-v'
+]
+                    \end{lstlisting}
+                        
+                    Successivamente aggiunge al comando \textit{command} il full-path di RTK-bin sfruttando la funzione \textit{add\_RTK\_path\_to(command)}:
+                        
+                    \begin{lstlisting}[language=python, frame=bt]
+command = add_RTK_path_to(command)
+                        \end{lstlisting}
+                        
+                    Infine esegue la generator-function \textit{execute(command)}, come descritto in Sezione \ref{esecuzione-processi-esterni}.
+                        
+                \end{itemize}                    
+        
+        \section{Utilizzo}
+        \label{sec:utilizzo}
+        
+            \par
+                L'elenco delle opzioni disponibili è consultabile eseguendo \texttt{RTK-handler -h}:
+                
+                \bigskip
+                \begin{lstlisting}[frame=bt]
+-h, --help     show this help message and exit
+-s             create the folder structure
+-g             create the XML geometry
+-n             normalize MHA stack
+-r             reconstruct with rtkfdk
+-c             delete the folder structure
+-p             insert RTK-bin folder path
+-v, --version  show program's version number and exit
+                \end{lstlisting}
+            
+            \bigskip
+            \par
+                L'utente, posizionandosi all'interno di una directory vuota, può generare la struttura gerarchica delle directory abilitando il paramentro "-s". I file a disposizione (stack MHA non normalizzato e file CSV) possono ora essere inseriti all'interno della struttura, come descritto in Sezione \ref{sec:architettura-directory}. A questo punto è possibile avviare le procedure di normalizzazione, di generazione della geometria XML e di ricostruzione \textit{rtkdfk} in un singolo comando:
+                
+                \begin{lstlisting}[language=bash, frame=bt]
+RTK-handler -ngr
+                \end{lstlisting}
+                
+                In questo caso, le funzioni normalize\_projections(), create\_geometry() e rtkfdk\_reconstruction() vengono eseguite in sequenza, rispettando la propedeuticità. Il file di geometria XML e lo stack di proiezioni MHA normalizzato, se correttamente generati, possono essere conservati per poterne testare la lettura da parte di altri algoritmi di ricostruzione presenti nella cartella RTK-bin, non supportati da RTK-handler. Nel caso in cui le procedure invocate con "-n", "-g" e "-r" vengano eseguite più volte, i file generati all'interno delle rispettive directory verranno sovrascritti. E' quindi opportuno generare manualmente delle copie di backup nel caso in cui si vogliano preservare le informazioni.
+                
+            \bigskip
+            \par
+                RTK-handler consente un considerevole risparmio di tempo nell'applicazione delle procedure evitando la continua esecuzione di script indipendenti e limitando l'introduzione di errori dovuti ad uno scorretto settaggio dei parametri. Una possibile estensione riguarda il supporto per altri algoritmi di ricostruzione all'interno della cartella \textit{RTK-bin/bin}.
             
     \chapter{Risultati e Conclusioni}
         \section{Risultati}
-        \section{Conclusioni}
+            \par
+                La documentazione ufficiale di OpenRTK, versione 1.3.0, generata a partire dai sorgenti C++ mediante il tool \textit{Doxygen} \cite{doxygen} è carente di informazioni riguardo il settaggio dello stack di proiezioni e riguardo le configurazioni necessarie alla generazione della geometria XML. Questi due procedimenti sono strettamente correlati. Nonostante fornisca discreti tutorial riguardo alcuni apparati di acquisizone commerciali (VARIAN OBI, ELEKTA, etc.) non fornisce con adeguato livello di dettaglio i procedimenti necessari alla ricostruzione di stack in formato grezzo (RAW) affiancati ad informazioni standard sull'apparato di acquisizione. Il corretto utilizzo di RTK su formati RAW richiede inoltre una corretta comprensione di ITK e di come questo effettui la lettura delle immagini supportate. ITK, versione 4.10, possiede una documentazione molto più estesa e dettagliata, in quanto il progetto è maturo e stabile. 
 
+        \section{Conclusioni}
+            \par
+                Lo sviluppo di questa Tesi ha permesso la comprensione del software OpenRTK e di come debbano essere configurati gli stack di proiezioni per poter essere correttamente elaborati dagli algoritmi di ricostruzione. RTK fornisce un'elevato quantitativo di algoritmi iterativi che in questa trattazione non sono stati esplorati. La loro esecuzione è elementare una volta compreso il funzionamento del sistema.
 
 
 \newpage
@@ -1025,8 +1282,67 @@ Backprojection: 180.379 s
     \bibitem{rtk-handler-source}
         \url{https://github.com/dannylessio/RTK-handler}
 
-
-    
+    \bibitem{python-packaging}
+        \url{https://packaging.python.org/}
         
+    \bibitem{rtk-handler-pypi}
+        \url{https://pypi.python.org/pypi/RTK-handler/0.1}
+
+    \bibitem{python-subprocess}
+        \url{https://docs.python.org/3/library/subprocess.html}    
+
+    \bibitem{python-UNS}
+        \url{https://www.python.org/dev/peps/pep-0278/}
+
+    \bibitem{python-yield}
+        \url{https://docs.python.org/3.5/reference/simple_stmts.html#the-yield-statement}
+
+    \bibitem{python-generator}
+        \url{https://docs.python.org/3.5/tutorial/classes.html#generators}
+
+    \bibitem{subprocess-calledprocesserror}
+        \url{https://docs.python.org/3/library/subprocess.html#subprocess.CalledProcessError}
+
+    \bibitem{python-entry-point}
+        \url{http://python-packaging.readthedocs.io/en/latest/command-line-scripts.html#the-console-scripts-entry-point}
+
+    \bibitem{python-argparse}
+        \url{https://docs.python.org/3/library/argparse.html}
+
+    \bibitem{python-pickle}
+        \url{https://docs.python.org/3/library/pickle.html}
+    
+    \bibitem{pkl-dump}
+        \url{https://docs.python.org/3/library/pickle.html#pickle.dump}
+    
+    \bibitem{pkl-load}
+        \url{https://docs.python.org/3/library/pickle.html#pickle.load}
+    
+    \bibitem{python-dictionary}
+        \url{https://docs.python.org/3/tutorial/datastructures.html#dictionaries}
+
+    \bibitem{os-path}
+        \url{https://docs.python.org/3/library/os.path.html}
+
+     \bibitem{os-path-join}
+        \url{https://docs.python.org/3/library/os.path.html#os.path.join}
+
+    \bibitem{python-sorted}
+        \url{https://docs.python.org/3/library/functions.html#sorted}    
+        
+    \bibitem{os-mkdir}
+        \url{https://docs.python.org/3/library/os.html#os.mkdir}
+
+    \bibitem{python-modules}
+        \url{https://docs.python.org/3/tutorial/modules.html}
+
+    \bibitem{python-glob}
+        \url{https://docs.python.org/3/library/glob.html}
+    
+
+        
+    \bibitem{doxygen}
+        \url{http://www.stack.nl/~dimitri/doxygen/}
+            
     \end{thebibliography}
 \end{document}
