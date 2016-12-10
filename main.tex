@@ -102,18 +102,25 @@
 
     \chapter*{Introduzione}
         \par
-            <TODO>
-            <
-        		Occorrerà descrivere il problema studiato o il progetto elaborato, il perché lo si è affrontato, l'ambito di applicazione del progetto realizzato.
-        
-        		Dall'introduzione il lettore deve comprendere l'argomento della tesi e come il tesista ha affrontato lo studio della risoluzione del problema eventualmente evidenziando eventuali contributi originali soprattutto nella realizzazione di un progetto (si pensi ad esempio a librerie sw realizzate ad hoc per lo sviluppo di un software...).
-        
-        		Inoltre dall'introduzione il lettore deve poter verificare se possiede le conoscenze per ben interpretare i contenuti descritti oppure se gli è necessario intraprendere prima la lettura di tesi precedenti o di altra letteratura di riferimento.
-        
-        		E' bene riportare nell'introduzione il riferimento ai capitoli di cui si compone la tesi con una breve descrizione dei contenuti di ogni singolo capitolo senza esplicitare gli eventuali sottocapitoli/paragrafi che saranno indicati nell'indice.
-        
-        		Spesso l'introduzione è l'ultimo capitolo che viene scritto, sebbene sia il primo che si incontra nella lettura della tesi.
-        	>
+            Questo elaborato tratta lo studio della libreria di ricostruzione tomografica OpenRTK (\textit{Reconstruction Toolkit}) sfruttando alcuni stack di proiezioni acquisiti mediante architettura CBCT. RTK necessita che gli stack siano normalizzati e definiti secondo particolari formati supportati da ITK (\textit{Insight Segmentation and Registration Toolkit}) chiamati MetaImage (MHA). Il software di ricostruzione inoltre richiede la generazione di un file di geometria XML che consente la descrizione delle informazioni relative all'apparato di acquisizione, sfruttate da RTK per effettuare ricostruzioni corrette. Per lo sviluppo delle procedure si è utilizzato il linguaggio Python, sfruttando i wrapper messi a disposizione da RTK ed ITK chiamati rispettivamente SimpleRTK e SimpleITK.
+            
+        \bigskip
+        \bigskip
+        \par
+            La trattazione è articolata in quattro capitoli principali:
+        \bigskip
+        \par
+            \textit{Capitolo 1}, Presenta una breve introduzione storica evidenziando quali cause hanno portato alla nascita ed allo sviluppo della Tomografia Computerizzata moderna. Vengono descritti i principi matematici alla base della Tomografia ed i principali software utilizzati: OpenRTK e SimpleITK.
+        \bigskip
+        \par            
+            \textit{Capitolo 2}, Riguarda lo sviluppo effettivo del progetto, descrive la manipolazione e la conversione degli stack da formato RAW a formato MHA, il processo di normalizzazione, la generazione della geometria XML ed evidenza in che modo possono essere eseguiti gli algoritmi di ricostruzione forniti da RTK.
+        \bigskip
+        \par            
+            \textit{Capitolo 3}, Presenta lo sviluppo di un package Python creato al fine di velocizzare e semplificare le procedure descritte in \textit{Capitolo 2}. Si evidenziano le tecniche, le scelte implementative ed un'eventuale possibile estensione.
+        \bigskip
+        \par            
+            \textit{Capitolo 4}, Riassume i risultati ottenuti ed evidenzia come uno studio degli algoritmi iterativi di RTK possa essere utile nell'applicazione della Tomosintesi. Vengono inoltre presentate alcune conclusioni personali, derivate dall'esperienza ottenuta durante sviluppo del progetto.
+            
     
     \newpage
     \tableofcontents
@@ -841,6 +848,7 @@ Backprojection: 180.379 s
             
             
     \chapter{Creazione Package Python}
+    \label{cap:rtk-handler}
         \par
             Le procedure descritte da Sezione \ref{sec:lettura-csv} a Sezione \ref{sec:ricostruzione}, inizialmente implementate come script Python indipendenti, sono state riassemblate in una serie di moduli, collezionati in un unico package. Il software è stato successivamente esteso implementando un'interfaccia testuale ed un'architettura a directory per la lettura automatica delle informazioni. Il progetto è stato sviluppato con licenza GNU GPL v3 \cite{gpl-v3} ed il codice sorgente è reperibile all'interno del repository GitHub RTK-handler \cite{rtk-handler-source}. Seguendo la guida ufficiale PyPUG \cite{python-packaging} è stato possibile registrare il package all'interno del Package Index \footnote{Un repository software avente un'interfaccia WEB} PyPI \cite{rtk-handler-pypi}, rendendone possibile l'installazione mediante PIP. Il software richiede che le dipendenze RTK, SimpleRTK, SimpleITK e pyexcel siano soddisfatte. Il suo funzionamento è testato su Python versione 3.5.2.
             
@@ -897,10 +905,10 @@ import pickle
 
 rtk_path = input("Enter the full RTK-bin path\n")
 store_path = '/home/dlessio/.RTK_handler.pkl'
-to_store = {'rtk_path': rtk_path}
+info = {'rtk_path': rtk_path}
 
 f = open(store_path, "wb")
-pickle.dump(to_store, f)
+pickle.dump(info, f)
 f.close()
                 \end{lstlisting}
                 
@@ -908,7 +916,7 @@ f.close()
                 
                 \begin{lstlisting}[language=python, frame=bt]  
 f = open(store_path, "rb")
-rtk_path = pickle.load(f)
+info = pickle.load(f)
 f.close()
                 \end{lstlisting}
                 
@@ -965,8 +973,8 @@ for directory in sorted(path_of):
     os.mkdir(path_of[directory])
                 \end{lstlisting}
                         
-                Questa struttura consente una gestione ordinata delle informazioni. Le procedure di ricostruzione, come visto in Sezione \ref{sec:ricostruzione}, richiedono una lunga serie di parametri e la loro configurazione può risultare dispendiosa in termini di tempo. RTK-handler gestisce la composizione del comando \textit{command}, in modo che la lettura ed il salvataggio delle informazioni avvenga all'interno di queste directories.         
-    
+                Questa struttura consente una gestione ordinata delle informazioni. Tutte le procedure effettuano la lettura ed il salvataggio delle informazioni all'interno di queste directories.
+                
         \section{Moduli Implementati}
             \par
                 In Python più Classi e funzioni possono essere incluse in un unico file, chiamato Modulo \cite{python-modules}. Di seguito si presenta l'elenco e la descrizione dei moduli implementati:
@@ -1007,11 +1015,11 @@ list_of_csv = glob.glob('ProjectFolder/csv/*.csv')
                 
             \bigskip
             \par
-                \textbf{projections\_handler.py} - All'interno è definita la classe \textit{ProjectionsHandler} che implementa la procedura di normalizzazione descritta in Sezione \ref{sec:norm-disp}. E' inoltre definita la funzione \textit{nornalize\_projections()} che si occupa della creazione di un'istanza di ProjectionsHandler e della sua esecuzione. Il recupero dello stack di proiezioni non normalizzate avviene mediante un semplice meccanismo di ricerca analogo al precedente, all'interno della directory \textit{projections/non\textunderscore normalized}. Le informazioni relative al file CSV vengono recuperate sfruttando la classe \textit{CsvHandler}. 
+                \textbf{projections\_handler.py} - All'interno è definita la classe \textit{ProjectionsHandler} che implementa la procedura di normalizzazione descritta in Sezione \ref{sec:norm-disp}. E' inoltre definita la funzione \textit{nornalize\_projections()} che si occupa della creazione di un'istanza di ProjectionsHandler e della sua esecuzione. Il recupero dello stack di proiezioni non normalizzate avviene mediante un semplice meccanismo di ricerca analogo al precedente, all'interno della directory \textit{projections/non\textunderscore normalized}. Le informazioni relative al file CSV vengono recuperate sfruttando la classe \textit{CsvHandler}. Il file di output viene salvato all'interno della struttura generata come in Sezione \ref{sec:architettura-directory}, all'interno di \textit{projections/normalized}.
                 
             \bigskip
             \par
-               \textbf{geometry\_maker.py} - Contiene la classe \textit{GeometryMaker} che si occupa della generazione del file di geometria XML descritta in Sezione \ref{sec:rtk-build-geometry}. E' inoltre definita la funzione \textit{create\_geometry()} la quale si occupa della creazione di un'istanza di GeometryMaker e della sua esecuzione. Il recupero delle informazioni da file CSV avviene sfruttando la classe \textit{CsvHandler} e la lettura delle informazioni da STDIN è effettuata all'interno del costruttore \_\_init\_\_().
+               \textbf{geometry\_maker.py} - Contiene la classe \textit{GeometryMaker} che si occupa della generazione del file di geometria XML descritta in Sezione \ref{sec:rtk-build-geometry}. E' inoltre definita la funzione \textit{create\_geometry()} la quale si occupa della creazione di un'istanza di GeometryMaker e della sua esecuzione. Il recupero delle informazioni da file CSV avviene sfruttando la classe \textit{CsvHandler} e la lettura delle informazioni da STDIN è effettuata all'interno del costruttore \_\_init\_\_(). Il file di output viene salvato all'interno della struttura generata come in Sezione \ref{sec:architettura-directory}, all'interno di \textit{geometry}.
             
             \bigskip
             \par
@@ -1103,12 +1111,29 @@ RTK-handler -ngr
     \chapter{Risultati e Conclusioni}
         \section{Risultati}
             \par
-                La documentazione ufficiale di OpenRTK, versione 1.3.0, generata a partire dai sorgenti C++ mediante il tool \textit{Doxygen} \cite{doxygen} è carente di informazioni riguardo il settaggio dello stack di proiezioni e riguardo le configurazioni necessarie alla generazione della geometria XML. Questi due procedimenti sono strettamente correlati. Nonostante fornisca discreti tutorial riguardo alcuni apparati di acquisizone commerciali (VARIAN OBI, ELEKTA, etc.) non fornisce con adeguato livello di dettaglio i procedimenti necessari alla ricostruzione di stack in formato grezzo (RAW) affiancati ad informazioni standard sull'apparato di acquisizione. Il corretto utilizzo di RTK su formati RAW richiede inoltre una corretta comprensione di ITK e di come questo effettui la lettura delle immagini supportate. ITK, versione 4.10, possiede una documentazione molto più estesa e dettagliata, in quanto il progetto è maturo e stabile. 
-
-        \section{Conclusioni}
+                Questo lavoro ha permesso la comprensione d'utilizzo del software di ricostruzione tomografica OpenRTK la cui documentazione ufficiale, associata alla versione 1.3.0, è carente di informazioni riguardo il settaggio dello stack di proiezioni e riguardo le configurazioni necessarie alla generazione della geometria XML. Queste procedure sono estremamente collegate: nel caso in cui il TAG Origin di un'oggetto Image non sia impostato come di default (Sezione \ref{sec:descrizione-immagini}), la generazione della geometria deve necessariamente adeguarsi a questo fatto, in quanto i parametri ProjOffsetX e ProjOffsetY (Sezione \ref{sec:rtk-geometry}) sono per definizione l'offset dall'origine del detector all'origine dell'immagine. Le informazioni fondamentali per la comprensione di questo punto sono state reperite all'interno della mailing-list RTK-users (si veda \cite{rtk-users-proj-offset}), non nella documentazione ufficiale. La corretta comprensione di OpenRTK coinvolge direttamente la corretta comprensione dei formati immagine supportati da ITK (Sezione \ref{sec:mha}). ITK, versione 4.10, presenta una documentazione molto più estesa e giova di una Community attiva e partecipante. 
+            
+            \bigskip
             \par
-                Lo sviluppo di questa Tesi ha permesso la comprensione del software OpenRTK e di come debbano essere configurati gli stack di proiezioni per poter essere correttamente elaborati dagli algoritmi di ricostruzione. RTK fornisce un'elevato quantitativo di algoritmi iterativi che in questa trattazione non sono stati esplorati. La loro esecuzione è elementare una volta compreso il funzionamento del sistema.
+                Esistono delle condizioni per le quali non è possibile, in fase di acquisizione, ottenere un intero set di proiezioni coprendo una vista angolare di almeno $180\degree$. Una metodologia che può essere applicata alla risoluzione del problema, derivata dal pionieristico lavoro di Ziedses des Plantes \cite{ziedses-tomo} (Sezione \ref{sec:TomografiaConvenzionale}), prende il nome di Tomosintesi \cite{tomosintesi}. Questa prevede l'utilizzo di algoritmi di ricostruzione iterativi e statistici per la ricostruzione tomografica dell'oggetto. RTK sembra poter effettuare ricostruzioni ad angoli di proiezione limitati \cite{rtk-users-tomosinthesys} ed è fornito di algoritmi di ricostruzione iterativi (Sezione \ref{sec:openrtk}). Nel caso in cui OpenRTK possa soddisfare queste esigenze, potrebbero sorgere interessi commerciali in quanto studi recenti \cite{studio-mammografia} evidenziano la superiorità della Tomosintesi rispetto alle tecniche di diagnosi convenzionale:
+    
+            \bigskip
+            \par
+                \textit{"Oltre cinquecentomila donne, alcune delle quali (più della metà) sottoposte a screening del seno con mammografia digitale e le restanti al medesimo esame, integrato con la tomosintesi. Da queste premesse è partito lo studio americano che ha permesso di concludere che la ‘doppia’ (2d + 3d) metodica mammografica è più efficace nel diagnosticare lesioni al seno rispetto alla tradizionale: 41\% in più di tumori al seno invasivi localizzati, 15\% in meno di richiami per indagini diagnostiche aggiuntive a causa di probabili falsi negativi e 29\% in più di ‘veri’ carcinomi mammari riscontrati."} \cite{fondazioneveronesi}.
 
+        \section{Conclusioni}               
+            \par
+                RTK fornisce un'elevato quantitativo di algoritmi iterativi che in questa trattazione non sono stati esplorati. La loro studio necessita l'abilitazione del supporto CUDA in quanto la loro esecuzione risulta computazionalmente più dispendiosa rispetto all'algoritmo sequenziale \textit{rtkfdk}. Le informazioni necessarie al testing degli algoritmi iterativi, quali la generazione della geometria XML e la configurazione dello stack di proiezioni, possono essere generate sfruttando il package RTK-handler, come descritto in \textit{Capitolo \ref{cap:rtk-handler}}.
+                    
+            \bigskip
+            \par
+                Lo sviluppo del software RTK-handler ha permesso lo studio, seppur limitato, del linguaggio Python. La scelta di questo linguaggio ha permesso un rapido sviluppo dei componenti software, del loro testing e della distribuzione. Durante lo sviluppo si è anche potuto apprendere l'utilizzo del CVS \footnote{Control Version System} Github.
+            
+            \bigskip
+            \par
+                Di particolare soddisfazione personale è stato l'utilizzo, da parte della Community OpenRTK, di uno script BASH creato al fine di automatizzare l'intricato processo di compilazione di RTK ed ITK in sistemi UNIX. All'interno del wiki ufficiale viene citato:
+                \textit{"Danny Lessio has developped and shared a script that automatically downloads and compiles ITK and RTK, see the auto-build-RTK GitHub repository."} \cite{wiki-rtk}
+             
 
 \newpage
 \begin{thebibliography}{1}
@@ -1343,6 +1368,21 @@ RTK-handler -ngr
         
     \bibitem{doxygen}
         \url{http://www.stack.nl/~dimitri/doxygen/}
+        
+    \bibitem{rtk-users-tomosinthesys}
+        \url{http://public.kitware.com/pipermail/rtk-users/2016-May/000918.html}
+            
+    \bibitem{ziedses-tomo}
+        Dobbins JT, 3rd; Godfrey, DJ (7 October 2003). "Digital x-ray tomosynthesis: current state of the art and clinical potential.". Physics in medicine and biology. 48 (19): R65–106.
+        
+    \bibitem{tomosintesi}
+        \url{https://en.wikipedia.org/wiki/Tomosynthesis}
+        
+    \bibitem{studio-mammografia}
+        \url{http://jamanetwork.com/journals/jama/fullarticle/1883018}
+    
+    \bibitem{fondazioneveronesi}
+        \url{https://www.fondazioneveronesi.it/articoli/oncologia/mammografia-3d-e-tomosintesi-la-nuova-diagnostica-nei-tumori-del-seno/}
             
     \end{thebibliography}
 \end{document}
