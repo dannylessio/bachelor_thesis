@@ -17,11 +17,6 @@
 \usepackage{gensymb}
 \usepackage{mathtools}
 
-\usepackage{etoolbox}
-\makeatletter
-\patchcmd{\chapter}{\if@openright\cleardoublepage\else\clearpage\fi}{}{}{}
-\makeatother
-
 \lstset{
             basicstyle=\ttfamily,
             showstringspaces=false
@@ -119,7 +114,7 @@
             \textit{Capitolo 3}, Presenta lo sviluppo di un package Python creato al fine di velocizzare e semplificare le procedure descritte in \textit{Capitolo 2}. Si evidenziano le tecniche, le scelte implementative ed un'eventuale possibile estensione.
         \bigskip
         \par            
-            \textit{Capitolo 4}, Riassume i risultati ottenuti ed evidenzia come uno studio degli algoritmi iterativi di RTK possa essere utile nell'applicazione della Tomosintesi. Vengono inoltre presentate alcune conclusioni personali, derivate dall'esperienza ottenuta durante sviluppo del progetto.
+            \textit{Capitolo 4}, Riassume i risultati ottenuti presentando alcuni esempi di ricostruzione sfruttando la procedura \textit{rtkfdk}.
             
     
     \newpage
@@ -322,16 +317,16 @@
                     Le proiezioni, $p(s,\theta)$ (acquisite dal detector) registrano l'intensità attenuata I, la quale è governata dalla legge di Lambert-Beer \cite{lambert-beer} nella forma:
                     
                     \begin{equation} \label{eq:lambert-beer}
-                        I = Io \cdot e^{- (\mu1 + \mu2 + ...  + \mu n)}
+                        I = I_o \ exp(\sum\limits_{i=1}^n \mu_i l_i)  
                     \end{equation}
                     
-                    $I$ è l'intensità rilevata dal detector, $\mu_i$ sono i coefficienti di attenuazione lineare appartenenti ad $n$ voxel di larghezza unitaria. Avendo a disposizione l'intensità della sorgente $Io$, è possibile ottenere la somma dei coefficienti di attenuazione lineare manipolando algebricamente (\ref{eq:lambert-beer}):
+                    $I$ è l'intensità rilevata dal detector, $\mu_i$ sono i coefficienti di attenuazione lineare appartenenti ad $n$ voxel di larghezza $l_i$. Avendo a disposizione l'intensità della sorgente $I_o$, è possibile ottenere la somma dei coefficienti di attenuazione lineare manipolando algebricamente (\ref{eq:lambert-beer}):
                         
                     \begin{equation} \label{eq:normalization}
-                        (\mu1 + \mu2 + ... + \mu n) = - \log_e{(I/Io)}
+                        \sum\limits_{i=1}^n \mu_i l_i = - \log_e{(I/I_o)}
                     \end{equation}
                     
-                    L'intensità $Io$ dev'essere salvata per ciascuno step angolare $\theta_i$ ponendo, ad esempio, un sensore di rilevazione davanti alla sorgente. Esiste la possibilità, in certe condizioni, di poter stimare $Io$, analizzando quelle zone del fascio rilevate del detector non attenuate dal corpo.
+                    L'intensità $I_o$ dev'essere salvata per ciascuno step angolare $\theta_i$ ponendo, ad esempio, un sensore di rilevazione davanti alla sorgente. Esiste la possibilità, in certe condizioni, di poter stimare $I_o$, analizzando quelle zone del fascio rilevate del detector non attenuate dal corpo.
             
             \subsection{Retroproiezione}
                 \par
@@ -541,7 +536,7 @@ Rotation = 1 0 0 0 1 0 0 0 1
                         
                     \item \textit{($N_{iso\_u},N_{iso\_v}$)} - Posizione dell'origine del detector (proiezione ortogonale dell'isocentro sul detector) nel sistema di riferimento $(u,v)$, in numero di pixel.
                         
-                    \item \textit{$Io$} - Intensità della sorgente durante l'acquisizione della proiezione, descritta in Sezione \ref{sec:normalizzazione}.
+                    \item \textit{$I_o$} - Intensità della sorgente durante l'acquisizione della proiezione, descritta in Sezione \ref{sec:normalizzazione}.
                 \end{itemize}
                 
             
@@ -629,7 +624,7 @@ for row in csv:
             
             \bigskip
             \par
-                Questa configurazione, permette un accesso all'informazione facilmente comprensibile. Nel caso in cui si voglia accedere, ad esempio, all'informazione $Io$ della $1\degree$ proiezione, è sufficiente accedere all'omonimo attributo dell'oggetto creato, nella posizione desiderata: 
+                Questa configurazione, permette un accesso all'informazione facilmente comprensibile. Nel caso in cui si voglia accedere, ad esempio, all'informazione $I_o$ della $1\degree$ proiezione, è sufficiente accedere all'omonimo attributo dell'oggetto creato, nella posizione desiderata: 
             
                 \begin{lstlisting}[language=python, frame=bt]
 >>> proj_obj_list[0].io
@@ -642,7 +637,7 @@ for row in csv:
             \label{sec:norm-disp}
             
             \par
-                Uno stack di proiezioni, convertito da formato RAW a formato MHA, deve essere normalizzato secondo la procedura descritta in Sezione \ref{sec:normalizzazione} per poter essere correttamente utilizzato dagli algoritmi di ricostruzione forniti da RTK. Ciò richiede l'ottenimento dei valori $Io$, che possono essere recuperati dalla lista \textit{proj\textunderscore obj\textunderscore list} generata a partire dal file CSV associato allo stack, come descritto in Sezione \ref{sec:lettura-csv}. La lettura dello stack MHA è invece affidata al metodo \textit{ReadImage()} di SimpleITK, il quale genera un' oggetto Image \cite{sitk-image}:
+                Uno stack di proiezioni, convertito da formato RAW a formato MHA, deve essere normalizzato secondo la procedura descritta in Sezione \ref{sec:normalizzazione} per poter essere correttamente utilizzato dagli algoritmi di ricostruzione forniti da RTK. Ciò richiede l'ottenimento dei valori $I_o$, che possono essere recuperati dalla lista \textit{proj\textunderscore obj\textunderscore list} generata a partire dal file CSV associato allo stack, come descritto in Sezione \ref{sec:lettura-csv}. La lettura dello stack MHA è invece affidata al metodo \textit{ReadImage()} di SimpleITK, il quale genera un' oggetto Image \cite{sitk-image}:
                 
                 \begin{lstlisting}[language=python, frame=bt]
 stack = sitk.ReadImage(proj_stack.mha)
@@ -680,7 +675,7 @@ proj = extractor.Execute(stack)
                     
                     Per poter applicare le operazioni, si ricorre al metodo \textit{Execute()}, il quale restituisce, in questo caso, un oggetto Image bidimensionale (proiezione estratta non normalizzata).
                     
-                    \item \textbf{Normalizzazione della proiezione estratta}. Alla proiezione si applica la procedura di normalizzazione descritta nell'Equazione (\ref{eq:normalization}). L'intensità $I$ è rappresentata da tutti i pixel componenti l'immagine estratta. L'intensità $Io$ è disponibile all'interno della lista di oggetti Projection: \textit{proj\textunderscore obj\textunderscore list}. SimpleITK fornisce il metodo \textit{Log()} \cite{sitk-log}, il quale applica il Logaritmo in base $e$ a ciascun pixel componente l'immagine. 
+                    \item \textbf{Normalizzazione della proiezione estratta}. Alla proiezione si applica la procedura di normalizzazione descritta nell'Equazione (\ref{eq:normalization}). L'intensità $I$ è rappresentata da tutti i pixel componenti l'immagine estratta. L'intensità $I_o$ è disponibile all'interno della lista di oggetti Projection: \textit{proj\textunderscore obj\textunderscore list}. SimpleITK fornisce il metodo \textit{Log()} \cite{sitk-log}, il quale applica il Logaritmo in base $e$ a ciascun pixel componente l'immagine. 
                     Le moltiplicazioni per numeri floating point \cite{python-floating-point}, possono essere applicate a ciascun pixel dell'immagine semplicemente utilizzando l'operatore $*$ \cite{sitk-star-operator} sull'oggetto Image:
                     \begin{lstlisting}[language=python, frame=bt]
 proj = proj * float(1 / proj_obj_list[zslice].io)
@@ -688,7 +683,7 @@ proj = sitk.Log(proj)
 proj = proj * float(-1)
                     \end{lstlisting}
                     
-                    Se è essenzialmente applicata l'equazione (\ref{eq:normalization}) in 3 operazioni separate. L'informazione $Io$ è stata prelevata lista sfruttando l'indice \textit{zslice}, il quale identifica (ordinatamente) l'esatta attenuazione della proiezione indicata.
+                    Se è essenzialmente applicata l'equazione (\ref{eq:normalization}) in 3 operazioni separate. L'informazione $I_o$ è stata prelevata lista sfruttando l'indice \textit{zslice}, il quale identifica (ordinatamente) l'esatta attenuazione della proiezione indicata.
                     
                     \item \textbf{Inserimento della proiezione normalizzata in lista.} L'oggetto Image normalizzato \textit{proj} viene concatenato alla lista \textit{norm\textunderscore proj\textunderscore list}, precedentemente istanziata, sfruttando il metodo \textit{append()}:
                     
@@ -850,7 +845,7 @@ Backprojection: 180.379 s
     \chapter{Creazione Package Python}
     \label{cap:rtk-handler}
         \par
-            Le procedure descritte da Sezione \ref{sec:lettura-csv} a Sezione \ref{sec:ricostruzione}, inizialmente implementate come script Python indipendenti, sono state riassemblate in una serie di moduli, collezionati in un unico package. Il software è stato successivamente esteso implementando un'interfaccia testuale ed un'architettura a directory per la lettura automatica delle informazioni. Il progetto è stato sviluppato con licenza GNU GPL v3 \cite{gpl-v3} ed il codice sorgente è reperibile all'interno del repository GitHub RTK-handler \cite{rtk-handler-source}. Seguendo la guida ufficiale PyPUG \cite{python-packaging} è stato possibile registrare il package all'interno del Package Index \footnote{Un repository software avente un'interfaccia WEB} PyPI \cite{rtk-handler-pypi}, rendendone possibile l'installazione mediante PIP. Il software richiede che le dipendenze RTK, SimpleRTK, SimpleITK e pyexcel siano soddisfatte. Il suo funzionamento è testato su Python versione 3.5.2.
+            Le procedure descritte, inizialmente implementate come script Python indipendenti, sono state riassemblate in una serie di moduli, collezionati in un unico package. Il software è stato successivamente esteso implementando un'interfaccia testuale ed un'architettura a directory per la lettura automatica delle informazioni. Il progetto è stato sviluppato con licenza GNU GPL v3 \cite{gpl-v3} ed il codice sorgente è reperibile all'interno del repository GitHub RTK-handler \cite{rtk-handler-source}. Seguendo la guida ufficiale PyPUG \cite{python-packaging} è stato possibile registrare il package all'interno del Package Index \footnote{Un repository software avente un'interfaccia WEB} PyPI \cite{rtk-handler-pypi}, rendendone possibile l'installazione mediante PIP. Il software richiede che le dipendenze RTK, SimpleRTK, SimpleITK e pyexcel siano soddisfatte. Il suo funzionamento è testato su Python versione 3.5.2.
             
         \section{Esecuzione di Processi Esterni}
         \label{esecuzione-processi-esterni}
@@ -973,7 +968,7 @@ for directory in sorted(path_of):
     os.mkdir(path_of[directory])
                 \end{lstlisting}
                         
-                Questa struttura consente una gestione ordinata delle informazioni. Tutte le procedure effettuano la lettura ed il salvataggio delle informazioni all'interno di queste directories.
+                Questa struttura consente una gestione ordinata delle informazioni. Tutte le procedure ne effettuano la lettura ed il salvataggio all'interno di queste directories.
                 
         \section{Moduli Implementati}
             \par
@@ -1108,8 +1103,117 @@ RTK-handler -ngr
             \par
                 RTK-handler consente un considerevole risparmio di tempo nell'applicazione delle procedure evitando la continua esecuzione di script indipendenti e limitando l'introduzione di errori dovuti ad uno scorretto settaggio dei parametri. Una possibile estensione riguarda il supporto per altri algoritmi di ricostruzione all'interno della cartella \textit{RTK-bin/bin}.
             
-    \chapter{Risultati e Conclusioni}
-        \section{Risultati}
+    \chapter{Risultati}
+            \par
+                Di seguito vengono presentati alcuni esempi di ricostruzione ottenuti sfruttando la procedura \textit{rtkfdk} su alcuni fantocci test. Gli stack di proiezioni sono stati normalizzati ed è stata generata la geometria XML come descritto nei capitoli precedenti. Sono inoltre mostrate le informazioni relative all'apparato di acquisizione ed i parametri utilizzati per l'ottenimento della ricostruzione.
+                
+            \bigskip
+            \par
+                \textbf{CatPhan500}. E' un fantoccio cilindrico sfruttato per poter ricavare informazioni riguardo l'apparato di acquisizione. E' composto da quattro moduli \cite{catphan-doc} racchiusi in un involucro di 200 millimetri, ciascuno dei quali è composto da materiali aventi densità differente. La figura \ref{fig:cat_proj} mostra lo stack proiezioni normalizzato.
+
+                \begin{figure}[h]
+                    \centering
+                    \includegraphics[width=1\textwidth]{cat_proj}
+                    \caption{Lo stack di proiezioni associato al fantoccio CatPhan500}
+                    \label{fig:cat_proj}
+                \end{figure}
+                
+                Le informazioni associate allo stack MHA sono le seguenti:
+                
+                \begin{lstlisting}
+# informazioni relative allo stack MHA
+name = CatPhan500_256_192_642_32bits.mha
+SID = 1000.0 mm
+SDD = 1500.0 mm
+du = 1.552 mm
+dv = 1.552 mm
+Nu = 256
+Nv = 192
+dimension = 256,192,642
+csvFile = CatPhan500.csv
+
+# informazioni relative all'oggetto da ricostruire
+dimension 256,256,256
+spacing = 1,1,1
+                \end{lstlisting}       
+                
+                La figura \ref{fig:catphan-recon} evidenzia la ricostruzione nella quale è possibile distinguere i quattro moduli interni. 
+                \begin{figure}[h]
+                    \centering
+                    \includegraphics[width=1\textwidth]{catphan-recon}
+                    \caption{Quattro sezioni del volume ricostruito mediante procedura rtkfdk relative al fantoccio CatPhan500, vista superiore. Da sinistra a destra si visualizzano i moduli: CTP401, CTP528, CTP515, CTP486.}
+                    \label{fig:catphan-recon}
+                \end{figure}
+                
+            \bigskip
+            \par
+                \textbf{SkullPhantom}. Il fantoccio rappresenta una struttura simile al cranio umano. Lo stack di proiezioni è stato presentato in figura \ref{fig:skull-phantom} e la rispettiva ricostruzione è stata presentata in figura \ref{fig:reconstruction}. Le informazioni associate allo stack di proiezioni MHA sono le seguenti:
+                
+                \begin{lstlisting}
+# informazioni relative allo stack MHA
+name = SkullPhantom.mha
+SID = 1000.0 mm
+SDD = 1500.0 mm
+du = 1.552 mm
+dv = 1.552 mm
+Nu = 256
+Nv = 192
+dimension = 256,192,641
+csvFile = SkullPhantom.csv
+
+# informazioni relative all'oggetto da ricostruire
+dimension 256,256,256
+spacing = 1,1,1
+                \end{lstlisting} 
+                
+                La ricostruzione può anche essere visualizzata tridimensionalmente sfruttando l'apposito plugin Imagej: 3D Viewer. E' possibile visualizzarla in figura \ref{fig:skull-recon-3d}.
+                
+                \begin{figure}[h]
+                    \centering                    \includegraphics[width=0.30\textwidth]{skull-recon-3d}
+                    \caption{Ricostruzione rtkfdk del fantoccio SkullPhantom visualizzata mediante il plugin 3D Viewer di Imagej.}
+                    \label{fig:skull-recon-3d}
+                \end{figure}
+            \bigskip
+            \par
+                \textbf{B-Phantom}. Questo fantoccio è composto da una bottiglia in plastica all'interno della quale è stata inserita una spugna. La figura \ref{fig:boccia_proj} evidenzia lo stack di proiezioni normalizzato MHA.
+                
+                \begin{figure}[h]
+                    \centering
+                    \includegraphics[width=1\textwidth]{boccia_proj}
+                    \caption{Lo stack di proiezioni associato al fantoccio B-Phantom.}
+                    \label{fig:boccia_proj}
+                \end{figure}
+                
+                Le informazioni associate sono:
+                \begin{lstlisting}
+# informazioni relative allo stack MHA
+name = B-Phantom.mha
+SID = 516.27 mm
+SDD = 640.79 mm
+du = 0.096 mm
+dv = 0.096 mm
+Nu = 1024
+Nv = 512
+dimension = 1024,512,200
+csvFile = B-Phantom.csv
+
+# informazioni relative all'oggetto da ricostruire
+dimension 512,512,512
+spacing = 0.1,0.1,0.1
+                \end{lstlisting}    
+                
+                
+                La ricostruzione rtkfdk è mostrata in figura \ref{fig:boccia_recon}. E' possibile visualizzare la struttura interna della spugna.
+                
+                 \begin{figure}[h]
+                    \centering
+                    \includegraphics[width=0.5\textwidth]{boccia_recon}
+                    \caption{Slice appartenenti alla ricostruzione rtkdfk del fantoccio B-Phantom, vista laterale e vista superiore.}
+                    \label{fig:boccia_recon}
+                \end{figure}
+        
+        
+        \chapter*{Conclusioni}
             \par
                 Questo lavoro ha permesso la comprensione d'utilizzo del software di ricostruzione tomografica OpenRTK la cui documentazione ufficiale, associata alla versione 1.3.0, è carente di informazioni riguardo il settaggio dello stack di proiezioni e riguardo le configurazioni necessarie alla generazione della geometria XML. Queste procedure sono estremamente collegate: nel caso in cui il TAG Origin di un'oggetto Image non sia impostato come di default (Sezione \ref{sec:descrizione-immagini}), la generazione della geometria deve necessariamente adeguarsi a questo fatto, in quanto i parametri ProjOffsetX e ProjOffsetY (Sezione \ref{sec:rtk-geometry}) sono per definizione l'offset dall'origine del detector all'origine dell'immagine. Le informazioni fondamentali per la comprensione di questo punto sono state reperite all'interno della mailing-list RTK-users (si veda \cite{rtk-users-proj-offset}), non nella documentazione ufficiale. La corretta comprensione di OpenRTK coinvolge direttamente la corretta comprensione dei formati immagine supportati da ITK (Sezione \ref{sec:mha}). ITK, versione 4.10, presenta una documentazione molto più estesa e giova di una Community attiva e partecipante. 
             
@@ -1120,14 +1224,14 @@ RTK-handler -ngr
             \bigskip
             \par
                 \textit{"Oltre cinquecentomila donne, alcune delle quali (più della metà) sottoposte a screening del seno con mammografia digitale e le restanti al medesimo esame, integrato con la tomosintesi. Da queste premesse è partito lo studio americano che ha permesso di concludere che la ‘doppia’ (2d + 3d) metodica mammografica è più efficace nel diagnosticare lesioni al seno rispetto alla tradizionale: 41\% in più di tumori al seno invasivi localizzati, 15\% in meno di richiami per indagini diagnostiche aggiuntive a causa di probabili falsi negativi e 29\% in più di ‘veri’ carcinomi mammari riscontrati."} \cite{fondazioneveronesi}.
-
-        \section{Conclusioni}               
+                
+            \bigskip
             \par
                 RTK fornisce un'elevato quantitativo di algoritmi iterativi che in questa trattazione non sono stati esplorati. La loro studio necessita l'abilitazione del supporto CUDA in quanto la loro esecuzione risulta computazionalmente più dispendiosa rispetto all'algoritmo sequenziale \textit{rtkfdk}. Le informazioni necessarie al testing degli algoritmi iterativi, quali la generazione della geometria XML e la configurazione dello stack di proiezioni, possono essere generate sfruttando il package RTK-handler, come descritto in \textit{Capitolo \ref{cap:rtk-handler}}.
                     
             \bigskip
             \par
-                Lo sviluppo del software RTK-handler ha permesso lo studio, seppur limitato, del linguaggio Python. La scelta di questo linguaggio ha permesso un rapido sviluppo dei componenti software, del loro testing e della distribuzione. Durante lo sviluppo si è anche potuto apprendere l'utilizzo del CVS \footnote{Control Version System} Github.
+                Lo sviluppo del software RTK-handler ha permesso lo studio, seppur limitato, del linguaggio Python. La scelta di questo linguaggio ha consentito un rapido sviluppo dei componenti software, del loro testing e della distribuzione. Durante lo sviluppo si è anche potuto apprendere l'utilizzo del CVS \footnote{Control Version System} Github.
             
             \bigskip
             \par
@@ -1365,9 +1469,9 @@ RTK-handler -ngr
         \url{https://docs.python.org/3/library/glob.html}
     
 
+    \bibitem{catphan-doc}
+        \url{http://www.uio.no/studier/emner/matnat/fys/FYS4760/h07/Catphan500-600manual.pdf}
         
-    \bibitem{doxygen}
-        \url{http://www.stack.nl/~dimitri/doxygen/}
         
     \bibitem{rtk-users-tomosinthesys}
         \url{http://public.kitware.com/pipermail/rtk-users/2016-May/000918.html}
